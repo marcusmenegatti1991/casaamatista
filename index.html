@@ -499,7 +499,7 @@
 // ══════════════════════════════════════════════════════════════
 //  CONFIGURACIÓN
 // ══════════════════════════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxq9hH2XpxLiWmqb4RovAQCNqytdjNCpnBS0_fCtVSxCeXz9diDomWcPd0M6BhRgM9W/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPi37958DXgOTbzgGIDVTErWlsMw6pqpIHXjgcocOsnyUsvNv9GNw72n0x3QWlUxUq/exec';
 
 const CALENDARIOS = {
   'consultorio-1':'f6b359cdadfa144d836290602caf1b796c8999515bf216a4c819c345cda71d6f@group.calendar.google.com',
@@ -519,7 +519,7 @@ const COLOR_SARY='#7A6F8F';
 
 function normNombre(n){if(!n)return'';return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();}
 function primerNombre(n){return normNombre(n).split(' ')[0]||normNombre(n);}
-function colorPsy(n){if(primerNombre(n)==='SARY')return COLOR_SARY;const k=normNombre(n);let h=5381;for(let i=0;i<k.length;i++)h=((h<<5)+h)+k.charCodeAt(i);return COLORES[Math.abs(h)%COLORES.length];}
+function colorPsy(n){const norm=normNombre(n);if(norm==='SARY'||norm.startsWith('SARY - '))return COLOR_SARY;let h=5381;for(let i=0;i<norm.length;i++)h=((h<<5)+h)+norm.charCodeAt(i);return COLORES[Math.abs(h)%COLORES.length];}
 
 const SLOTS=[];for(let h=H_INI;h<H_FIN;h++){SLOTS.push(h);SLOTS.push(h+0.5);}
 const IDS=Object.keys(CALENDARIOS);
@@ -772,7 +772,7 @@ async function cargarAdmin(){
   renderTotales();renderStats();renderPsyTable();renderCalAdmin();
 }
 
-function esSary(ev){return normNombre(ev.nombreBase)==='SARY';}
+function esSary(ev){const n=normNombre(ev.nombreBase||'');return n==='SARY'||n.startsWith('SARY - ');}
 
 function renderTotales(){
   // Rentas: eventos de psicólogos (no Sary)
