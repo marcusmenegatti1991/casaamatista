@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casa Amatista</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --cream:#FAF7F2;--cream-mid:#F0EAE0;--cream-dark:#DDD4C6;
+      --sage:#6B9080;--sage-light:#EAF2EE;--sage-dark:#3D6457;
+      --plum:#7A6F8F;--plum-dark:#4A4256;
+      --ink:#2A2520;--ink-mid:#5C5248;--ink-light:#9C9188;
+      --gold:#C4983A;--white:#FFFFFF;
+      --red:#b94040;--red-light:#FDEAEA;
+      --amber:#b07020;--amber-light:#FEF3E2;
+      --green:#2e7d52;--green-light:#E8F5EE;
+    }
+    body{background:var(--cream);font-family:'Lora',Georgia,serif;color:var(--ink);min-height:100vh;}
+
+    /* LOGIN */
+    #login-screen{min-height:100vh;display:flex;flex-direction:column;background:linear-gradient(160deg,var(--plum-dark) 0%,var(--plum) 60%,#9B8FAF 100%);}
+    .login-top{display:flex;justify-content:flex-end;padding:1rem 1.5rem;}
+    .btn-admin-login{font-size:0.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.2);cursor:pointer;border:none;background:none;font-family:'Lora',serif;padding:.25rem .5rem;transition:color .2s;}
+    .btn-admin-login:hover{color:rgba(255,255,255,.55);}
+    .login-center{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 1rem;}
+    .login-card{background:var(--white);border-radius:20px;padding:2.5rem 2rem;width:100%;max-width:360px;box-shadow:0 24px 64px rgba(42,37,32,.22);}
+    .login-logo{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;text-align:center;}
+    .login-card h2{font-family:'Playfair Display',serif;font-weight:400;font-size:1.75rem;text-align:center;color:var(--ink);margin-bottom:.25rem;}
+    .login-card h2 em{font-style:italic;color:var(--plum);}
+    .login-sub{font-size:.82rem;color:var(--ink-light);text-align:center;margin-bottom:1.75rem;}
+    .lfield{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem;}
+    .lfield label{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mid);}
+    .lfield input{font-family:'Lora',serif;font-size:.92rem;color:var(--ink);background:var(--cream);border:1px solid var(--cream-dark);border-radius:10px;padding:.65rem .9rem;outline:none;transition:border-color .2s,box-shadow .2s;}
+    .lfield input:focus{border-color:var(--plum);box-shadow:0 0 0 3px rgba(122,111,143,.14);}
+    .login-error{font-size:.78rem;color:var(--red);text-align:center;margin-bottom:.75rem;min-height:1.2em;}
+    .btn-login{width:100%;font-family:'Lora',serif;font-size:.9rem;background:var(--plum);color:white;border:none;border-radius:10px;padding:.75rem;cursor:pointer;transition:background .2s;margin-top:.25rem;}
+    .btn-login:hover{background:var(--plum-dark);}
+    .btn-login:disabled{background:var(--ink-light);cursor:not-allowed;}
+
+    /* HEADER */
+    header{background:var(--plum);padding:1.25rem 2rem 1rem;text-align:center;position:relative;}
+    .eyebrow{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem;}
+    header h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.75rem);font-weight:400;color:#FAF7F2;}
+    header h1 em{font-style:italic;color:var(--gold);}
+    .admin-trigger{position:absolute;bottom:.4rem;right:1rem;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.18);cursor:pointer;border:none;background:none;font-family:'Lora',serif;padding:.2rem .4rem;transition:color .2s;}
+    .admin-trigger:hover{color:rgba(255,255,255,.5);}
+    .session-bar{background:var(--plum-dark);padding:.4rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;color:rgba(255,255,255,.75);}
+    .session-bar strong{color:var(--gold);}
+    .btn-logout{font-family:'Lora',serif;font-size:.68rem;color:rgba(255,255,255,.6);background:none;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:.2rem .65rem;cursor:pointer;transition:all .15s;}
+    .btn-logout:hover{color:white;border-color:rgba(255,255,255,.5);}
+
+    /* FORM BAR */
+    .form-bar{background:var(--white);border-bottom:1px solid var(--cream-dark);padding:.9rem 1.5rem;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+    .field{display:flex;flex-direction:column;gap:.3rem;flex:1;min-width:150px;}
+    .field label{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mid);}
+    .field input,.field select{font-family:'Lora',serif;font-size:.88rem;color:var(--ink);background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:.5rem .8rem;outline:none;transition:border-color .2s;}
+    .field input:focus,.field select:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(107,144,128,.12);}
+    .btn-primary{font-family:'Lora',serif;font-size:.83rem;color:#fff;background:var(--sage-dark);border:none;border-radius:8px;padding:.55rem 1.25rem;cursor:pointer;white-space:nowrap;transition:background .2s;align-self:flex-end;}
+    .btn-primary:hover{background:var(--sage);}
+    .btn-primary:disabled{background:var(--ink-light);cursor:not-allowed;}
+
+    /* GRID USUARIO */
+    main{padding:1.5rem 1rem 4rem;max-width:1000px;margin:0 auto;}
+    .date-banner{display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem;flex-wrap:wrap;}
+    .date-banner h2{font-family:'Playfair Display',serif;font-weight:400;font-size:1.1rem;}
+    .legend{display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;margin-left:auto;}
+    .leg{display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--ink-mid);}
+    .leg-dot{width:10px;height:10px;border-radius:3px;}
+    .grid-wrapper{overflow-x:auto;border-radius:12px;border:1px solid var(--cream-dark);background:var(--white);}
+    .time-grid{display:grid;grid-template-columns:62px repeat(4,1fr);min-width:480px;}
+    .gh{background:var(--ink);color:#FAF7F2;font-size:.75rem;font-weight:500;letter-spacing:.04em;padding:.7rem .4rem;text-align:center;border-right:1px solid rgba(255,255,255,.08);}
+    .gh:first-child{border-right:1px solid rgba(255,255,255,.15);}
+    .tl{background:var(--cream);color:var(--ink-mid);font-size:.62rem;text-align:center;border-right:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;min-height:36px;line-height:1.2;padding:2px 0;}
+    .tl.hora-entera{border-top:1px solid var(--cream-dark);font-weight:500;}
+    .tl.media-hora{border-top:1px dashed #E5DDD3;font-size:.57rem;color:#B8AF9F;}
+    .slot{min-height:36px;border-right:1px solid var(--cream-dark);padding:3px;position:relative;}
+    .slot:last-child{border-right:none;}
+    .slot.hora-entera{border-top:1px solid var(--cream-dark);}
+    .slot.media-hora{border-top:1px dashed #E5DDD3;}
+    .slot.available{cursor:pointer;background:var(--white);transition:background .15s;}
+    .slot.available:hover{background:var(--sage-light);}
+    .slot.available:hover::after{content:'+ Reservar';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:var(--sage-dark);letter-spacing:.05em;pointer-events:none;}
+    .slot.occupied{cursor:default;}
+    .chip{display:flex;align-items:center;height:100%;min-height:30px;border-radius:4px;padding:3px 5px;font-size:.65rem;font-family:'Lora',serif;font-weight:500;color:white;line-height:1.2;overflow:hidden;}
+    .slot.loading{background:var(--cream);animation:pulse 1.2s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .idle-state{text-align:center;padding:4rem 1rem;color:var(--ink-light);}
+    .idle-icon{font-size:2rem;margin-bottom:.6rem;opacity:.3;}
+    .idle-state p{font-size:.88rem;line-height:1.6;}
+
+    /* MODALES */
+    .overlay{position:fixed;inset:0;background:rgba(42,37,32,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s;}
+    .overlay.open{opacity:1;pointer-events:all;}
+    .modal{background:var(--white);border-radius:16px;padding:1.75rem;max-width:390px;width:100%;transform:translateY(14px);transition:transform .2s;}
+    .overlay.open .modal{transform:translateY(0);}
+    .modal h3{font-family:'Playfair Display',serif;font-weight:400;font-size:1.2rem;margin-bottom:.35rem;}
+    .modal-sub{font-size:.8rem;color:var(--ink-mid);margin-bottom:1.1rem;}
+    .modal-detail{background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:.8rem .9rem;font-size:.82rem;line-height:1.9;margin-bottom:1rem;}
+    .modal-detail strong{color:var(--sage-dark);}
+    .ffield{display:flex;flex-direction:column;gap:.3rem;margin-bottom:1rem;}
+    .ffield label{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mid);}
+    .ffield select,.ffield input{font-family:'Lora',serif;font-size:.86rem;color:var(--ink);background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:.5rem .8rem;outline:none;}
+    .mactions{display:flex;gap:.7rem;}
+    .btnc{flex:1;font-family:'Lora',serif;font-size:.83rem;background:none;border:1px solid var(--cream-dark);border-radius:8px;padding:.55rem;cursor:pointer;color:var(--ink-mid);transition:background .15s;}
+    .btnc:hover{background:var(--cream);}
+    .btnok{flex:2;font-family:'Lora',serif;font-size:.83rem;background:var(--sage-dark);border:none;border-radius:8px;padding:.55rem;cursor:pointer;color:#fff;transition:background .15s;}
+    .btnok:hover{background:var(--sage);}
+    .btnok:disabled{background:var(--ink-light);cursor:not-allowed;}
+    .modal-sm{max-width:320px;}
+    .modal-sm input{font-family:'Lora',serif;font-size:.9rem;width:100%;background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:.55rem .85rem;outline:none;margin-bottom:.75rem;}
+    .modal-error{font-size:.75rem;color:var(--red);margin-bottom:.75rem;display:none;}
+
+    /* ADMIN */
+    #admin-panel{display:none;background:var(--cream);}
+    #admin-panel.visible{display:block;}
+    .admin-inner{max-width:1080px;margin:0 auto;padding:1.5rem 1rem 4rem;}
+    .admin-topbar{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+    .admin-topbar h2{font-family:'Playfair Display',serif;font-weight:400;font-size:1.2rem;flex:1;}
+    .btn-ghost{font-family:'Lora',serif;font-size:.78rem;color:var(--ink-mid);background:none;border:1px solid var(--cream-dark);border-radius:8px;padding:.4rem .9rem;cursor:pointer;transition:background .15s;}
+    .btn-ghost:hover{background:var(--cream-dark);}
+    .admin-tabs{display:flex;border-bottom:2px solid var(--cream-dark);margin-bottom:1.5rem;gap:0;overflow-x:auto;}
+    .atab{font-family:'Lora',serif;font-size:.82rem;padding:.6rem 1.25rem;border:none;background:none;color:var(--ink-mid);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;white-space:nowrap;}
+    .atab:hover{color:var(--ink);}
+    .atab.active{color:var(--plum);border-bottom-color:var(--plum);font-weight:500;}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+
+    /* Stats */
+    .admin-filters{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;padding:1rem 1.25rem;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.85rem;margin-bottom:1.25rem;}
+    .stat-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;padding:.9rem 1rem;}
+    .stat-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:.3rem;}
+    .stat-value{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:400;line-height:1;}
+    .sv-green{color:var(--green);}.sv-red{color:var(--red);}.sv-amber{color:var(--amber);}.sv-gold{color:var(--gold);}.sv-plum{color:var(--plum);}
+
+    /* Totales dobles */
+    .totales-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.75rem;}
+    .total-box{background:var(--white);border:1.5px solid var(--cream-dark);border-radius:14px;padding:1.1rem 1.25rem;}
+    .total-box.rentas{border-color:#a5c8be;}
+    .total-box.terapias{border-color:var(--plum);}
+    .total-box-label{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-light);margin-bottom:.3rem;}
+    .total-box-value{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;line-height:1;}
+    .total-box.rentas .total-box-value{color:var(--sage-dark);}
+    .total-box.terapias .total-box-value{color:var(--plum);}
+    .total-box-sub{font-size:.72rem;color:var(--ink-light);margin-top:.3rem;}
+
+    /* Tablas */
+    .section-title{font-family:'Playfair Display',serif;font-weight:400;font-size:1rem;margin-bottom:.85rem;}
+    .table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--cream-dark);margin-bottom:1.75rem;}
+    table{width:100%;border-collapse:collapse;background:var(--white);font-size:.8rem;}
+    thead th{background:var(--ink);color:#FAF7F2;font-weight:500;font-size:.68rem;letter-spacing:.05em;padding:.6rem .85rem;text-align:left;white-space:nowrap;}
+    thead th:last-child{text-align:right;}
+    tbody tr{border-top:1px solid var(--cream-dark);}
+    tbody tr:hover{background:var(--cream);}
+    tbody td{padding:.6rem .85rem;vertical-align:middle;}
+    .psy-name-cell{display:flex;align-items:center;gap:.5rem;}
+    .psy-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+    .badge{display:inline-block;font-size:.63rem;border-radius:20px;padding:.15rem .55rem;}
+    .b-green{background:var(--green-light);color:var(--green);}
+    .b-red{background:var(--red-light);color:var(--red);}
+    .b-amber{background:var(--amber-light);color:var(--amber);}
+    .b-plum{background:#EDE9F5;color:var(--plum);}
+    .monto-cell{font-family:'Playfair Display',serif;font-size:.9rem;text-align:right;}
+    .btn-danger{font-family:'Lora',serif;font-size:.72rem;color:var(--red);background:var(--red-light);border:1px solid #e8bebe;border-radius:6px;padding:.28rem .7rem;cursor:pointer;transition:background .15s;white-space:nowrap;}
+    .btn-danger:hover{background:#f5cccc;}
+
+    /* Calendario admin */
+    .cal-nav{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;}
+    .cal-nav h3{font-family:'Playfair Display',serif;font-weight:400;font-size:1rem;flex:1;text-align:center;}
+    .btn-nav{font-family:'Lora',serif;font-size:.8rem;background:var(--white);border:1px solid var(--cream-dark);border-radius:8px;padding:.4rem .85rem;cursor:pointer;color:var(--ink-mid);transition:background .15s;white-space:nowrap;}
+    .btn-nav:hover{background:var(--cream-dark);}
+    .cal-wrapper{overflow-x:auto;border-radius:12px;border:1px solid var(--cream-dark);background:var(--white);margin-bottom:1.75rem;}
+    .cal-grid{display:grid;grid-template-columns:58px repeat(7,1fr);}
+    .cgh{background:var(--ink);color:#FAF7F2;font-size:.72rem;font-weight:500;padding:.6rem .3rem;text-align:center;border-right:1px solid rgba(255,255,255,.08);line-height:1.3;}
+    .cgh:first-child{border-right:1px solid rgba(255,255,255,.18);}
+    .cgh small{display:block;font-size:.58rem;opacity:.5;}
+    .ctl{background:var(--cream);color:var(--ink-mid);font-size:.6rem;text-align:center;border-right:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;min-height:34px;padding:2px 0;}
+    .ctl.he{border-top:1px solid var(--cream-dark);font-weight:500;}
+    .ctl.mh{border-top:1px dashed #E5DDD3;font-size:.55rem;color:#B8AF9F;}
+    .cslot{min-height:34px;border-right:1px solid var(--cream-dark);padding:2px;position:relative;}
+    .cslot:last-child{border-right:none;}
+    .cslot.he{border-top:1px solid var(--cream-dark);}
+    .cslot.mh{border-top:1px dashed #E5DDD3;}
+    .cslot.empty{background:var(--white);}
+    .cslot.has-event{display:flex;gap:1px;align-items:stretch;}
+    .ac{border-radius:4px;padding:2px 5px;font-size:.62rem;font-family:'Lora',serif;font-weight:500;color:white;line-height:1.25;overflow:hidden;flex:1;min-width:0;min-height:30px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;transition:opacity .15s;position:relative;}
+    .ac:hover{opacity:.82;}
+    .ac .ac-name{display:block;}
+    .ac .ac-room{display:block;font-size:.54rem;opacity:.85;margin-top:1px;}
+    .ac.cancelo{opacity:.55;cursor:default;}
+    .ac::after{content:attr(data-badge);position:absolute;top:2px;right:3px;font-size:.5rem;background:rgba(0,0,0,.22);border-radius:3px;padding:0 3px;line-height:1.5;}
+    .cal-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;font-size:.72rem;color:var(--ink-mid);}
+    .cl-item{display:flex;align-items:center;gap:.4rem;}
+    .cl-dot{width:10px;height:10px;border-radius:2px;}
+
+    /* Status modal */
+    .status-options{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.1rem;}
+    .status-opt{display:flex;align-items:center;gap:.85rem;border:1.5px solid var(--cream-dark);border-radius:10px;padding:.75rem 1rem;cursor:pointer;transition:border-color .15s,background .15s;font-family:'Lora',serif;}
+    .status-opt:hover{background:var(--cream);}
+    .status-opt.opt-asistio{color:var(--green);}.status-opt.opt-asistio.selected{background:var(--green-light);border-color:var(--green);}
+    .status-opt.opt-cancelo{color:var(--red);}.status-opt.opt-cancelo.selected{background:var(--red-light);border-color:var(--red);}
+    .status-opt.opt-descuento{color:var(--amber);}.status-opt.opt-descuento.selected{background:var(--amber-light);border-color:var(--amber);}
+    .opt-icon{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0;}
+    .opt-title{font-size:.88rem;font-weight:500;}
+    .opt-desc{font-size:.72rem;opacity:.7;margin-top:.1rem;}
+    .desc-amount-wrap{display:none;margin-top:.5rem;}
+    .desc-amount-wrap.visible{display:block;}
+    .desc-amount-wrap label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:.3rem;}
+    .desc-amount-wrap input{font-family:'Lora',serif;font-size:.88rem;color:var(--ink);background:var(--white);border:1px solid var(--cream-dark);border-radius:8px;padding:.45rem .75rem;outline:none;width:120px;}
+
+    /* Pacientes Sary / Add forms */
+    .add-form{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;padding:1.25rem;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .sary-form{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;padding:1.25rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;align-items:flex-end;margin-bottom:1.5rem;}
+    .sary-bookings{display:flex;flex-direction:column;gap:.55rem;}
+    .sary-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:10px;padding:.8rem 1rem;display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;}
+    .sc-info{flex:1;min-width:160px;}
+    .sc-nombre{font-weight:500;font-size:.86rem;}
+    .sc-meta{font-size:.73rem;color:var(--ink-mid);margin-top:.1rem;}
+    .init-box{background:var(--green-light);border:1px solid #a5d4b8;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.84rem;line-height:1.8;display:none;}
+    .init-box.show{display:block;}
+
+    .admin-empty{text-align:center;padding:2.5rem 1rem;color:var(--ink-light);font-size:.86rem;}
+    .loading-msg{text-align:center;padding:2rem;color:var(--ink-mid);font-size:.85rem;font-style:italic;}
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#FAF7F2;font-family:'Lora',serif;font-size:.83rem;padding:.65rem 1.3rem;border-radius:30px;z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;}
+    .toast.success{background:var(--sage-dark);}.toast.error{background:var(--red);}.toast.show{transform:translateX(-50%) translateY(0);}
+
+    @media(max-width:520px){
+      .form-bar{flex-direction:column;}.btn-primary{width:100%;}.legend{display:none;}
+      .admin-filters{flex-direction:column;}.stats-row{grid-template-columns:1fr 1fr;}
+      .totales-grid{grid-template-columns:1fr;}.sary-form{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-top">
+    <button class="btn-admin-login" onclick="mostrarLoginAdmin()">admin</button>
+  </div>
+  <div class="login-center">
+    <div class="login-card">
+      <p class="login-logo">Casa Amatista</p>
+      <h2>Bienvenida/o</h2>
+      <p class="login-sub">Ingresa tu usuario para acceder</p>
+      <div class="lfield">
+        <label for="l-user">Usuario</label>
+        <input type="text" id="l-user" placeholder="garcia.lopez" autocomplete="username"
+          onkeydown="if(event.key==='Enter') doLogin()">
+      </div>
+      <p class="login-error" id="l-error"></p>
+      <button class="btn-login" id="btn-login" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- VISTA USUARIO -->
+<div id="vista-usuario" style="display:none;">
+  <header>
+    <p class="eyebrow">Casa Amatista</p>
+    <h1>Reserva tu <em>horario</em></h1>
+    <button class="admin-trigger" onclick="mostrarLoginAdmin()">admin</button>
+  </header>
+  <div class="session-bar">
+    <span>Sesión: <strong id="session-nombre">—</strong></span>
+    <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+  </div>
+  <div class="form-bar">
+    <div class="field"><label for="fecha">Fecha</label><input type="date" id="fecha"></div>
+    <button class="btn-primary" onclick="cargarDisponibilidad()">Ver disponibilidad</button>
+  </div>
+  <main>
+    <div id="contenido">
+      <div class="idle-state">
+        <div class="idle-icon">🗓</div>
+        <p>Selecciona una fecha para ver los horarios disponibles.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <header style="margin-bottom:0;">
+    <p class="eyebrow">Casa Amatista</p>
+    <h1><em>Administración</em></h1>
+  </header>
+  <div class="admin-inner">
+    <div class="admin-topbar">
+      <h2>Panel de administración</h2>
+      <button class="btn-ghost" onclick="salirAdmin()">← Volver a la agenda</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="atab active" onclick="switchAdminTab('agenda')">📅 Agenda</button>
+      <button class="atab" onclick="switchAdminTab('psicologos')">👥 Psicólogos</button>
+      <button class="atab" onclick="switchAdminTab('sary')">💜 Pacientes Sary</button>
+    </div>
+
+    <!-- TAB AGENDA -->
+    <div class="tab-content active" id="tab-agenda">
+      <div class="admin-filters">
+        <div class="field"><label for="a-ini">Desde</label><input type="date" id="a-ini"></div>
+        <div class="field"><label for="a-fin">Hasta</label><input type="date" id="a-fin"></div>
+        <button class="btn-primary" onclick="cargarAdmin()">Consultar período</button>
+      </div>
+
+      <!-- Totales separados -->
+      <div class="totales-grid" id="totales-grid" style="display:none;">
+        <div class="total-box rentas">
+          <div class="total-box-label">💰 Total rentas</div>
+          <div class="total-box-value" id="total-rentas">$0</div>
+          <div class="total-box-sub" id="total-rentas-sub">— citas</div>
+        </div>
+        <div class="total-box terapias">
+          <div class="total-box-label">💜 Total terapias Sary</div>
+          <div class="total-box-value" id="total-terapias">$0</div>
+          <div class="total-box-sub" id="total-terapias-sub">— sesiones</div>
+        </div>
+      </div>
+
+      <!-- Stats rentas -->
+      <div class="stats-row" id="admin-stats" style="display:none;">
+        <div class="stat-card"><div class="stat-label">Asistieron</div><div class="stat-value sv-green" id="st-asistio">—</div></div>
+        <div class="stat-card"><div class="stat-label">Cancelaron</div><div class="stat-value sv-red" id="st-cancelo">—</div></div>
+        <div class="stat-card"><div class="stat-label">Descuento</div><div class="stat-value sv-amber" id="st-desc">—</div></div>
+        <div class="stat-card"><div class="stat-label">Sesiones Sary</div><div class="stat-value sv-plum" id="st-sary">—</div></div>
+      </div>
+
+      <div id="psy-section" style="display:none;">
+        <p class="section-title">Resumen por psicólogo (rentas)</p>
+        <div class="table-wrap">
+          <table><thead><tr><th>Psicólogo/a</th><th>Asistió</th><th>Canceló</th><th>Descuento</th><th style="text-align:right;">Total</th></tr></thead>
+          <tbody id="psy-tbody"></tbody></table>
+        </div>
+      </div>
+
+      <div id="cal-section" style="display:none;">
+        <p class="section-title">Calendario — haz clic en un nombre para registrar estado</p>
+        <div class="cal-legend">
+          <div class="cl-item"><div class="cl-dot" style="background:#3B82F6;"></div>Sin marcar</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--red);opacity:.6;"></div>Canceló</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--amber);"></div>Descuento</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--plum);"></div>Sary</div>
+        </div>
+        <div class="cal-nav">
+          <button class="btn-nav" onclick="navSemana(-1)">&#8592; Semana anterior</button>
+          <h3 id="cal-titulo">—</h3>
+          <button class="btn-nav" onclick="navSemana(1)">Semana siguiente &#8594;</button>
+        </div>
+        <div class="cal-wrapper"><div class="cal-grid" id="cal-grid"></div></div>
+      </div>
+
+      <div class="admin-empty" id="admin-empty" style="display:none;">No se encontraron citas en el periodo seleccionado.</div>
+      <div class="loading-msg" id="admin-loading" style="display:none;">Cargando citas…</div>
+    </div>
+
+    <!-- TAB PSICÓLOGOS -->
+    <div class="tab-content" id="tab-psicologos">
+      <div class="init-box" id="init-box">✓ Base de datos inicializada con los psicólogos registrados.</div>
+      <p class="section-title">Registrar nuevo psicólogo</p>
+      <div class="add-form">
+        <div class="field"><label for="psy-nombre">Nombre</label><input type="text" id="psy-nombre" placeholder="María"></div>
+        <div class="field"><label for="psy-apellido">Apellido</label><input type="text" id="psy-apellido" placeholder="García"></div>
+        <button class="btn-primary" onclick="registrarPsicologo()">Registrar</button>
+      </div>
+      <p class="section-title">Psicólogos activos</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="psy-list-tbody"></tbody>
+        </table>
+      </div>
+      <div class="loading-msg" id="psy-loading" style="display:none;">Cargando…</div>
+    </div>
+
+    <!-- TAB PACIENTES SARY -->
+    <div class="tab-content" id="tab-sary">
+
+      <!-- Agenda de citas -->
+      <p class="section-title">Agendar cita de paciente (aparece como "Sary" públicamente)</p>
+      <div class="sary-form">
+        <div class="field">
+          <label for="s-room">Consultorio</label>
+          <select id="s-room">
+            <option value="consultorio-1">Consultorio 1</option>
+            <option value="consultorio-2">Consultorio 2</option>
+            <option value="consultorio-3">Consultorio 3</option>
+            <option value="taller">Taller</option>
+          </select>
+        </div>
+        <div class="field"><label for="s-fecha">Fecha</label><input type="date" id="s-fecha"></div>
+        <div class="field"><label for="s-ini">Hora inicio</label><select id="s-ini"></select></div>
+        <div class="field"><label for="s-fin-hora">Hora fin</label><select id="s-fin-hora"></select></div>
+        <div class="field">
+          <label for="s-paciente-sel">Paciente</label>
+          <select id="s-paciente-sel" onchange="autoFillFee()">
+            <option value="">— Selecciona —</option>
+          </select>
+        </div>
+        <div class="field"><label for="s-fee">Monto cobrado ($)</label><input type="number" id="s-fee" min="0" placeholder="550"></div>
+        <button class="btn-primary" onclick="agendarSary()">Agendar</button>
+      </div>
+
+      <!-- Ver citas agendadas -->
+      <div class="admin-filters" style="margin-bottom:1rem;">
+        <div class="field"><label for="s-ver-ini">Desde</label><input type="date" id="s-ver-ini"></div>
+        <div class="field"><label for="s-ver-fin">Hasta</label><input type="date" id="s-ver-fin"></div>
+        <button class="btn-primary" onclick="cargarAgendaSary()">Ver citas</button>
+      </div>
+      <div class="sary-bookings" id="sary-list" style="margin-bottom:2rem;"></div>
+      <div class="loading-msg" id="sary-loading" style="display:none;">Cargando citas…</div>
+
+      <hr style="border:none;border-top:1px solid var(--cream-dark);margin-bottom:1.5rem;">
+
+      <!-- Registro de pacientes -->
+      <p class="section-title">Directorio de pacientes</p>
+      <div class="add-form">
+        <div class="field"><label for="pac-nombre">Nombre del paciente</label><input type="text" id="pac-nombre" placeholder="Nombre completo"></div>
+        <div class="field"><label for="pac-fee">Tarifa por sesión ($)</label><input type="number" id="pac-fee" min="0" placeholder="550"></div>
+        <button class="btn-primary" onclick="registrarPaciente()">Agregar</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Paciente</th><th>Tarifa/sesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="pac-tbody"></tbody>
+        </table>
+      </div>
+      <div class="loading-msg" id="pac-loading" style="display:none;">Cargando…</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL reserva usuario -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <h3>Confirmar reserva</h3>
+    <p class="modal-sub">Revisa los datos antes de confirmar.</p>
+    <div class="modal-detail" id="mdetail"></div>
+    <div class="ffield"><label for="hora-fin">Hora de término</label><select id="hora-fin"></select></div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarModal()">Cancelar</button>
+      <button class="btnok" id="btnok" onclick="confirmar()">Confirmar reserva</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL login admin -->
+<div class="overlay" id="modal-admin">
+  <div class="modal modal-sm">
+    <h3>Acceso administrador</h3>
+    <p class="modal-sub" style="margin-bottom:1rem;">Contraseña de administración</p>
+    <input type="password" id="admin-pw" placeholder="Contraseña"
+      onkeydown="if(event.key==='Enter') verificarAdmin()">
+    <p class="modal-error" id="admin-error">Contraseña incorrecta.</p>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarLoginAdmin()">Cancelar</button>
+      <button class="btnok" onclick="verificarAdmin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL estado de cita -->
+<div class="overlay" id="modal-estado">
+  <div class="modal" style="max-width:360px;">
+    <h3>Registrar estado</h3>
+    <p class="modal-sub" id="estado-sub"></p>
+    <div class="modal-detail" id="estado-detail"></div>
+    <div class="status-options">
+      <div class="status-opt opt-asistio selected" id="opt-asistio" onclick="selStatus('asistio')">
+        <div class="opt-icon">✓</div>
+        <div><div class="opt-title">Asistió</div><div class="opt-desc">Tarifa completa ($55)</div></div>
+      </div>
+      <div class="status-opt opt-cancelo" id="opt-cancelo" onclick="selStatus('cancelo')">
+        <div class="opt-icon">✕</div>
+        <div><div class="opt-title">Canceló</div><div class="opt-desc">Slot libre ($30)</div></div>
+      </div>
+      <div class="status-opt opt-descuento" id="opt-descuento" onclick="selStatus('descuento')">
+        <div class="opt-icon">%</div>
+        <div>
+          <div class="opt-title">Descuento</div><div class="opt-desc">Monto especial</div>
+          <div class="desc-amount-wrap" id="desc-amount-wrap">
+            <label>Monto ($)</label>
+            <input type="number" id="desc-amount" value="30" min="0" max="55">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarEstadoModal()">Cancelar</button>
+      <button class="btnok" id="btn-estado-ok" onclick="guardarEstado()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  CONFIGURACIÓN
+// ══════════════════════════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxq9hH2XpxLiWmqb4RovAQCNqytdjNCpnBS0_fCtVSxCeXz9diDomWcPd0M6BhRgM9W/exec';
+
+const CALENDARIOS = {
+  'consultorio-1':'f6b359cdadfa144d836290602caf1b796c8999515bf216a4c819c345cda71d6f@group.calendar.google.com',
+  'consultorio-2':'e6ec7606cf0cb7e3340401ed80eb55aea734fc516bbd2ee9983513d7f01dbaa7@group.calendar.google.com',
+  'consultorio-3':'d925e13197852e408a82591d060a7c03598e16bf2e77200b2aa7bcd46d09414c@group.calendar.google.com',
+  'taller':'ca7c63526ea07f923b30a30bafc3d5149091d37c85546f16c1783b682382d952@group.calendar.google.com',
+};
+const NOMBRES={'consultorio-1':'Consultorio 1','consultorio-2':'Consultorio 2','consultorio-3':'Consultorio 3','taller':'Taller'};
+const ADMIN_PASSWORD='amatista2024';
+const TARIFA_ASISTIO=55, TARIFA_CANCELO=30;
+const H_INI=8, H_FIN=21;
+const SESSION_KEY='amatista_session';
+// ══════════════════════════════════════════════════════════════
+
+const COLORES=['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#84CC16','#F97316','#6366F1','#14B8A6','#BE185D'];
+const COLOR_SARY='#7A6F8F';
+
+function normNombre(n){if(!n)return'';return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();}
+function primerNombre(n){return normNombre(n).split(' ')[0]||normNombre(n);}
+function colorPsy(n){if(primerNombre(n)==='SARY')return COLOR_SARY;const k=normNombre(n);let h=5381;for(let i=0;i<k.length;i++)h=((h<<5)+h)+k.charCodeAt(i);return COLORES[Math.abs(h)%COLORES.length];}
+
+const SLOTS=[];for(let h=H_INI;h<H_FIN;h++){SLOTS.push(h);SLOTS.push(h+0.5);}
+const IDS=Object.keys(CALENDARIOS);
+const DIAS_ES=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MESES_ES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function slotKey(v){const h=Math.floor(v);const m=v%1===0.5?'30':'00';return`${String(h).padStart(2,'0')}:${m}`;}
+function fmtHora(v){const h=Math.floor(v);const m=v%1===0.5?':30':':00';if(h===12)return`12${m}pm`;if(h>12)return`${h-12}${m}pm`;return`${h}${m}am`;}
+function toISO(v){const h=Math.floor(v);const m=v%1===0.5?'30':'00';return`${String(h).padStart(2,'0')}:${m}:00`;}
+function fmtFecha(f){const[y,m,d]=f.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+function fmtCorta(f){const[y,m,d]=f.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});}
+function dateStr(d){return d.toISOString().slice(0,10);}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function horaLeg(iso){return iso.slice(11,16);}
+function startOfWeek(d){const r=new Date(d);r.setDate(r.getDate()-(r.getDay()||7)+1);return r;}
+
+function fetchJSONP(url){
+  return new Promise((resolve,reject)=>{
+    const cb='cb_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    const t=setTimeout(()=>{cleanup();reject(new Error('Timeout'));},15000);
+    function cleanup(){delete window[cb];if(s.parentNode)document.head.removeChild(s);clearTimeout(t);}
+    window[cb]=data=>{cleanup();resolve(data);};
+    s.onerror=()=>{cleanup();reject(new Error('Script error'));};
+    s.src=url+'&callback='+cb;
+    document.head.appendChild(s);
+  });
+}
+
+// SESIÓN
+function getSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY));}catch{return null;}}
+function saveSession(d){localStorage.setItem(SESSION_KEY,JSON.stringify(d));}
+function clearSession(){localStorage.removeItem(SESSION_KEY);}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const hoy=new Date().toISOString().slice(0,10);
+  document.getElementById('fecha').value=hoy;
+  poblarHorasSary();
+  const lun=startOfWeek(new Date());
+  document.getElementById('a-ini').value=dateStr(lun);
+  document.getElementById('a-fin').value=dateStr(addDays(lun,6));
+  document.getElementById('s-fecha').value=hoy;
+  document.getElementById('s-ver-ini').value=hoy;
+  document.getElementById('s-ver-fin').value=dateStr(addDays(new Date(),30));
+  const session=getSession();
+  if(session&&session.nombreCompleto) mostrarVistaUsuario(session.nombreCompleto);
+});
+
+// ══════════════════════════════════════════════════════════════
+//  LOGIN / LOGOUT
+// ══════════════════════════════════════════════════════════════
+async function doLogin(){
+  const username=document.getElementById('l-user').value.trim();
+  const err=document.getElementById('l-error');
+  const btn=document.getElementById('btn-login');
+  if(!username){err.textContent='Ingresa tu usuario';return;}
+  btn.disabled=true;btn.textContent='Verificando…';err.textContent='';
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=login&username=${encodeURIComponent(username)}`);
+    if(data.ok){saveSession({username:data.username,nombreCompleto:data.nombreCompleto,id:data.id});mostrarVistaUsuario(data.nombreCompleto);}
+    else err.textContent='Usuario no registrado. Contacta a la administración.';
+  }catch(e){err.textContent='Error de conexión. Intenta de nuevo.';}
+  finally{btn.disabled=false;btn.textContent='Entrar';}
+}
+
+function mostrarVistaUsuario(nombreCompleto){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('vista-usuario').style.display='block';
+  document.getElementById('session-nombre').textContent=primerNombre(nombreCompleto);
+  document.getElementById('fecha').value=document.getElementById('fecha').value||new Date().toISOString().slice(0,10);
+}
+function doLogout(){
+  clearSession();
+  document.getElementById('vista-usuario').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('l-user').value='';
+  document.getElementById('l-error').textContent='';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  VISTA USUARIO
+// ══════════════════════════════════════════════════════════════
+let dispon={},reserva={};
+
+async function cargarDisponibilidad(){
+  const session=getSession();if(!session){doLogout();return;}
+  const fecha=document.getElementById('fecha').value;
+  if(!fecha){showToast('Selecciona una fecha','error');return;}
+  renderGrid(null,fecha);
+  const res={};
+  try{
+    await Promise.all(IDS.map(async id=>{
+      const url=`${SCRIPT_URL}?accion=consultarDisponibilidadHoras&fecha=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
+      res[id]=await fetchJSONP(url);
+    }));
+    dispon=res;
+  }catch(err){
+    document.getElementById('contenido').innerHTML=`<div class="idle-state"><div class="idle-icon" style="opacity:1">⚠️</div><p>No se pudo conectar.<br>${err.message}</p></div>`;
+    return;
+  }
+  renderGrid(dispon,fecha);
+}
+
+function renderGrid(data,fecha){
+  const el=document.getElementById('contenido');
+  if(!data){
+    el.innerHTML=`<div class="date-banner"><h2>Cargando…</h2></div>
+      <div class="grid-wrapper"><div class="time-grid">
+        <div class="gh"></div>${IDS.map(id=>`<div class="gh">${NOMBRES[id]}</div>`).join('')}
+        ${SLOTS.map(()=>`<div class="tl"></div>${IDS.map(()=>`<div class="slot loading"></div>`).join('')}`).join('')}
+      </div></div>`;
+    return;
+  }
+  const rows=SLOTS.map(v=>{
+    const key=slotKey(v);const cls=v%1===0?'hora-entera':'media-hora';
+    const cols=IDS.map(id=>{
+      const raw=data[id]?.[key];const estado=typeof raw==='object'?raw.estado:raw;const psyNom=typeof raw==='object'?raw.nombre:null;
+      if(estado==='ocupada'){
+        const col=colorPsy(psyNom||'');
+        // En vista usuario: solo primer nombre (Sary muestra "Sary")
+        return`<div class="slot occupied ${cls}"><div class="chip" style="background:${col};">${primerNombre(psyNom)||'Ocupado'}</div></div>`;
+      }
+      return`<div class="slot available ${cls}" onclick="abrirModal('${id}',${v},'${fecha}')"></div>`;
+    }).join('');
+    return`<div class="tl ${cls}">${fmtHora(v)}</div>${cols}`;
+  }).join('');
+  el.innerHTML=`
+    <div class="date-banner"><h2>${fmtFecha(fecha)}</h2>
+      <div class="legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--white);border:1.5px solid var(--sage);"></div>Disponible</div>
+        <div class="leg"><div class="leg-dot" style="background:#3B82F6;"></div>Ocupado</div>
+      </div>
+    </div>
+    <div class="grid-wrapper"><div class="time-grid">
+      <div class="gh"></div>${IDS.map(id=>`<div class="gh">${NOMBRES[id]}</div>`).join('')}
+      ${rows}
+    </div></div>`;
+}
+
+function abrirModal(id,hIni,fecha){
+  const session=getSession();if(!session){doLogout();return;}
+  reserva={id,hIni:parseFloat(hIni),fecha,nombre:session.nombreCompleto};
+  const sel=document.getElementById('hora-fin');
+  sel.innerHTML='';
+  for(let v=parseFloat(hIni)+0.5;v<=H_FIN;v+=0.5){const o=document.createElement('option');o.value=v;o.textContent=fmtHora(v);sel.appendChild(o);}
+  sel.value=parseFloat(hIni)+1;
+  document.getElementById('mdetail').innerHTML=`<strong>Espacio:</strong> ${NOMBRES[id]}<br><strong>Fecha:</strong> ${fmtFecha(fecha)}<br><strong>Inicio:</strong> ${fmtHora(parseFloat(hIni))}<br><strong>Psicólogo/a:</strong> ${primerNombre(session.nombreCompleto)}`;
+  document.getElementById('modal').classList.add('open');
+}
+function cerrarModal(){document.getElementById('modal').classList.remove('open');}
+
+async function confirmar(){
+  const btn=document.getElementById('btnok');
+  const hFin=parseFloat(document.getElementById('hora-fin').value);
+  const{id,hIni,fecha,nombre}=reserva;
+  btn.disabled=true;btn.textContent='Registrando…';
+  const fISO=v=>`${fecha}T${toISO(v)}`;
+  const url=`${SCRIPT_URL}?accion=crearEvento&titulo=${encodeURIComponent(nombre)}&inicio=${encodeURIComponent(fISO(hIni))}&fin=${encodeURIComponent(fISO(hFin))}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
+  try{
+    await fetchJSONP(url);
+    cerrarModal();
+    showToast(`¡Reservado! ${NOMBRES[id]} · ${fmtHora(hIni)}–${fmtHora(hFin)}`,'success');
+    cargarDisponibilidad();
+  }catch(e){showToast('Error al conectar','error');}
+  finally{btn.disabled=false;btn.textContent='Confirmar reserva';}
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — ACCESO
+// ══════════════════════════════════════════════════════════════
+function mostrarLoginAdmin(){
+  document.getElementById('admin-pw').value='';
+  document.getElementById('admin-error').style.display='none';
+  document.getElementById('modal-admin').classList.add('open');
+  setTimeout(()=>document.getElementById('admin-pw').focus(),200);
+}
+function cerrarLoginAdmin(){document.getElementById('modal-admin').classList.remove('open');}
+
+async function verificarAdmin(){
+  if(document.getElementById('admin-pw').value!==ADMIN_PASSWORD){
+    document.getElementById('admin-error').style.display='block';return;
+  }
+  cerrarLoginAdmin();
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('vista-usuario').style.display='none';
+  document.getElementById('admin-panel').style.display='block';
+  // Inicializar psicólogos si la DB está vacía
+  try{
+    const r=await fetchJSONP(`${SCRIPT_URL}?accion=inicializar`);
+    if(r.ok && r.total>0 && r.mensaje==='Psicólogos cargados'){
+      document.getElementById('init-box').classList.add('show');
+      setTimeout(()=>document.getElementById('init-box').classList.remove('show'),4000);
+    }
+  }catch(_){}
+  cargarListaPsicologos();
+  cargarPacientesRegistry();
+}
+
+function salirAdmin(){
+  document.getElementById('admin-panel').style.display='none';
+  const session=getSession();
+  if(session) mostrarVistaUsuario(session.nombreCompleto);
+  else{document.getElementById('login-screen').style.display='flex';}
+}
+function switchAdminTab(tab){
+  const tabs=['agenda','psicologos','sary'];
+  document.querySelectorAll('.atab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
+  tabs.forEach(t=>document.getElementById(`tab-${t}`).classList.toggle('active',t===tab));
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — AGENDA
+// ══════════════════════════════════════════════════════════════
+let todosLosEventos=[],estadosMap={},semanaOffset=0,fechaIniAdmin='',fechaFinAdmin='';
+
+async function cargarAdmin(){
+  fechaIniAdmin=document.getElementById('a-ini').value;
+  fechaFinAdmin=document.getElementById('a-fin').value;
+  if(!fechaIniAdmin||!fechaFinAdmin){showToast('Selecciona rango de fechas','error');return;}
+  ['admin-stats','psy-section','cal-section','admin-empty','totales-grid'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('admin-loading').style.display='block';
+
+  try{
+    const [activos,estadosRaw,canceladosRaw]=await Promise.all([
+      Promise.all(IDS.map(async id=>{
+        const url=`${SCRIPT_URL}?accion=listarEventos&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}&roomId=${id}`;
+        const data=await fetchJSONP(url).catch(()=>[]);
+        return Array.isArray(data)?data.map(ev=>({...ev,roomId:id,roomNombre:NOMBRES[id],calId:CALENDARIOS[id]})):[];
+      })).then(a=>a.flat()),
+      fetchJSONP(`${SCRIPT_URL}?accion=listarEstados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}`).catch(()=>[]),
+      fetchJSONP(`${SCRIPT_URL}?accion=listarCancelados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&roomId=todos`).catch(()=>[]),
+    ]);
+
+    estadosMap={};
+    if(Array.isArray(estadosRaw)) estadosRaw.forEach(e=>{estadosMap[e.eventoId]={estado:e.estado,monto:e.monto};});
+
+    const activosConEstado=activos.map(ev=>({
+      ...ev,
+      estado:estadosMap[ev.id]?.estado||'asistio',
+      monto: estadosMap[ev.id]?.monto ||TARIFA_ASISTIO,
+    }));
+    const cancelados=Array.isArray(canceladosRaw)?canceladosRaw.map(ev=>({...ev,estado:'cancelo',monto:TARIFA_CANCELO})):[];
+    todosLosEventos=[...activosConEstado,...cancelados].sort((a,b)=>a.inicio.localeCompare(b.inicio));
+  }catch(err){showToast('Error: '+err.message,'error');document.getElementById('admin-loading').style.display='none';return;}
+
+  document.getElementById('admin-loading').style.display='none';
+  if(todosLosEventos.length===0){document.getElementById('admin-empty').style.display='block';return;}
+  semanaOffset=0;
+  renderTotales();renderStats();renderPsyTable();renderCalAdmin();
+}
+
+function esSary(ev){return normNombre(ev.nombreBase)==='SARY';}
+
+function renderTotales(){
+  // Rentas: eventos de psicólogos (no Sary)
+  const rentas=todosLosEventos.filter(ev=>!esSary(ev));
+  const totalRentas=rentas.reduce((s,ev)=>{
+    if(ev.estado==='asistio')  return s+(ev.monto||TARIFA_ASISTIO);
+    if(ev.estado==='cancelo')  return s+TARIFA_CANCELO;
+    if(ev.estado==='descuento')return s+(ev.monto||0);
+    return s;
+  },0);
+  // Terapias: eventos de Sary con su fee
+  const terapias=todosLosEventos.filter(ev=>esSary(ev));
+  const totalTerapias=terapias.reduce((s,ev)=>s+(ev.fee||0),0);
+  document.getElementById('total-rentas').textContent=`$${totalRentas.toLocaleString('es-MX')}`;
+  document.getElementById('total-rentas-sub').textContent=`${rentas.length} citas de psicólogos`;
+  document.getElementById('total-terapias').textContent=`$${totalTerapias.toLocaleString('es-MX')}`;
+  document.getElementById('total-terapias-sub').textContent=`${terapias.length} sesiones de Sary`;
+  document.getElementById('totales-grid').style.display='grid';
+}
+
+function renderStats(){
+  const noSary=todosLosEventos.filter(ev=>!esSary(ev));
+  document.getElementById('st-asistio').textContent=noSary.filter(e=>e.estado==='asistio').length;
+  document.getElementById('st-cancelo').textContent=noSary.filter(e=>e.estado==='cancelo').length;
+  document.getElementById('st-desc').textContent=noSary.filter(e=>e.estado==='descuento').length;
+  document.getElementById('st-sary').textContent=todosLosEventos.filter(ev=>esSary(ev)).length;
+  document.getElementById('admin-stats').style.display='grid';
+}
+
+function renderPsyTable(){
+  const psyMap={};
+  todosLosEventos.filter(ev=>!esSary(ev)).forEach(ev=>{
+    const n=primerNombre(ev.nombreBase);
+    if(!psyMap[n])psyMap[n]={ag:0,can:0,desc:0,monto:0,base:ev.nombreBase};
+    const p=psyMap[n];
+    if(ev.estado==='asistio')  {p.ag++;  p.monto+=ev.monto||TARIFA_ASISTIO;}
+    if(ev.estado==='cancelo')  {p.can++; p.monto+=TARIFA_CANCELO;}
+    if(ev.estado==='descuento'){p.desc++;p.monto+=ev.monto||0;}
+  });
+  document.getElementById('psy-tbody').innerHTML=Object.entries(psyMap).map(([nombre,d])=>{
+    const col=colorPsy(d.base);
+    return`<tr><td><div class="psy-name-cell"><div class="psy-dot" style="background:${col};"></div>${nombre}</div></td>
+      <td><span class="badge b-green">${d.ag}</span></td><td><span class="badge b-red">${d.can}</span></td>
+      <td><span class="badge b-amber">${d.desc}</span></td><td class="monto-cell">$${d.monto.toLocaleString('es-MX')}</td></tr>`;
+  }).join('');
+  document.getElementById('psy-section').style.display='block';
+}
+
+function navSemana(delta){semanaOffset+=delta;renderCalAdmin();}
+function renderCalAdmin(){
+  const base=new Date(fechaIniAdmin+'T00:00:00');
+  const lunes=startOfWeek(base);
+  const lunesSemana=addDays(lunes,semanaOffset*7);
+  const dias=Array.from({length:7},(_,i)=>addDays(lunesSemana,i));
+  document.getElementById('cal-titulo').textContent=`${dias[0].getDate()} ${MESES_ES[dias[0].getMonth()]} – ${dias[6].getDate()} ${MESES_ES[dias[6].getMonth()]} ${dias[6].getFullYear()}`;
+  const grid=document.getElementById('cal-grid');
+  const headers=`<div class="cgh"></div>`+dias.map(d=>{
+    const esHoy=dateStr(d)===new Date().toISOString().slice(0,10);
+    return`<div class="cgh"${esHoy?' style="background:var(--plum);"':''}>${DIAS_ES[d.getDay()]}<small>${d.getDate()}/${d.getMonth()+1}</small></div>`;
+  }).join('');
+  const rows=SLOTS.map(v=>{
+    const cls=v%1===0?'he':'mh';
+    const cols=dias.map(d=>{
+      const fecha=dateStr(d);
+      const evs=todosLosEventos.filter(ev=>{
+        const evF=ev.inicio.slice(0,10);
+        const evI=parseFloat(ev.inicio.slice(11,13))+(ev.inicio.slice(14,16)==='30'?0.5:0);
+        const evF2=parseFloat(ev.fin.slice(11,13))+(ev.fin.slice(14,16)==='30'?0.5:0);
+        return evF===fecha&&v>=evI&&v<evF2;
+      });
+      if(!evs.length)return`<div class="cslot ${cls} empty"></div>`;
+      const chips=evs.map(ev=>{
+        const esSaryEv=esSary(ev);
+        // En admin: Sary muestra nombre del paciente; psicólogos muestran primer nombre
+        const displayNombre=esSaryEv?primerNombre(ev.paciente||'—'):primerNombre(ev.nombreBase);
+        let bg=esSaryEv?COLOR_SARY:colorPsy(ev.nombreBase),badge='',statusCls='';
+        if(ev.estado==='cancelo')  {bg='#c07070';badge='✕';statusCls='cancelo';}
+        if(ev.estado==='descuento'){bg='#c09030';badge='%';}
+        const clickable=ev.estado!=='cancelo'&&!esSaryEv;
+        const onclick=clickable?`onclick="abrirEstadoModal('${ev.id}')"`:'' ;
+        return`<div class="ac ${statusCls}" style="background:${bg};" data-badge="${badge}" ${onclick} title="${ev.roomNombre} · ${horaLeg(ev.inicio)}-${horaLeg(ev.fin)}${esSaryEv?' · Sary':''}">
+          <span class="ac-name">${displayNombre}</span>
+          <span class="ac-room">${ev.roomNombre.replace('Consultorio','C')}${esSaryEv?' 💜':''}</span>
+        </div>`;
+      }).join('');
+      return`<div class="cslot ${cls} has-event">${chips}</div>`;
+    }).join('');
+    return`<div class="ctl ${cls}">${fmtHora(v)}</div>${cols}`;
+  }).join('');
+  grid.innerHTML=headers+rows;
+  document.getElementById('cal-section').style.display='block';
+}
+
+// Estado de cita
+let eventoActual=null,estadoSel='asistio';
+function abrirEstadoModal(eventoId){
+  eventoActual=todosLosEventos.find(e=>e.id===eventoId);
+  if(!eventoActual||esSary(eventoActual))return;
+  estadoSel=eventoActual.estado||'asistio';
+  document.getElementById('estado-sub').textContent=primerNombre(eventoActual.nombreBase);
+  document.getElementById('estado-detail').innerHTML=`<strong>Espacio:</strong> ${eventoActual.roomNombre}<br><strong>Fecha:</strong> ${eventoActual.inicio.slice(0,10)}<br><strong>Horario:</strong> ${horaLeg(eventoActual.inicio)} – ${horaLeg(eventoActual.fin)}`;
+  selStatus(estadoSel,false);
+  document.getElementById('desc-amount').value=eventoActual.monto||30;
+  document.getElementById('modal-estado').classList.add('open');
+}
+function selStatus(estado,focus=true){
+  estadoSel=estado;
+  ['asistio','cancelo','descuento'].forEach(s=>document.getElementById(`opt-${s}`).classList.toggle('selected',s===estado));
+  document.getElementById('desc-amount-wrap').classList.toggle('visible',estado==='descuento');
+  if(focus&&estado==='descuento')setTimeout(()=>document.getElementById('desc-amount').focus(),50);
+}
+function cerrarEstadoModal(){document.getElementById('modal-estado').classList.remove('open');}
+
+async function guardarEstado(){
+  if(!eventoActual)return;
+  const btn=document.getElementById('btn-estado-ok');
+  btn.disabled=true;btn.textContent='Guardando…';
+  const monto=estadoSel==='descuento'?parseFloat(document.getElementById('desc-amount').value)||0:(estadoSel==='asistio'?TARIFA_ASISTIO:TARIFA_CANCELO);
+  try{
+    if(estadoSel==='cancelo'){
+      await fetchJSONP(`${SCRIPT_URL}?accion=cancelarEvento&eventoId=${encodeURIComponent(eventoActual.id)}&calendarioId=${encodeURIComponent(eventoActual.calId)}&roomId=${encodeURIComponent(eventoActual.roomId)}&roomNombre=${encodeURIComponent(eventoActual.roomNombre)}&nombreBase=${encodeURIComponent(eventoActual.nombreBase)}&inicio=${encodeURIComponent(eventoActual.inicio)}&fin=${encodeURIComponent(eventoActual.fin)}`);
+      const idx=todosLosEventos.findIndex(e=>e.id===eventoActual.id);
+      if(idx>=0)todosLosEventos[idx]={...todosLosEventos[idx],estado:'cancelo',monto:TARIFA_CANCELO};
+    }else{
+      await fetchJSONP(`${SCRIPT_URL}?accion=guardarEstado&eventoId=${encodeURIComponent(eventoActual.id)}&estado=${encodeURIComponent(estadoSel)}&monto=${monto}&calendarioId=${encodeURIComponent(eventoActual.calId)}&fechaIni=${encodeURIComponent(eventoActual.inicio)}&fechaFin=${encodeURIComponent(eventoActual.fin)}&nombreBase=${encodeURIComponent(eventoActual.nombreBase)}`);
+      const idx=todosLosEventos.findIndex(e=>e.id===eventoActual.id);
+      if(idx>=0)todosLosEventos[idx]={...todosLosEventos[idx],estado:estadoSel,monto};
+      estadosMap[eventoActual.id]={estado:estadoSel,monto};
+    }
+    cerrarEstadoModal();
+    renderTotales();renderStats();renderPsyTable();renderCalAdmin();
+    showToast(`${primerNombre(eventoActual.nombreBase)}: guardado`,'success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='Guardar';}
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — PSICÓLOGOS
+// ══════════════════════════════════════════════════════════════
+async function registrarPsicologo(){
+  const nombre=document.getElementById('psy-nombre').value.trim();
+  const apellido=document.getElementById('psy-apellido').value.trim();
+  if(!nombre||!apellido){showToast('Ingresa nombre y apellido','error');return;}
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=registrarPsicologo&nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}`);
+    if(data.ok){
+      showToast(`${nombre} ${apellido} registrado · usuario: ${data.username}`,'success');
+      document.getElementById('psy-nombre').value='';document.getElementById('psy-apellido').value='';
+      cargarListaPsicologos();
+    }else showToast(data.error||'Error','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+async function cargarListaPsicologos(){
+  document.getElementById('psy-loading').style.display='block';
+  document.getElementById('psy-list-tbody').innerHTML='';
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=listarPsicologos`);
+    document.getElementById('psy-loading').style.display='none';
+    if(!Array.isArray(data)||!data.length){
+      document.getElementById('psy-list-tbody').innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin psicólogos registrados.</td></tr>';
+      return;
+    }
+    document.getElementById('psy-list-tbody').innerHTML=data.map(p=>{
+      const col=colorPsy(`${p.nombre} ${p.apellido}`);
+      return`<tr>
+        <td><div class="psy-name-cell"><div class="psy-dot" style="background:${col};"></div>${primerNombre(p.nombre+' '+p.apellido)} ${normNombre(p.apellido)}</div></td>
+        <td><span class="badge b-plum">${p.username}</span></td>
+        <td style="text-align:right;"><button class="btn-danger" onclick="eliminarPsicologo('${p.id}','${p.nombre} ${p.apellido}')">Eliminar</button></td>
+      </tr>`;
+    }).join('');
+  }catch(e){document.getElementById('psy-loading').style.display='none';showToast('Error al cargar','error');}
+}
+
+async function eliminarPsicologo(id,nombre){
+  if(!confirm(`¿Eliminar a ${nombre}? Ya no podrá iniciar sesión.`))return;
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=eliminarPsicologo&id=${encodeURIComponent(id)}`);
+    if(data.ok){showToast(`${nombre} eliminado`,'success');cargarListaPsicologos();}
+    else showToast('Error al eliminar','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — PACIENTES SARY
+// ══════════════════════════════════════════════════════════════
+let pacientesRegistry=[];
+
+async function cargarPacientesRegistry(){
+  document.getElementById('pac-loading').style.display='block';
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=listarPacientesRegistry`);
+    pacientesRegistry=Array.isArray(data)?data:[];
+    renderPacientesTable();
+    poblarSelectPacientes();
+  }catch(e){showToast('Error: '+e.message,'error');}
+  finally{document.getElementById('pac-loading').style.display='none';}
+}
+
+function renderPacientesTable(){
+  const tbody=document.getElementById('pac-tbody');
+  if(!pacientesRegistry.length){
+    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin pacientes registrados aún.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=pacientesRegistry.map(p=>`<tr>
+    <td>${p.nombre}</td>
+    <td><span class="badge b-plum">$${(p.fee||0).toLocaleString('es-MX')}</span></td>
+    <td style="text-align:right;"><button class="btn-danger" onclick="eliminarPaciente('${p.id}','${p.nombre}')">Eliminar</button></td>
+  </tr>`).join('');
+}
+
+function poblarSelectPacientes(){
+  const sel=document.getElementById('s-paciente-sel');
+  const val=sel.value;
+  sel.innerHTML='<option value="">— Selecciona paciente —</option>';
+  pacientesRegistry.forEach(p=>{
+    const o=document.createElement('option');o.value=p.id;o.textContent=p.nombre;o.dataset.fee=p.fee||0;sel.appendChild(o);
+  });
+  if(val)sel.value=val;
+}
+
+function autoFillFee(){
+  const sel=document.getElementById('s-paciente-sel');
+  const opt=sel.options[sel.selectedIndex];
+  if(opt&&opt.dataset.fee) document.getElementById('s-fee').value=opt.dataset.fee;
+}
+
+async function registrarPaciente(){
+  const nombre=document.getElementById('pac-nombre').value.trim();
+  const fee=parseFloat(document.getElementById('pac-fee').value)||0;
+  if(!nombre){showToast('Ingresa el nombre del paciente','error');return;}
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(nombre)}&fee=${fee}`);
+    if(data.ok){
+      showToast(`${nombre} registrado`,'success');
+      document.getElementById('pac-nombre').value='';document.getElementById('pac-fee').value='';
+      cargarPacientesRegistry();
+    }else showToast(data.error||'Error','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+async function eliminarPaciente(id,nombre){
+  if(!confirm(`¿Eliminar a ${nombre} del directorio?`))return;
+  try{
+    await fetchJSONP(`${SCRIPT_URL}?accion=eliminarPacienteSary&id=${encodeURIComponent(id)}`);
+    showToast(`${nombre} eliminado`,'success');
+    cargarPacientesRegistry();
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+// AGENDA SARY
+function poblarHorasSary(){
+  ['s-ini','s-fin-hora'].forEach(id=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    sel.innerHTML='';
+    for(let v=H_INI;v<=H_FIN;v+=0.5){const o=document.createElement('option');o.value=v;o.textContent=fmtHora(v);sel.appendChild(o);}
+  });
+  const si=document.getElementById('s-ini');const sf=document.getElementById('s-fin-hora');
+  if(si&&sf){si.value=9;sf.value=10;}
+}
+
+async function agendarSary(){
+  const roomId=document.getElementById('s-room').value;
+  const fecha=document.getElementById('s-fecha').value;
+  const hIni=parseFloat(document.getElementById('s-ini').value);
+  const hFin=parseFloat(document.getElementById('s-fin-hora').value);
+  const pacSel=document.getElementById('s-paciente-sel');
+  const pacId=pacSel.value;
+  const fee=parseFloat(document.getElementById('s-fee').value)||0;
+  const pacNombre=pacId?pacSel.options[pacSel.selectedIndex].textContent:'';
+  if(!fecha||!pacId){showToast('Selecciona fecha y paciente','error');return;}
+  if(hFin<=hIni){showToast('La hora de fin debe ser después del inicio','error');return;}
+  const fISO=v=>`${fecha}T${toISO(v)}`;
+  const url=`${SCRIPT_URL}?accion=agendarSary&calendarioId=${encodeURIComponent(CALENDARIOS[roomId])}&roomId=${encodeURIComponent(roomId)}&roomNombre=${encodeURIComponent(NOMBRES[roomId])}&inicio=${encodeURIComponent(fISO(hIni))}&fin=${encodeURIComponent(fISO(hFin))}&paciente=${encodeURIComponent(pacNombre)}&fee=${fee}`;
+  try{
+    const data=await fetchJSONP(url);
+    if(data.ok){
+      showToast(`Cita de ${pacNombre} agendada en ${NOMBRES[roomId]}`,'success');
+      cargarAgendaSary();
+    }else showToast(data.mensaje||data.error||'Error','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+async function cargarAgendaSary(){
+  const ini=document.getElementById('s-ver-ini').value;
+  const fin=document.getElementById('s-ver-fin').value;
+  if(!ini||!fin)return;
+  document.getElementById('sary-loading').style.display='block';
+  document.getElementById('sary-list').innerHTML='';
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=listarAgendaSary&fechaIni=${ini}&fechaFin=${fin}`);
+    document.getElementById('sary-loading').style.display='none';
+    if(!Array.isArray(data)||!data.length){
+      document.getElementById('sary-list').innerHTML='<div class="admin-empty">Sin citas en este período.</div>';
+      return;
+    }
+    const totalSary=data.reduce((s,c)=>s+(c.fee||0),0);
+    document.getElementById('sary-list').innerHTML=`
+      <div style="background:var(--white);border:1px solid var(--cream-dark);border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;font-size:.82rem;">
+        <span><strong>${data.length}</strong> sesiones en el período</span>
+        <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--plum);">$${totalSary.toLocaleString('es-MX')}</span>
+      </div>`+
+      data.sort((a,b)=>a.inicio.localeCompare(b.inicio)).map(c=>`
+        <div class="sary-card">
+          <div class="sc-info">
+            <div class="sc-nombre">${c.paciente||'—'}</div>
+            <div class="sc-meta">${c.roomNombre||''} · ${fmtCorta(c.inicio.slice(0,10))} · ${horaLeg(c.inicio)} – ${horaLeg(c.fin)}</div>
+          </div>
+          <span style="font-family:'Playfair Display',serif;color:var(--plum);font-size:.95rem;">$${(c.fee||0).toLocaleString('es-MX')}</span>
+        </div>`).join('');
+  }catch(e){
+    document.getElementById('sary-loading').style.display='none';
+    document.getElementById('sary-list').innerHTML=`<div style="background:var(--red-light);border:1px solid #e8bebe;border-radius:10px;padding:1rem;font-size:.82rem;color:var(--red);">
+      ⚠️ Error al conectar: ${e.message}<br><small>Verifica que el script de Google esté actualizado a la versión más reciente.</small>
+    </div>`;
+    showToast('Error: '+e.message,'error');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════════════
+function showToast(msg,tipo=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${tipo} show`;
+  setTimeout(()=>{t.className=`toast ${tipo}`;},3800);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){cerrarModal();cerrarLoginAdmin();cerrarEstadoModal();}
+});
+[document.getElementById('modal'),document.getElementById('modal-admin'),document.getElementById('modal-estado')]
+  .forEach(m=>m&&m.addEventListener('click',e=>{if(e.target===e.currentTarget)e.target.classList.remove('open');}));
+</script>
+</body></html>
