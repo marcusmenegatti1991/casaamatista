@@ -499,7 +499,7 @@
 // ══════════════════════════════════════════════════════════════
 //  CONFIGURACIÓN
 // ══════════════════════════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8U3mPX-gXRSCpSNri9Nz3yOBmreC5AStAxc2qq3_E3ao0PkKL0OM1KD0IMdWA0vw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAB1SbgkP1m0ML-YKBwl-pH1UjyIY7-yDJDOQOAhN4xDf0Iz9aRYi1LA_pCzB6yeP0/exec';
 
 const CALENDARIOS = {
   'consultorio-1':'f6b359cdadfa144d836290602caf1b796c8999515bf216a4c819c345cda71d6f@group.calendar.google.com',
@@ -1076,13 +1076,14 @@ async function cargarAgendaSary(){
         <span><strong>${data.length}</strong> sesiones en el período</span>
         <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--plum);">$${totalSary.toLocaleString('es-MX')}</span>
       </div>`+
-      data.sort((a,b)=>a.inicio.localeCompare(b.inicio)).map(c=>`
-        <div class="sary-card">
+      data.sort((a,b)=>a.inicio.localeCompare(b.inicio)).map((c,i)=>`
+        <div class="sary-card" id="sary-item-${i}">
           <div class="sc-info">
             <div class="sc-nombre">${c.paciente||'—'}</div>
             <div class="sc-meta">${c.roomNombre||''} · ${fmtCorta(c.inicio.slice(0,10))} · ${horaLeg(c.inicio)} – ${horaLeg(c.fin)}</div>
           </div>
-          <span style="font-family:'Playfair Display',serif;color:var(--plum);font-size:.95rem;">$${(c.fee||0).toLocaleString('es-MX')}</span>
+          <span style="font-family:'Playfair Display',serif;color:var(--plum);font-size:.95rem;margin-right:.75rem;">$${(c.fee||0).toLocaleString('es-MX')}</span>
+          <button class="btn-danger" onclick="eliminarCitaSary('${c.eventoId}','${c.calId||''}','${c.paciente||''}',${i})">Eliminar</button>
         </div>`).join('');
   }catch(e){
     document.getElementById('sary-loading').style.display='none';
@@ -1091,6 +1092,22 @@ async function cargarAgendaSary(){
     </div>`;
     showToast('Error: '+e.message,'error');
   }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ELIMINAR CITA SARY
+// ══════════════════════════════════════════════════════════════
+async function eliminarCitaSary(eventoId, calId, paciente, idx){
+  if(!confirm(`¿Eliminar la cita de ${paciente}? También se borrará del calendario.`)) return;
+  try{
+    // Eliminar del calendario Google si hay eventoId
+    if(eventoId && calId){
+      await fetchJSONP(`${SCRIPT_URL}?accion=eliminarCitaSary&eventoId=${encodeURIComponent(eventoId)}&calendarioId=${encodeURIComponent(calId)}`);
+    }
+    showToast(`Cita de ${paciente} eliminada`,'success');
+    // Recargar lista
+    cargarAgendaSary();
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 
 // ══════════════════════════════════════════════════════════════
