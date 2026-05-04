@@ -159,6 +159,8 @@
     .monto-cell{font-family:'Playfair Display',serif;font-size:.9rem;text-align:right;}
     .btn-danger{font-family:'Lora',serif;font-size:.72rem;color:var(--red);background:var(--red-light);border:1px solid #e8bebe;border-radius:6px;padding:.28rem .7rem;cursor:pointer;transition:background .15s;white-space:nowrap;}
     .btn-danger:hover{background:#f5cccc;}
+    .btn-info{font-family:'Lora',serif;font-size:.72rem;color:var(--sage-dark);background:#DFE9E6;border:1px solid #c5d9d4;border-radius:6px;padding:.28rem .7rem;cursor:pointer;transition:background .15s;white-space:nowrap;margin-right:.3rem;}
+    .btn-info:hover{background:#cfe0dd;}
     /* Calendario admin */
     .cal-nav{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;}
     .cal-nav h3{font-family:'Playfair Display',serif;font-weight:400;font-size:1rem;flex:1;text-align:center;}
@@ -488,7 +490,7 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Paciente</th><th>Tarifa/sesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <thead><tr><th>Paciente</th><th>Teléfono</th><th>Tarifa/sesión</th><th style="text-align:right;">Acción</th></tr></thead>
           <tbody id="pac-tbody"></tbody>
         </table>
       </div>
@@ -567,6 +569,22 @@
     <div class="mactions">
       <button class="btnc" onclick="cerrarBatchModal()">Cancelar</button>
       <button class="btnok" onclick="guardarBatch()">Guardar todo</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL EDITAR PACIENTE -->
+<div class="overlay" id="modal-edit-pac">
+  <div class="modal">
+    <h3>Editar paciente</h3>
+    <p class="modal-sub">Actualiza la información del paciente.</p>
+    <div class="add-form">
+      <div class="field"><label for="edit-pac-nombre">Nombre</label><input type="text" id="edit-pac-nombre" placeholder="Nombre completo"></div>
+      <div class="field"><label for="edit-pac-tel">Teléfono WhatsApp</label><input type="tel" id="edit-pac-tel" placeholder="87-12-34-56-78"></div>
+      <div class="field"><label for="edit-pac-fee">Tarifa por sesión ($)</label><input type="number" id="edit-pac-fee" min="0" placeholder="550"></div>
+    </div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarEditarPaciente()">Cancelar</button>
+      <button class="btnok" onclick="guardarEditarPaciente()">Guardar cambios</button>
     </div>
   </div>
 </div>
@@ -1061,13 +1079,14 @@ async function cargarPacientesRegistry(){
 function renderPacientesTable(){
   const tbody=document.getElementById('pac-tbody');
   if(!pacientesRegistry.length){
-    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin pacientes registrados aún.</td></tr>';
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin pacientes registrados aún.</td></tr>';
     return;
   }
   tbody.innerHTML=pacientesRegistry.map(p=>`<tr>
     <td>${p.nombre}</td>
+    <td>${p.tel||'—'}</td>
     <td><span class="badge b-plum">$${(p.fee||0).toLocaleString('es-MX')}</span></td>
-    <td style="text-align:right;"><button class="btn-danger" onclick="eliminarPaciente('${p.id}','${p.nombre}')">Eliminar</button></td>
+    <td style="text-align:right;"><button class="btn-info" onclick="abrirEditarPaciente('${p.id}','${p.nombre.replace(/'/g,"\\'")}','${(p.tel||'').replace(/'/g,"\\'")}','${p.fee||0}')">Editar</button> <button class="btn-danger" onclick="eliminarPaciente('${p.id}','${p.nombre}')">Eliminar</button></td>
   </tr>`).join('');
 }
 function poblarSelectPacientes(){
@@ -1212,6 +1231,48 @@ async function guardarBatch(){
     cargarPacientesRegistry();
   }catch(e){showToast('Error: '+e.message,'error');}
 }
+// MODAL EDITAR PACIENTE
+let pacienteEditando={};
+function abrirEditarPaciente(id,nombre,tel,fee){
+  pacienteEditando={id,nombre,tel,fee};
+  document.getElementById('edit-pac-nombre').value=nombre;
+  document.getElementById('edit-pac-tel').value=tel;
+  document.getElementById('edit-pac-fee').value=fee;
+  document.getElementById('modal-edit-pac').classList.add('open');
+}
+function cerrarEditarPaciente(){
+  document.getElementById('modal-edit-pac').classList.remove('open');
+  pacienteEditando={};
+}
+async function guardarEditarPaciente(){
+  if(!pacienteEditando.id){showToast('Error: ID de paciente no encontrado','error');return;}
+  const nombre=document.getElementById('edit-pac-nombre').value.trim();
+  const tel=document.getElementById('edit-pac-tel').value.trim();
+  const fee=parseFloat(document.getElementById('edit-pac-fee').value)||0;
+  if(!nombre){showToast('Ingresa el nombre del paciente','error');return;}
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=actualizarPaciente&id=${pacienteEditando.id}&nombre=${encodeURIComponent(nombre)}&tel=${encodeURIComponent(tel)}&fee=${fee}`);
+    if(data.ok){
+      showToast('Paciente actualizado','success');
+      cerrarEditarPaciente();
+      cargarPacientesRegistry();
+    }else{
+      showToast(data.error||'Error','error');
+    }
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+async function eliminarPaciente(id,nombre){
+  if(!confirm(`¿Eliminar a ${nombre}?`)) return;
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=eliminarPaciente&id=${id}`);
+    if(data.ok){
+      showToast(`${nombre} eliminado`,'success');
+      cargarPacientesRegistry();
+    }else{
+      showToast(data.error||'Error','error');
+    }
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
 // ══════════════════════════════════════════════════════════════
 //  ENVIAR MENSAJES SARY
 // ══════════════════════════════════════════════════════════════
@@ -1264,9 +1325,9 @@ function showToast(msg,tipo=''){
   setTimeout(()=>{t.className=`toast ${tipo}`;},3800);
 }
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){cerrarModal();cerrarLoginAdmin();cerrarEstadoModal();cerrarBatchModal();}
+  if(e.key==='Escape'){cerrarModal();cerrarLoginAdmin();cerrarEstadoModal();cerrarBatchModal();cerrarEditarPaciente();}
 });
-[document.getElementById('modal'),document.getElementById('modal-admin'),document.getElementById('modal-estado'),document.getElementById('modal-batch')]
+[document.getElementById('modal'),document.getElementById('modal-admin'),document.getElementById('modal-estado'),document.getElementById('modal-batch'),document.getElementById('modal-edit-pac')]
   .forEach(m=>m&&m.addEventListener('click',e=>{if(e.target===e.currentTarget)e.target.classList.remove('open');}));
 </script>
 </body></html>
