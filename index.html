@@ -37,10 +37,12 @@
     .btn-login:hover{background:var(--plum-dark);}
     .btn-login:disabled{background:var(--ink-light);cursor:not-allowed;}
     /* HEADER */
-    header{background:var(--plum);padding:1.25rem 2rem 1rem;text-align:center;position:relative;}
+    header{background:#D4C5E2;padding:1.25rem 2rem 1rem;text-align:center;position:relative;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;}
+    header > *{flex:0 0 auto;}
+    .header-content{display:flex;flex-direction:column;align-items:center;gap:.3rem;}
     .eyebrow{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem;}
-    .header-logo{height:60px;margin-bottom:.6rem;display:flex;align-items:center;justify-content:center;}
-    .header-logo img{max-height:60px;width:auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));}
+    .header-logo{height:90px;display:flex;align-items:center;justify-content:center;}
+    .header-logo img{max-height:90px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3));}
     header h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.75rem);font-weight:400;color:#FAF7F2;}
     header h1 em{font-style:italic;color:var(--gold);}
     .admin-trigger{position:absolute;bottom:.4rem;right:1rem;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.18);cursor:pointer;border:none;background:none;font-family:'Lora',serif;padding:.2rem .4rem;transition:color .2s;}
@@ -276,8 +278,10 @@
     <div class="header-logo">
       <img src="fotos/logo.png" alt="Casa Amatista" onerror="this.style.display='none'">
     </div>
-    <p class="eyebrow">Casa Amatista</p>
-    <h1>Reserva tu <em>horario</em></h1>
+    <div class="header-content">
+      <p class="eyebrow">Casa Amatista</p>
+      <h1>Reserva tu <em>horario</em></h1>
+    </div>
     <button class="admin-trigger" onclick="mostrarLoginAdmin()">admin</button>
   </header>
   <div class="session-bar">
@@ -317,8 +321,10 @@
     <div class="header-logo">
       <img src="fotos/logo.png" alt="Casa Amatista" onerror="this.style.display='none'">
     </div>
-    <p class="eyebrow">Casa Amatista</p>
-    <h1><em>Administración</em></h1>
+    <div class="header-content">
+      <p class="eyebrow">Casa Amatista</p>
+      <h1><em>Administración</em></h1>
+    </div>
   </header>
   <div class="admin-inner">
     <div class="admin-topbar">
