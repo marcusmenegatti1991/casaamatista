@@ -817,7 +817,7 @@ function cargarEquipo(){
         ${p.modalidad&&p.modalidad!=='—'?`<div class="team-detail"><strong>📍 ${p.modalidad}</strong></div>`:''}
         ${p.frase?`<div class="team-frase">"${p.frase}"</div>`:''}
         <div class="team-contacto">
-          ${p.tel?`<a href="https://wa.me/52${p.tel.replace(/-/g,'')}" class="team-link" title="WhatsApp" target="_blank">📱</a>`:''}
+          ${p.tel?`<a href="https://wa.me/52${p.tel.replace(/\D/g,'')}" class="team-link" title="WhatsApp" target="_blank">📱</a>`:''}
           ${p.ig?`<a href="https://instagram.com/${p.ig.replace('@','')}" class="team-link" title="Instagram" target="_blank">📸</a>`:''}
           ${p.fb?`<a href="https://facebook.com/search/top/?q=${encodeURIComponent(p.fb)}" class="team-link" title="Facebook" target="_blank">f</a>`:''}
         </div>
@@ -1224,7 +1224,8 @@ function enviarMensajeSary(paciente,inicio,fin,room){
   const fecha=inicio.slice(0,10);
   const hora=horaLeg(inicio);
   const msg=`Hola ${paciente}, 👋\n\nConfirmamos tu sesión de terapia:\n\n📅 Fecha: ${fmtCorta(fecha)}\n🕐 Hora: ${hora}\n\n¡Nos vemos! 💜`;
-  const telLimpio=tel.replace(/-/g,'');
+  const telLimpio=tel.replace(/\D/g,'');  // quita todo lo que no sea dígito
+  if(telLimpio.length<10){showToast('Número inválido: debe tener 10 dígitos','error');return;}
   window.open(`https://wa.me/52${telLimpio}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 // FIX #4 — enviarMensajeATodos: abre uno a la vez con aviso
