@@ -472,6 +472,7 @@
         <div class="field"><label for="s-ver-ini">Desde</label><input type="date" id="s-ver-ini"></div>
         <div class="field"><label for="s-ver-fin">Hasta</label><input type="date" id="s-ver-fin"></div>
         <button class="btn-primary" onclick="cargarAgendaSary()">Ver citas</button>
+        <button class="btn-primary" style="background:var(--green);" onclick="enviarMensajeATodos()">📱 Enviar a todos</button>
       </div>
       <div class="sary-bookings" id="sary-list" style="margin-bottom:2rem;"></div>
       <div class="loading-msg" id="sary-loading" style="display:none;">Cargando citas…</div>
@@ -480,6 +481,7 @@
       <p class="section-title">Directorio de pacientes</p>
       <div class="add-form">
         <div class="field"><label for="pac-nombre">Nombre del paciente</label><input type="text" id="pac-nombre" placeholder="Nombre completo"></div>
+        <div class="field"><label for="pac-tel">Teléfono WhatsApp</label><input type="tel" id="pac-tel" placeholder="87-12-34-56-78"></div>
         <div class="field"><label for="pac-fee">Tarifa por sesión ($)</label><input type="number" id="pac-fee" min="0" placeholder="550"></div>
         <button class="btn-primary" onclick="registrarPaciente()">+ Agregar uno</button>
         <button class="btn-primary" style="background:var(--plum);" onclick="abrirBatchModal()">+ Agregar varios</button>
@@ -1153,6 +1155,7 @@ async function cargarAgendaSary(){
             <div class="sc-meta">${c.roomNombre||''} · ${fmtCorta(c.inicio.slice(0,10))} · ${horaLeg(c.inicio)} – ${horaLeg(c.fin)}</div>
           </div>
           <span style="font-family:'Playfair Display',serif;color:var(--plum);font-size:.95rem;margin-right:.75rem;">$${(c.fee||0).toLocaleString('es-MX')}</span>
+          <button class="btn-primary" style="background:var(--green);padding:.45rem .9rem;font-size:.75rem;" onclick="enviarMensajeSary('${c.paciente||''}','${c.inicio}','${c.fin}','${c.roomNombre||''}','${c.tel||''}')">📱 Mensaje</button>
           <button class="btn-danger" onclick="eliminarCitaSary('${c.eventoId}','${c.calId||''}','${c.paciente||''}',${i})">Eliminar</button>
         </div>`).join('');
   }catch(e){
@@ -1210,16 +1213,47 @@ async function guardarBatch(){
   }catch(e){showToast('Error: '+e.message,'error');}
 }
 // ══════════════════════════════════════════════════════════════
+//  ENVIAR MENSAJES SARY
+// ══════════════════════════════════════════════════════════════
+function enviarMensajeSary(paciente,inicio,fin,room,tel){
+  if(!tel){showToast('El paciente no tiene teléfono registrado','error');return;}
+  const fecha=inicio.slice(0,10);
+  const hora=horaLeg(inicio);
+  const msg=`Hola ${paciente}, 👋\n\nConfirmamos tu sesión de terapia:\n\n📅 Fecha: ${fmtCorta(fecha)}\n🕐 Hora: ${hora}\n\n¡Nos vemos! 💜`;
+  const telLimpio=tel.replace(/-/g,'');
+  const wa_url=`https://wa.me/52${telLimpio}?text=${encodeURIComponent(msg)}`;
+  window.open(wa_url,'_blank');
+}
+function enviarMensajeATodos(){
+  const ini=document.getElementById('s-ver-ini').value;
+  const fin=document.getElementById('s-ver-fin').value;
+  if(!ini||!fin){showToast('Selecciona fechas primero','error');return;}
+  const citas=document.querySelectorAll('.sary-card');
+  if(citas.length===0){showToast('No hay citas en este período','error');return;}
+  let count=0;
+  citas.forEach(card=>{
+    const nombre=card.querySelector('.sc-nombre').textContent;
+    const meta=card.querySelector('.sc-meta').textContent;
+    const tel_btn=card.querySelector('[onclick*="enviarMensajeSary"]');
+    if(tel_btn){
+      tel_btn.click();
+      count++;
+    }
+  });
+  showToast(`Abiertos ${count} mensajes de WhatsApp`,'success');
+}
+// ══════════════════════════════════════════════════════════════
 //  UTILS
 // ══════════════════════════════════════════════════════════════
 function registrarPaciente(){
   const nombre=document.getElementById('pac-nombre').value.trim();
+  const tel=document.getElementById('pac-tel').value.trim();
   const fee=parseFloat(document.getElementById('pac-fee').value)||0;
   if(!nombre){showToast('Ingresa el nombre del paciente','error');return;}
-  fetchJSONP(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(nombre)}&fee=${fee}`).then(data=>{
+  fetchJSONP(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(nombre)}&tel=${encodeURIComponent(tel)}&fee=${fee}`).then(data=>{
     if(data.ok){
       showToast(`${nombre} registrado`,'success');
-      document.getElementById('pac-nombre').value='';document.getElementById('pac-fee').value='';
+      document.getElementById('pac-nombre').value='';document.getElementById('pac-tel').value='';document.getElementById('pac-fee').value='';
       cargarPacientesRegistry();
     }else showToast(data.error||'Error','error');
   }).catch(e=>showToast('Error: '+e.message,'error'));
