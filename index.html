@@ -1189,8 +1189,8 @@ async function cargarAgendaSary(){
           </div>
           <span style="font-family:'Playfair Display',serif;color:var(--plum);font-size:.95rem;margin-right:.75rem;">$${(c.fee||0).toLocaleString('es-MX')}</span>
           <button class="btn-primary" style="background:var(--green);padding:.45rem .9rem;font-size:.75rem;"
-            onclick="enviarMensajeSary(${JSON.stringify(c.paciente||'')},${JSON.stringify(c.inicio)},${JSON.stringify(c.fin)},${JSON.stringify(c.roomNombre||'')})">📱 Mensaje</button>
-          <button class="btn-danger" onclick="eliminarCitaSary(${JSON.stringify(c.eventoId)},${JSON.stringify(c.calId||'')},${JSON.stringify(c.paciente||'')},${i})">Eliminar</button>
+            onclick="enviarMensajeSary('${encodeURIComponent(c.paciente||'')}','${c.inicio}','${c.fin}','${encodeURIComponent(c.roomNombre||'')}')">📱 Mensaje</button>
+          <button class="btn-danger" onclick="eliminarCitaSary('${encodeURIComponent(c.eventoId||'')}','${encodeURIComponent(c.calId||'')}','${encodeURIComponent(c.paciente||'')}',${i})">Eliminar</button>
         </div>`).join('');
   }catch(e){
     document.getElementById('sary-loading').style.display='none';
@@ -1200,7 +1200,10 @@ async function cargarAgendaSary(){
     showToast('Error: '+e.message,'error');
   }
 }
-async function eliminarCitaSary(eventoId,calId,paciente,idx){
+async function eliminarCitaSary(eventoIdEnc,calIdEnc,pacienteEnc,idx){
+  const eventoId=decodeURIComponent(eventoIdEnc);
+  const calId=decodeURIComponent(calIdEnc);
+  const paciente=decodeURIComponent(pacienteEnc);
   if(!confirm(`¿Eliminar la cita de ${paciente}? También se borrará del calendario.`)) return;
   try{
     if(eventoId&&calId){
@@ -1213,7 +1216,8 @@ async function eliminarCitaSary(eventoId,calId,paciente,idx){
 // ══════════════════════════════════════════════════════════════
 //  FIX #2 — enviarMensajeSary busca el tel del directorio
 // ══════════════════════════════════════════════════════════════
-function enviarMensajeSary(paciente,inicio,fin,room){
+function enviarMensajeSary(pacienteEnc,inicio,fin,roomEnc){
+  const paciente=decodeURIComponent(pacienteEnc);
   // Buscar el teléfono actualizado desde el directorio de pacientes (no de la cita)
   const pac=pacientesRegistry.find(p=>p.nombre===paciente);
   const tel=pac?pac.tel:'';
