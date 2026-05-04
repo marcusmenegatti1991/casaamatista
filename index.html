@@ -557,6 +557,13 @@
       <button class="btnc" onclick="cerrarEstadoModal()">Cancelar</button>
       <button class="btnok" id="btn-estado-ok" onclick="guardarEstado()">Guardar</button>
     </div>
+    <div style="border-top:1px solid var(--cream-dark);margin-top:.9rem;padding-top:.75rem;text-align:center;">
+      <button id="btn-borrar-evento" onclick="borrarEventoSinCargo()"
+        style="font-family:'Lora',serif;font-size:.75rem;color:var(--ink-light);background:none;border:none;cursor:pointer;text-decoration:underline;padding:.25rem .5rem;"
+        title="Elimina la cita del calendario sin registrar cancelación ni cargo">
+        🗑 Borrar cita sin cargo (psicólogo pidió excluirla)
+      </button>
+    </div>
   </div>
 </div>
 <!-- MODAL BATCH PACIENTES — FIX #3: ahora incluye campo de teléfono -->
@@ -661,7 +668,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('a-fin').value=dateStr(addDays(lun,6));
   document.getElementById('s-fecha').value=hoy;
   document.getElementById('s-ver-ini').value=hoy;
-  document.getElementById('s-ver-fin').value=dateStr(addDays(new Date(),30));
+  document.getElementById('s-ver-fin').value=hoy;
   const session=getSession();
   if(session&&session.nombreCompleto) mostrarVistaUsuario(session.nombreCompleto);
 });
@@ -1004,6 +1011,22 @@ function selStatus(estado,focus=true){
   if(focus&&estado==='descuento')setTimeout(()=>document.getElementById('desc-amount').focus(),50);
 }
 function cerrarEstadoModal(){document.getElementById('modal-estado').classList.remove('open');}
+async function borrarEventoSinCargo(){
+  if(!eventoActual)return;
+  const nombre=primerNombre(eventoActual.nombreBase);
+  if(!confirm(`¿Borrar la cita de ${nombre}?\n\nSe eliminará del calendario sin registrar cancelación ni cargo de $30.`))return;
+  const btnOk=document.getElementById('btn-estado-ok');
+  const btnBorrar=document.getElementById('btn-borrar-evento');
+  btnOk.disabled=true;btnBorrar.disabled=true;btnBorrar.textContent='Borrando…';
+  try{
+    await fetchJSONP(`${SCRIPT_URL}?accion=eliminarCitaSary&eventoId=${encodeURIComponent(eventoActual.id)}&calendarioId=${encodeURIComponent(eventoActual.calId)}`);
+    todosLosEventos=todosLosEventos.filter(e=>e.id!==eventoActual.id);
+    cerrarEstadoModal();
+    renderTotales();renderStats();renderPsyTable();renderCalAdmin();
+    showToast(`Cita de ${nombre} eliminada del calendario`,'success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+  finally{btnOk.disabled=false;btnBorrar.disabled=false;btnBorrar.textContent='🗑 Borrar cita sin cargo (psicólogo pidió excluirla)';}
+}
 async function guardarEstado(){
   if(!eventoActual)return;
   const btn=document.getElementById('btn-estado-ok');
