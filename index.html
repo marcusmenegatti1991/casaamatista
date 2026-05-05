@@ -67,11 +67,12 @@
     .legend{display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;margin-left:auto;}
     .leg{display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--ink-mid);}
     .leg-dot{width:10px;height:10px;border-radius:3px;}
-    .grid-wrapper{overflow-x:auto;border-radius:12px;border:1px solid var(--cream-dark);background:var(--white);max-height:600px;overflow-y:auto;}
+    .grid-wrapper{overflow-y:auto;max-height:600px;border-radius:12px;border:1px solid var(--cream-dark);background:var(--white);}
+    .grid-wrapper-x{overflow-x:auto;}
     .time-grid{display:grid;grid-template-columns:62px repeat(4,1fr);min-width:480px;}
     .gh{background:var(--ink);color:#FAF7F2;font-size:.75rem;font-weight:500;letter-spacing:.04em;padding:.7rem .4rem;text-align:center;border-right:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:50;}
     .gh:first-child{border-right:1px solid rgba(255,255,255,.15);position:sticky;left:0;z-index:51;}
-    .tl{background:var(--cream);color:var(--ink-mid);font-size:.62rem;text-align:center;border-right:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;min-height:36px;line-height:1.2;padding:2px 0;}
+    .tl{background:var(--cream);color:var(--ink-mid);font-size:.62rem;text-align:center;border-right:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;min-height:36px;line-height:1.2;padding:2px 0;position:sticky;left:0;z-index:10;}
     .tl.hora-entera{border-top:1px solid var(--cream-dark);font-weight:500;}
     .tl.media-hora{border-top:1px dashed #E5DDD3;font-size:.57rem;color:#B8AF9F;}
     .slot{min-height:36px;border-right:1px solid var(--cream-dark);padding:3px;position:relative;}
@@ -611,7 +612,7 @@
 // ══════════════════════════════════════════════════════════════
 //  CONFIGURACIÓN
 // ══════════════════════════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQFl1K_PRSQ9nWX9NBMF1_0FEAw57d3Kj5R-xjD8sjfmV0poVR6eaPgyIID0bmZ3-o/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWf5VdThpqMceq35kdbleS8RW0sAfDIywznRLTP4nrjx4RWjujukfRaOMuRW10mnIH/exec';
 const CALENDARIOS = {
   'consultorio-1':'f6b359cdadfa144d836290602caf1b796c8999515bf216a4c819c345cda71d6f@group.calendar.google.com',
   'consultorio-2':'e6ec7606cf0cb7e3340401ed80eb55aea734fc516bbd2ee9983513d7f01dbaa7@group.calendar.google.com',
@@ -734,10 +735,10 @@ function renderGrid(data,fecha){
   const el=document.getElementById('contenido');
   if(!data){
     el.innerHTML=`<div class="date-banner"><h2>Cargando…</h2></div>
-      <div class="grid-wrapper"><div class="time-grid">
+      <div class="grid-wrapper"><div class="grid-wrapper-x"><div class="time-grid">
         <div class="gh"></div>${IDS.map(id=>`<div class="gh">${NOMBRES[id]}</div>`).join('')}
         ${SLOTS.map(()=>`<div class="tl"></div>${IDS.map(()=>`<div class="slot loading"></div>`).join('')}`).join('')}
-      </div></div>`;
+      </div></div></div>`;
     return;
   }
   const rows=SLOTS.map(v=>{
@@ -759,10 +760,10 @@ function renderGrid(data,fecha){
         <div class="leg"><div class="leg-dot" style="background:#3B82F6;"></div>Ocupado</div>
       </div>
     </div>
-    <div class="grid-wrapper"><div class="time-grid">
+    <div class="grid-wrapper"><div class="grid-wrapper-x"><div class="time-grid">
       <div class="gh"></div>${IDS.map(id=>`<div class="gh">${NOMBRES[id]}</div>`).join('')}
       ${rows}
-    </div></div>`;
+    </div></div></div>`;
 }
 function abrirModal(id,hIni,fecha){
   const session=getSession();if(!session){doLogout();return;}
