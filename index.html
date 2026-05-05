@@ -312,7 +312,7 @@
     <button class="admin-trigger" onclick="mostrarLoginAdmin()">admin</button>
   </header>
   <div class="session-bar">
-    <span>Sesión: <strong id="session-nombre">—</strong></span>
+    <span>Sesión: <strong id="session-nombre">—</strong><span id="mes-saludo" style="display:none;margin-left:.85rem;font-size:.68rem;color:var(--gold);font-style:italic;"></span></span>
     <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
   </div>
   <!-- PESTAÑAS USUARIO -->
@@ -418,17 +418,38 @@
     <!-- TAB PSICÓLOGOS -->
     <div class="tab-content" id="tab-psicologos">
       <div class="init-box" id="init-box">✓ Base de datos inicializada con los psicólogos registrados.</div>
-      <p class="section-title">Registrar nuevo psicólogo</p>
+      <p class="section-title">Registrar nuevo profesional</p>
       <div class="add-form">
         <div class="field"><label for="psy-nombre">Nombre</label><input type="text" id="psy-nombre" placeholder="María"></div>
         <div class="field"><label for="psy-apellido">Apellido</label><input type="text" id="psy-apellido" placeholder="García"></div>
+        <div class="field"><label for="psy-profesion">Profesión</label>
+          <select id="psy-profesion">
+            <option value="psicologo">Psicólogo/a</option>
+            <option value="nutriologo">Nutriólogo/a</option>
+            <option value="masajista">Masajista</option>
+          </select>
+        </div>
         <button class="btn-primary" onclick="registrarPsicologo()">Registrar</button>
       </div>
-      <p class="section-title">Psicólogos activos</p>
+      <p class="section-title">🧠 Psicólogos</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Nombre completo</th><th>Usuario</th><th style="text-align:right;">Acción</th></tr></thead>
-          <tbody id="psy-list-tbody"></tbody>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="psy-list-psicologos"></tbody>
+        </table>
+      </div>
+      <p class="section-title">🥗 Nutriólogos</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="psy-list-nutriologos"></tbody>
+        </table>
+      </div>
+      <p class="section-title">💆 Masajistas</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="psy-list-masajistas"></tbody>
         </table>
       </div>
       <div class="loading-msg" id="psy-loading" style="display:none;">Cargando…</div>
@@ -612,7 +633,7 @@
 // ══════════════════════════════════════════════════════════════
 //  CONFIGURACIÓN
 // ══════════════════════════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWf5VdThpqMceq35kdbleS8RW0sAfDIywznRLTP4nrjx4RWjujukfRaOMuRW10mnIH/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz800po-h2UBg1FEHToA37o-aixwm1CCmcwMbOYUQ0at_FEtviA8u2oHLGZ5WR1_yaO/exec';
 const CALENDARIOS = {
   'consultorio-1':'f6b359cdadfa144d836290602caf1b796c8999515bf216a4c819c345cda71d6f@group.calendar.google.com',
   'consultorio-2':'e6ec7606cf0cb7e3340401ed80eb55aea734fc516bbd2ee9983513d7f01dbaa7@group.calendar.google.com',
@@ -671,7 +692,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('s-ver-ini').value=hoy;
   document.getElementById('s-ver-fin').value=hoy;
   const session=getSession();
-  if(session&&session.nombreCompleto) mostrarVistaUsuario(session.nombreCompleto);
+  if(session&&session.nombreCompleto) mostrarVistaUsuario(session.nombreCompleto,session.profesion||'psicologo');
 });
 // ══════════════════════════════════════════════════════════════
 //  LOGIN / LOGOUT
@@ -684,17 +705,28 @@ async function doLogin(){
   btn.disabled=true;btn.textContent='Verificando…';err.textContent='';
   try{
     const data=await fetchJSONP(`${SCRIPT_URL}?accion=login&username=${encodeURIComponent(username)}`);
-    if(data.ok){saveSession({username:data.username,nombreCompleto:data.nombreCompleto,id:data.id});mostrarVistaUsuario(data.nombreCompleto);}
+    if(data.ok){saveSession({username:data.username,nombreCompleto:data.nombreCompleto,id:data.id,profesion:data.profesion||'psicologo'});mostrarVistaUsuario(data.nombreCompleto,data.profesion||'psicologo');}
     else err.textContent='Usuario no registrado. Contacta a la administración.';
   }catch(e){err.textContent='Error de conexión. Intenta de nuevo.';}
   finally{btn.disabled=false;btn.textContent='Entrar';}
 }
-function mostrarVistaUsuario(nombreCompleto){
+function mostrarVistaUsuario(nombreCompleto,profesion){
   document.getElementById('login-screen').style.display='none';
   document.getElementById('admin-panel').style.display='none';
   document.getElementById('vista-usuario').style.display='block';
   document.getElementById('session-nombre').textContent=primerNombre(nombreCompleto);
   document.getElementById('fecha').value=document.getElementById('fecha').value||new Date().toISOString().slice(0,10);
+  // Saludo de mes según profesión
+  const SALUDOS={
+    psicologo:{mes:5, texto:'🎉 ¡Feliz Mes del Psicólogo!'},
+    nutriologo:{mes:1, texto:'🎉 ¡Feliz Mes del Nutriólogo!'},
+    masajista: {mes:12,texto:'🎉 ¡Feliz Mes del Masajista!'},
+  };
+  const prof=profesion||((getSession()||{}).profesion)||'psicologo';
+  const saludo=SALUDOS[prof];
+  const el=document.getElementById('mes-saludo');
+  if(el&&saludo&&(new Date().getMonth()+1)===saludo.mes){el.textContent=saludo.texto;el.style.display='inline';}
+  else if(el){el.style.display='none';}
   cargarEquipo();
 }
 function switchUserTab(tab){
@@ -1056,9 +1088,10 @@ async function guardarEstado(){
 async function registrarPsicologo(){
   const nombre=document.getElementById('psy-nombre').value.trim();
   const apellido=document.getElementById('psy-apellido').value.trim();
+  const profesion=document.getElementById('psy-profesion').value||'psicologo';
   if(!nombre||!apellido){showToast('Ingresa nombre y apellido','error');return;}
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=registrarPsicologo&nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}`);
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=registrarPsicologo&nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}&profesion=${encodeURIComponent(profesion)}`);
     if(data.ok){
       showToast(`${nombre} ${apellido} registrado · usuario: ${data.username}`,'success');
       document.getElementById('psy-nombre').value='';document.getElementById('psy-apellido').value='';
@@ -1068,23 +1101,50 @@ async function registrarPsicologo(){
 }
 async function cargarListaPsicologos(){
   document.getElementById('psy-loading').style.display='block';
-  document.getElementById('psy-list-tbody').innerHTML='';
+  ['psy-list-psicologos','psy-list-nutriologos','psy-list-masajistas'].forEach(id=>document.getElementById(id).innerHTML='');
   try{
     const data=await fetchJSONP(`${SCRIPT_URL}?accion=listarPsicologos`);
     document.getElementById('psy-loading').style.display='none';
     if(!Array.isArray(data)||!data.length){
-      document.getElementById('psy-list-tbody').innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin psicólogos registrados.</td></tr>';
+      document.getElementById('psy-list-psicologos').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin profesionales registrados.</td></tr>';
       return;
     }
-    document.getElementById('psy-list-tbody').innerHTML=data.map(p=>{
-      const col=colorPsy(`${p.nombre} ${p.apellido}`);
-      return`<tr>
-        <td><div class="psy-name-cell"><div class="psy-dot" style="background:${col};"></div>${primerNombre(p.nombre+' '+p.apellido)} ${normNombre(p.apellido)}</div></td>
-        <td><span class="badge b-plum">${p.username}</span></td>
-        <td style="text-align:right;"><button class="btn-danger" onclick="eliminarPsicologo('${p.id}','${p.nombre} ${p.apellido}')">Eliminar</button></td>
-      </tr>`;
-    }).join('');
+    const grupos={psicologo:[],nutriologo:[],masajista:[]};
+    data.forEach(p=>{const prof=p.profesion||'psicologo';if(grupos[prof])grupos[prof].push(p);else grupos.psicologo.push(p);});
+    const LABELS={psicologo:'Psicólogo/a',nutriologo:'Nutriólogo/a',masajista:'Masajista'};
+    const TBODY_IDS={psicologo:'psy-list-psicologos',nutriologo:'psy-list-nutriologos',masajista:'psy-list-masajistas'};
+    Object.entries(grupos).forEach(([prof,lista])=>{
+      const tbody=document.getElementById(TBODY_IDS[prof]);
+      if(!lista.length){
+        tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:.9rem;font-size:.8rem;">Sin ${LABELS[prof].toLowerCase()}s registrados.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML=lista.map(p=>{
+        const col=colorPsy(`${p.nombre} ${p.apellido}`);
+        const profActual=p.profesion||'psicologo';
+        return`<tr>
+          <td><div class="psy-name-cell"><div class="psy-dot" style="background:${col};"></div>${primerNombre(p.nombre+' '+p.apellido)} ${normNombre(p.apellido)}</div></td>
+          <td><span class="badge b-plum">${p.username}</span></td>
+          <td>
+            <select style="font-family:'Lora',serif;font-size:.75rem;background:var(--cream);border:1px solid var(--cream-dark);border-radius:6px;padding:.2rem .5rem;color:var(--ink);cursor:pointer;"
+              onchange="cambiarProfesion('${p.id}',this.value)">
+              <option value="psicologo"${profActual==='psicologo'?' selected':''}>Psicólogo/a</option>
+              <option value="nutriologo"${profActual==='nutriologo'?' selected':''}>Nutriólogo/a</option>
+              <option value="masajista"${profActual==='masajista'?' selected':''}>Masajista</option>
+            </select>
+          </td>
+          <td style="text-align:right;"><button class="btn-danger" onclick="eliminarPsicologo('${p.id}','${p.nombre} ${p.apellido}')">Eliminar</button></td>
+        </tr>`;
+      }).join('');
+    });
   }catch(e){document.getElementById('psy-loading').style.display='none';showToast('Error al cargar','error');}
+}
+async function cambiarProfesion(id,nuevaProfesion){
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=actualizarProfesional&id=${encodeURIComponent(id)}&profesion=${encodeURIComponent(nuevaProfesion)}`);
+    if(data.ok){showToast('Profesión actualizada','success');cargarListaPsicologos();}
+    else showToast(data.error||'Error','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 async function eliminarPsicologo(id,nombre){
   if(!confirm(`¿Eliminar a ${nombre}? Ya no podrá iniciar sesión.`))return;
