@@ -376,6 +376,7 @@
         <div class="field"><label for="a-ini">Desde</label><input type="date" id="a-ini"></div>
         <div class="field"><label for="a-fin">Hasta</label><input type="date" id="a-fin"></div>
         <button class="btn-primary" onclick="cargarAdmin()">Consultar período</button>
+        <button class="btn-primary" id="btn-partir" onclick="partirEventosLargos()" style="background:var(--plum);white-space:nowrap;" title="Divide automáticamente citas de más de 1 hora en bloques de 1 hora">✂️ Partir citas largas</button>
       </div>
       <div id="cal-section" style="display:none;">
         <p class="section-title">Calendario — toca una cita para registrar estado o moverla</p>
@@ -828,9 +829,11 @@ async function confirmar(){
   const fISO=v=>`${fecha}T${toISO(v)}`;
   const url=`${SCRIPT_URL}?accion=crearEvento&titulo=${encodeURIComponent(nombre)}&inicio=${encodeURIComponent(fISO(hIni))}&fin=${encodeURIComponent(fISO(hFin))}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
   try{
-    await fetchJSONP(url);
+    const data=await fetchJSONP(url);
+    if(data&&data.error){showToast(data.mensaje||data.error,'error');btn.disabled=false;btn.textContent='Confirmar reserva';return;}
     cerrarModal();
-    showToast(`¡Reservado! ${NOMBRES[id]} · ${fmtHora(hIni)}–${fmtHora(hFin)}`,'success');
+    const extra=data&&data.total>1?` · dividido en ${data.total} hrs`:'';
+    showToast(`¡Reservado! ${NOMBRES[id]} · ${fmtHora(hIni)}–${fmtHora(hFin)}${extra}`,'success');
     cargarDisponibilidad();
   }catch(e){showToast('Error al conectar','error');}
   finally{btn.disabled=false;btn.textContent='Confirmar reserva';}
@@ -997,6 +1000,22 @@ function renderPsyTable(){
   document.getElementById('psy-section').style.display='block';
 }
 function navSemana(delta){semanaOffset+=delta;renderCalAdmin();}
+async function partirEventosLargos(){
+  const ini=document.getElementById('a-ini').value;
+  const fin=document.getElementById('a-fin').value;
+  if(!ini||!fin){showToast('Primero consulta un período','error');return;}
+  const btn=document.getElementById('btn-partir');
+  btn.disabled=true;btn.textContent='✂️ Partiendo…';
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=partirEventosLargos&fechaIni=${ini}&fechaFin=${fin}`);
+    if(data.ok){
+      if(data.partidos===0){showToast('No hay citas largas en este período','');}
+      else{showToast(`✂️ ${data.partidos} slot${data.partidos>1?'s':''} creado${data.partidos>1?'s':''} — recargando…`,'success');}
+      await cargarAdmin();
+    }else{showToast(data.error||'Error','error');}
+  }catch(e){showToast('Error: '+e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='✂️ Partir citas largas';}
+}
 function renderCalAdmin(){
   const base=new Date(fechaIniAdmin+'T00:00:00');
   const lunes=startOfWeek(base);
