@@ -1001,20 +1001,47 @@ function renderPsyTable(){
 }
 function navSemana(delta){semanaOffset+=delta;renderCalAdmin();}
 async function partirEventosLargos(){
-  const ini=document.getElementById('a-ini').value;
-  const fin=document.getElementById('a-fin').value;
-  if(!ini||!fin){showToast('Primero consulta un período','error');return;}
+  if(!todosLosEventos.length){showToast('Primero consulta el período','error');return;}
+  // Encontrar eventos NO-Sary con duración > 1 hora
+  const largos=todosLosEventos.filter(ev=>{
+    if(esSary(ev)||ev.estado==='cancelo')return false;
+    return calcDuracion(ev.inicio,ev.fin)>1;
+  });
+  if(!largos.length){showToast('No hay citas largas en este período ✓','');return;}
   const btn=document.getElementById('btn-partir');
   btn.disabled=true;btn.textContent='✂️ Partiendo…';
-  try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=partirEventosLargos&fechaIni=${ini}&fechaFin=${fin}`);
-    if(data.ok){
-      if(data.partidos===0){showToast('No hay citas largas en este período','');}
-      else{showToast(`✂️ ${data.partidos} slot${data.partidos>1?'s':''} creado${data.partidos>1?'s':''} — recargando…`,'success');}
-      await cargarAdmin();
-    }else{showToast(data.error||'Error','error');}
-  }catch(e){showToast('Error: '+e.message,'error');}
-  finally{btn.disabled=false;btn.textContent='✂️ Partir citas largas';}
+  let slotsCreados=0,errores=0;
+  for(const ev of largos){
+    try{
+      // 1. Borrar evento original del calendario
+      await fetchJSONP(`${SCRIPT_URL}?accion=eliminarCitaSary`+
+        `&eventoId=${encodeURIComponent(ev.id)}`+
+        `&calendarioId=${encodeURIComponent(ev.calId)}`+
+        `&inicio=${encodeURIComponent(ev.inicio)}`);
+      // 2. Crear slots de 1 hora
+      const fecha=ev.inicio.slice(0,10);
+      const hIni=parseFloat(ev.inicio.slice(11,13))+(ev.inicio.slice(14,16)==='30'?0.5:0);
+      const hFin=parseFloat(ev.fin.slice(11,13))+(ev.fin.slice(14,16)==='30'?0.5:0);
+      let cursor=hIni;
+      while(cursor<hFin){
+        const slotFin=Math.min(cursor+1,hFin);
+        await fetchJSONP(`${SCRIPT_URL}?accion=crearEvento`+
+          `&titulo=${encodeURIComponent(ev.nombreBase)}`+
+          `&inicio=${encodeURIComponent(fecha+'T'+toISO(cursor))}`+
+          `&fin=${encodeURIComponent(fecha+'T'+toISO(slotFin))}`+
+          `&calendarioId=${encodeURIComponent(ev.calId)}`);
+        cursor=slotFin;
+        slotsCreados++;
+      }
+    }catch(e){errores++;}
+  }
+  if(slotsCreados>0){
+    showToast(`✂️ ${largos.length} cita${largos.length>1?'s':''} dividida${largos.length>1?'s':''} en ${slotsCreados} slots — recargando…`,'success');
+    await cargarAdmin();
+  }else{
+    showToast('No se pudo partir ninguna cita','error');
+  }
+  btn.disabled=false;btn.textContent='✂️ Partir citas largas';
 }
 function renderCalAdmin(){
   const base=new Date(fechaIniAdmin+'T00:00:00');
