@@ -187,6 +187,13 @@
     .ac .ac-room{display:block;font-size:.54rem;opacity:.85;margin-top:1px;}
     .ac.cancelo{opacity:.55;cursor:default;}
     .ac::after{content:attr(data-badge);position:absolute;top:2px;right:3px;font-size:.5rem;background:rgba(0,0,0,.22);border-radius:3px;padding:0 3px;line-height:1.5;}
+    /* Mover citas */
+    .ac.moving{outline:2.5px solid var(--gold);outline-offset:1px;animation:pulse 1.1s ease-in-out infinite;cursor:pointer;}
+    .ac.sary-movible{cursor:grab;}
+    .cslot.move-target{background:rgba(107,144,128,.13);cursor:pointer;transition:background .12s;}
+    .cslot.move-target:hover{background:rgba(107,144,128,.28);}
+    .cslot.move-target::after{content:'📍';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--sage-dark);}
+    #move-banner{display:none;background:var(--plum);color:white;border-radius:10px;padding:.65rem 1rem;margin-bottom:.85rem;font-size:.8rem;align-items:center;gap:.6rem;flex-wrap:wrap;}
     .cal-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;font-size:.72rem;color:var(--ink-mid);}
     .cl-item{display:flex;align-items:center;gap:.4rem;}
     .cl-dot{width:10px;height:10px;border-radius:2px;}
@@ -390,20 +397,14 @@
         <div class="stat-card"><div class="stat-label">Descuento</div><div class="stat-value sv-amber" id="st-desc">—</div></div>
         <div class="stat-card"><div class="stat-label">Sesiones Sary</div><div class="stat-value sv-plum" id="st-sary">—</div></div>
       </div>
-      <div id="psy-section" style="display:none;">
-        <p class="section-title">Resumen por psicólogo (rentas)</p>
-        <div class="table-wrap">
-          <table><thead><tr><th>Psicólogo/a</th><th>Asistió</th><th>Canceló</th><th>Descuento</th><th style="text-align:right;">Total</th></tr></thead>
-          <tbody id="psy-tbody"></tbody></table>
-        </div>
-      </div>
       <div id="cal-section" style="display:none;">
-        <p class="section-title">Calendario — haz clic en un nombre para registrar estado</p>
+        <p class="section-title">Calendario — toca un nombre para registrar estado · toca una cita 💜 para moverla</p>
+        <div id="move-banner"></div>
         <div class="cal-legend">
           <div class="cl-item"><div class="cl-dot" style="background:#3B82F6;"></div>Sin marcar</div>
           <div class="cl-item"><div class="cl-dot" style="background:var(--red);opacity:.6;"></div>Canceló</div>
           <div class="cl-item"><div class="cl-dot" style="background:var(--amber);"></div>Descuento</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--plum);"></div>Sary</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--plum);"></div>Sary (toca para mover)</div>
         </div>
         <div class="cal-nav">
           <button class="btn-nav" onclick="navSemana(-1)">&#8592; Semana anterior</button>
@@ -411,6 +412,13 @@
           <button class="btn-nav" onclick="navSemana(1)">Semana siguiente &#8594;</button>
         </div>
         <div class="cal-wrapper"><div class="cal-grid" id="cal-grid"></div></div>
+      </div>
+      <div id="psy-section" style="display:none;">
+        <p class="section-title">Resumen por psicólogo (rentas)</p>
+        <div class="table-wrap">
+          <table><thead><tr><th>Psicólogo/a</th><th>Asistió</th><th>Canceló</th><th>Descuento</th><th style="text-align:right;">Total</th></tr></thead>
+          <tbody id="psy-tbody"></tbody></table>
+        </div>
       </div>
       <div class="admin-empty" id="admin-empty" style="display:none;">No se encontraron citas en el periodo seleccionado.</div>
       <div class="loading-msg" id="admin-loading" style="display:none;">Cargando citas…</div>
@@ -633,7 +641,7 @@
 // ══════════════════════════════════════════════════════════════
 //  CONFIGURACIÓN
 // ══════════════════════════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz800po-h2UBg1FEHToA37o-aixwm1CCmcwMbOYUQ0at_FEtviA8u2oHLGZ5WR1_yaO/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRIO6Yw8VIBgDKryr3T3b4tW8QjtN57W-Bt7a3-DVG8OkqLO9gTL8VBmOB3eY7JsvS/exec';
 const CALENDARIOS = {
   'consultorio-1':'f6b359cdadfa144d836290602caf1b796c8999515bf216a4c819c345cda71d6f@group.calendar.google.com',
   'consultorio-2':'e6ec7606cf0cb7e3340401ed80eb55aea734fc516bbd2ee9983513d7f01dbaa7@group.calendar.google.com',
@@ -892,6 +900,7 @@ async function verificarAdmin(){
   }catch(_){}
   cargarListaPsicologos();
   cargarPacientesRegistry();
+  cargarAdmin(); // auto-carga la semana actual al entrar al admin
 }
 function salirAdmin(){
   document.getElementById('admin-panel').style.display='none';
@@ -900,6 +909,7 @@ function salirAdmin(){
   else{document.getElementById('login-screen').style.display='flex';}
 }
 function switchAdminTab(tab){
+  citaSeleccionada=null; // cancelar modo mover al cambiar de pestaña
   const tabs=['agenda','psicologos','sary'];
   document.querySelectorAll('#admin-panel .atab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
   tabs.forEach(t=>document.getElementById(`tab-${t}`).classList.toggle('active',t===tab));
@@ -989,6 +999,15 @@ function renderCalAdmin(){
   const lunesSemana=addDays(lunes,semanaOffset*7);
   const dias=Array.from({length:7},(_,i)=>addDays(lunesSemana,i));
   document.getElementById('cal-titulo').textContent=`${dias[0].getDate()} ${MESES_ES[dias[0].getMonth()]} – ${dias[6].getDate()} ${MESES_ES[dias[6].getMonth()]} ${dias[6].getFullYear()}`;
+  // Banner de modo mover
+  const banner=document.getElementById('move-banner');
+  if(banner){
+    if(citaSeleccionada){
+      banner.style.display='flex';
+      banner.innerHTML=`📍 Moviendo: <strong>${primerNombre(citaSeleccionada.paciente||'—')}</strong> · ${horaLeg(citaSeleccionada.inicio)}–${horaLeg(citaSeleccionada.fin)} &nbsp;— toca el horario destino&nbsp;
+        <button onclick="cancelarMovimiento()" style="font-family:'Lora',serif;font-size:.72rem;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:.2rem .65rem;cursor:pointer;color:white;margin-left:auto;">✕ Cancelar</button>`;
+    }else{banner.style.display='none';}
+  }
   const grid=document.getElementById('cal-grid');
   const headers=`<div class="cgh"></div>`+dias.map(d=>{
     const esHoy=dateStr(d)===new Date().toISOString().slice(0,10);
@@ -1004,16 +1023,24 @@ function renderCalAdmin(){
         const evF2=parseFloat(ev.fin.slice(11,13))+(ev.fin.slice(14,16)==='30'?0.5:0);
         return evF===fecha&&v>=evI&&v<evF2;
       });
-      if(!evs.length)return`<div class="cslot ${cls} empty"></div>`;
+      // Slot vacío: en modo mover → destino potencial
+      if(!evs.length){
+        if(citaSeleccionada) return`<div class="cslot ${cls} move-target" onclick="confirmarMovimiento('${fecha}',${v})"></div>`;
+        return`<div class="cslot ${cls} empty"></div>`;
+      }
       const chips=evs.map(ev=>{
         const esSaryEv=esSary(ev);
+        const esMoviendo=citaSeleccionada&&citaSeleccionada.id===ev.id;
         const displayNombre=esSaryEv?primerNombre(ev.paciente||'—'):primerNombre(ev.nombreBase);
         let bg=esSaryEv?COLOR_SARY:colorPsy(ev.nombreBase),badge='',statusCls='';
         if(ev.estado==='cancelo')  {bg='#c07070';badge='✕';statusCls='cancelo';}
         if(ev.estado==='descuento'){bg='#c09030';badge='%';}
-        const clickable=ev.estado!=='cancelo'&&!esSaryEv;
-        const onclick=clickable?`onclick="abrirEstadoModal('${ev.id}')"`:'' ;
-        return`<div class="ac ${statusCls}" style="background:${bg};" data-badge="${badge}" ${onclick} title="${ev.roomNombre} · ${horaLeg(ev.inicio)}-${horaLeg(ev.fin)}${esSaryEv?' · Sary':''}">
+        // Click: citas Sary movibles, psicólogos → estado
+        let onclick='';
+        if(esSaryEv&&ev.estado!=='cancelo') onclick=`onclick="seleccionarCitaParaMover('${ev.id}')"`;
+        else if(!esSaryEv&&ev.estado!=='cancelo') onclick=`onclick="abrirEstadoModal('${ev.id}')"`;
+        const movCls=esMoviendo?' moving':(esSaryEv&&ev.estado!=='cancelo'?' sary-movible':'');
+        return`<div class="ac ${statusCls}${movCls}" style="background:${bg};" data-badge="${badge}" ${onclick} title="${ev.roomNombre} · ${horaLeg(ev.inicio)}-${horaLeg(ev.fin)}${esSaryEv?' · Toca para mover':''}">
           <span class="ac-name">${displayNombre}</span>
           <span class="ac-room">${ev.roomNombre.replace('Consultorio','C')}${esSaryEv?' 💜':''}</span>
         </div>`;
@@ -1025,8 +1052,54 @@ function renderCalAdmin(){
   grid.innerHTML=headers+rows;
   document.getElementById('cal-section').style.display='block';
 }
-// Estado de cita
-let eventoActual=null,estadoSel='asistio';
+// ══════════════════════════════════════════════════════════════
+//  MOVER CITA DE SARY — Opción B: toca para seleccionar, toca destino
+// ══════════════════════════════════════════════════════════════
+// Estado de cita / mover cita
+let eventoActual=null,estadoSel='asistio',citaSeleccionada=null;
+function seleccionarCitaParaMover(eventoId){
+  const ev=todosLosEventos.find(e=>e.id===eventoId);
+  if(!ev||!esSary(ev))return;
+  if(citaSeleccionada&&citaSeleccionada.id===eventoId){cancelarMovimiento();return;}
+  citaSeleccionada=ev;
+  renderCalAdmin();
+  showToast(`${primerNombre(ev.paciente||'—')} seleccionada — toca el horario destino`,'');
+}
+function cancelarMovimiento(){
+  citaSeleccionada=null;
+  renderCalAdmin();
+}
+async function confirmarMovimiento(fecha,hora){
+  if(!citaSeleccionada)return;
+  const ev=citaSeleccionada;
+  const duracion=calcDuracion(ev.inicio,ev.fin);
+  const nuevaHoraFin=hora+duracion;
+  if(nuevaHoraFin>H_FIN){showToast('El horario de fin queda fuera del horario disponible','error');return;}
+  const paciente=primerNombre(ev.paciente||'—');
+  if(!confirm(`¿Mover cita de ${paciente}?\n\nNuevo horario: ${fmtCorta(fecha)} · ${fmtHora(hora)} – ${fmtHora(nuevaHoraFin)}`))return;
+  const fISO=(f,v)=>`${f}T${toISO(v)}`;
+  try{
+    const data=await fetchJSONP(`${SCRIPT_URL}?accion=moverCitaSary`+
+      `&eventoId=${encodeURIComponent(ev.id)}&calendarioId=${encodeURIComponent(ev.calId)}`+
+      `&inicio=${encodeURIComponent(ev.inicio)}`+
+      `&nuevaFechaIni=${encodeURIComponent(fISO(fecha,hora))}&nuevaFechaFin=${encodeURIComponent(fISO(fecha,nuevaHoraFin))}`+
+      `&paciente=${encodeURIComponent(ev.paciente||'')}&fee=${ev.fee||0}`);
+    if(data.ok){
+      const idx=todosLosEventos.findIndex(e=>e.id===ev.id);
+      if(idx>=0) todosLosEventos[idx]={...todosLosEventos[idx],id:data.nuevoEventoId,inicio:fISO(fecha,hora),fin:fISO(fecha,nuevaHoraFin)};
+      citaSeleccionada=null;
+      renderCalAdmin();renderTotales();renderStats();
+      showToast(`Cita de ${paciente} movida a ${fmtHora(hora)}`,'success');
+    }else{
+      showToast(data.mensaje||data.error||'Error al mover','error');
+    }
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+function calcDuracion(inicio,fin){
+  const hIni=parseFloat(inicio.slice(11,13))+(inicio.slice(14,16)==='30'?0.5:0);
+  const hFin=parseFloat(fin.slice(11,13))+(fin.slice(14,16)==='30'?0.5:0);
+  return hFin-hIni;
+}
 function abrirEstadoModal(eventoId){
   eventoActual=todosLosEventos.find(e=>e.id===eventoId);
   if(!eventoActual||esSary(eventoActual))return;
