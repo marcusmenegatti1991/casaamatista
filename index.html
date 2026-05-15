@@ -377,6 +377,22 @@
         <div class="field"><label for="a-fin">Hasta</label><input type="date" id="a-fin"></div>
         <button class="btn-primary" onclick="cargarAdmin()">Consultar período</button>
       </div>
+      <div id="cal-section" style="display:none;">
+        <p class="section-title">Calendario — toca una cita para registrar estado o moverla</p>
+        <div id="move-banner"></div>
+        <div class="cal-legend">
+          <div class="cl-item"><div class="cl-dot" style="background:#3B82F6;"></div>Sin marcar</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--red);opacity:.6;"></div>Canceló</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--amber);"></div>Descuento</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--plum);"></div>Sary (toca para mover)</div>
+        </div>
+        <div class="cal-nav">
+          <button class="btn-nav" onclick="navSemana(-1)">&#8592; Semana anterior</button>
+          <h3 id="cal-titulo">—</h3>
+          <button class="btn-nav" onclick="navSemana(1)">Semana siguiente &#8594;</button>
+        </div>
+        <div class="cal-wrapper"><div class="cal-grid" id="cal-grid"></div></div>
+      </div>
       <!-- Totales separados -->
       <div class="totales-grid" id="totales-grid" style="display:none;">
         <div class="total-box rentas">
@@ -396,22 +412,6 @@
         <div class="stat-card"><div class="stat-label">Cancelaron</div><div class="stat-value sv-red" id="st-cancelo">—</div></div>
         <div class="stat-card"><div class="stat-label">Descuento</div><div class="stat-value sv-amber" id="st-desc">—</div></div>
         <div class="stat-card"><div class="stat-label">Sesiones Sary</div><div class="stat-value sv-plum" id="st-sary">—</div></div>
-      </div>
-      <div id="cal-section" style="display:none;">
-        <p class="section-title">Calendario — toca un nombre para registrar estado · toca una cita 💜 para moverla</p>
-        <div id="move-banner"></div>
-        <div class="cal-legend">
-          <div class="cl-item"><div class="cl-dot" style="background:#3B82F6;"></div>Sin marcar</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--red);opacity:.6;"></div>Canceló</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--amber);"></div>Descuento</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--plum);"></div>Sary (toca para mover)</div>
-        </div>
-        <div class="cal-nav">
-          <button class="btn-nav" onclick="navSemana(-1)">&#8592; Semana anterior</button>
-          <h3 id="cal-titulo">—</h3>
-          <button class="btn-nav" onclick="navSemana(1)">Semana siguiente &#8594;</button>
-        </div>
-        <div class="cal-wrapper"><div class="cal-grid" id="cal-grid"></div></div>
       </div>
       <div id="psy-section" style="display:none;">
         <p class="section-title">Resumen por psicólogo (rentas)</p>
@@ -587,7 +587,11 @@
       <button class="btnc" onclick="cerrarEstadoModal()">Cancelar</button>
       <button class="btnok" id="btn-estado-ok" onclick="guardarEstado()">Guardar</button>
     </div>
-    <div style="border-top:1px solid var(--cream-dark);margin-top:.9rem;padding-top:.75rem;text-align:center;">
+    <div style="border-top:1px solid var(--cream-dark);margin-top:.9rem;padding-top:.75rem;text-align:center;display:flex;flex-direction:column;gap:.45rem;align-items:center;">
+      <button onclick="moverDesdModal()"
+        style="font-family:'Lora',serif;font-size:.78rem;color:var(--sage-dark);background:var(--sage-light);border:1px solid #a5c8be;border-radius:8px;cursor:pointer;padding:.3rem .9rem;width:100%;">
+        📍 Mover esta cita a otro horario
+      </button>
       <button id="btn-borrar-evento" onclick="borrarEventoSinCargo()"
         style="font-family:'Lora',serif;font-size:.75rem;color:var(--ink-light);background:none;border:none;cursor:pointer;text-decoration:underline;padding:.25rem .5rem;"
         title="Elimina la cita del calendario sin registrar cancelación ni cargo">
@@ -1004,7 +1008,8 @@ function renderCalAdmin(){
   if(banner){
     if(citaSeleccionada){
       banner.style.display='flex';
-      banner.innerHTML=`📍 Moviendo: <strong>${primerNombre(citaSeleccionada.paciente||'—')}</strong> · ${horaLeg(citaSeleccionada.inicio)}–${horaLeg(citaSeleccionada.fin)} &nbsp;— toca el horario destino&nbsp;
+      const movNombre=esSary(citaSeleccionada)?primerNombre(citaSeleccionada.paciente||citaSeleccionada.nombreBase||'—'):primerNombre(citaSeleccionada.nombreBase||'—');
+      banner.innerHTML=`📍 Moviendo: <strong>${movNombre}</strong> · ${horaLeg(citaSeleccionada.inicio)}–${horaLeg(citaSeleccionada.fin)} &nbsp;— toca el horario destino&nbsp;
         <button onclick="cancelarMovimiento()" style="font-family:'Lora',serif;font-size:.72rem;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:.2rem .65rem;cursor:pointer;color:white;margin-left:auto;">✕ Cancelar</button>`;
     }else{banner.style.display='none';}
   }
@@ -1059,11 +1064,17 @@ function renderCalAdmin(){
 let eventoActual=null,estadoSel='asistio',citaSeleccionada=null;
 function seleccionarCitaParaMover(eventoId){
   const ev=todosLosEventos.find(e=>e.id===eventoId);
-  if(!ev||!esSary(ev))return;
+  if(!ev)return;
   if(citaSeleccionada&&citaSeleccionada.id===eventoId){cancelarMovimiento();return;}
   citaSeleccionada=ev;
+  cerrarEstadoModal();
   renderCalAdmin();
-  showToast(`${primerNombre(ev.paciente||'—')} seleccionada — toca el horario destino`,'');
+  const nombre=esSary(ev)?primerNombre(ev.paciente||ev.nombreBase||'—'):primerNombre(ev.nombreBase||'—');
+  showToast(`${nombre} seleccionado/a — toca el horario destino`,'');
+}
+function moverDesdModal(){
+  if(!eventoActual)return;
+  seleccionarCitaParaMover(eventoActual.id);
 }
 function cancelarMovimiento(){
   citaSeleccionada=null;
@@ -1075,7 +1086,7 @@ async function confirmarMovimiento(fecha,hora){
   const duracion=calcDuracion(ev.inicio,ev.fin);
   const nuevaHoraFin=hora+duracion;
   if(nuevaHoraFin>H_FIN){showToast('El horario de fin queda fuera del horario disponible','error');return;}
-  const paciente=primerNombre(ev.paciente||'—');
+  const paciente=esSary(ev)?primerNombre(ev.paciente||ev.nombreBase||'—'):primerNombre(ev.nombreBase||'—');
   if(!confirm(`¿Mover cita de ${paciente}?\n\nNuevo horario: ${fmtCorta(fecha)} · ${fmtHora(hora)} – ${fmtHora(nuevaHoraFin)}`))return;
   const fISO=(f,v)=>`${f}T${toISO(v)}`;
   try{
@@ -1089,7 +1100,7 @@ async function confirmarMovimiento(fecha,hora){
       if(idx>=0) todosLosEventos[idx]={...todosLosEventos[idx],id:data.nuevoEventoId,inicio:fISO(fecha,hora),fin:fISO(fecha,nuevaHoraFin)};
       citaSeleccionada=null;
       renderCalAdmin();renderTotales();renderStats();
-      showToast(`Cita de ${paciente} movida a ${fmtHora(hora)}`,'success');
+      showToast(`Cita de ${paciente} movida a ${fmtHora(hora)} ✓`,'success');
     }else{
       showToast(data.mensaje||data.error||'Error al mover','error');
     }
