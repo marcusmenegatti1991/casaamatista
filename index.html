@@ -2,6 +2,9 @@
 <html lang="es"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Casa Amatista</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -651,6 +654,17 @@ async function sha256(t){const d=await crypto.subtle.digest('SHA-256',new TextEn
 const TARIFA_ASISTIO=55, TARIFA_CANCELO=30;
 const H_INI=8, H_FIN=21;
 const SESSION_KEY='amatista_session';
+// ── Limpieza de caché: si hay una versión nueva publicada, recarga automáticamente ──
+(async function(){
+  try{
+    const r=await fetch(location.pathname,{method:'HEAD',cache:'no-store'});
+    const v=r.headers.get('etag')||r.headers.get('last-modified')||'';
+    if(!v)return;
+    const prev=localStorage.getItem('amatista_version');
+    localStorage.setItem('amatista_version',v);
+    if(prev&&prev!==v)location.replace(location.pathname+'?v='+Date.now());
+  }catch(_){/* modo local (file://): se ignora */}
+})();
 // ══════════════════════════════════════════════════════════════
 const COLORES=['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#84CC16','#F97316','#6366F1','#14B8A6','#BE185D'];
 const COLOR_SARY='#7A6F8F';
