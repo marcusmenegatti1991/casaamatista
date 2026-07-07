@@ -18,23 +18,20 @@
     }
     body{background:var(--cream);font-family:'Lora',Georgia,serif;color:var(--ink);min-height:100vh;}
     /* LOGIN */
-    #login-screen{min-height:100vh;display:flex;flex-direction:column;background:linear-gradient(160deg,var(--plum-dark) 0%,var(--plum) 60%,#9B8FAF 100%);}
-    .login-top{display:flex;justify-content:flex-end;padding:1rem 1.5rem;}
-    .btn-admin-login{font-size:0.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.2);cursor:pointer;border:none;background:none;font-family:'Lora',serif;padding:.25rem .5rem;transition:color .2s;}
-    .btn-admin-login:hover{color:rgba(255,255,255,.55);}
-    .login-center{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 1rem;}
-    .login-card{background:var(--white);border-radius:20px;padding:2.5rem 2rem;width:100%;max-width:360px;box-shadow:0 24px 64px rgba(42,37,32,.22);}
-    .login-logo{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;text-align:center;}
-    .login-card h2{font-family:'Playfair Display',serif;font-weight:400;font-size:1.75rem;text-align:center;color:var(--ink);margin-bottom:.25rem;}
-    .login-card h2 em{font-style:italic;color:var(--plum);}
-    .login-sub{font-size:.82rem;color:var(--ink-light);text-align:center;margin-bottom:1.75rem;}
-    .lfield{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem;}
-    .lfield label{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mid);}
-    .lfield input{font-family:'Lora',serif;font-size:.92rem;color:var(--ink);background:var(--cream);border:1px solid var(--cream-dark);border-radius:10px;padding:.65rem .9rem;outline:none;transition:border-color .2s,box-shadow .2s;}
-    .lfield input:focus{border-color:var(--plum);box-shadow:0 0 0 3px rgba(122,111,143,.14);}
-    .login-error{font-size:.78rem;color:var(--red);text-align:center;margin-bottom:.75rem;min-height:1.2em;}
-    .btn-login{width:100%;font-family:'Lora',serif;font-size:.9rem;background:var(--plum);color:white;border:none;border-radius:10px;padding:.75rem;cursor:pointer;transition:background .2s;margin-top:.25rem;}
-    .btn-login:hover{background:var(--plum-dark);}
+    #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1rem;background:linear-gradient(160deg,#2B2635 0%,#3A3348 55%,#4A4059 100%);}
+    .login-card{position:relative;background:#3E374F;border-radius:18px;padding:2.75rem 2.25rem 3rem;width:100%;max-width:430px;box-shadow:0 8px 24px rgba(0,0,0,.25),0 28px 70px rgba(0,0,0,.35);}
+    .btn-admin-login{position:absolute;top:1.1rem;right:1.3rem;font-size:0.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);cursor:pointer;border:none;background:none;font-family:'Lora',serif;padding:.25rem .4rem;transition:color .2s;}
+    .btn-admin-login:hover{color:rgba(255,255,255,.7);}
+    .login-brand-logo{display:block;width:min(185px,55vw);margin:0 auto .35rem;border-radius:16px;-webkit-mask-image:radial-gradient(ellipse 78% 82% at 50% 50%,#000 62%,transparent 94%);mask-image:radial-gradient(ellipse 78% 82% at 50% 50%,#000 62%,transparent 94%);}
+    .login-sub{font-family:'Playfair Display',serif;font-size:1rem;color:#B9A8D6;text-align:center;letter-spacing:.06em;margin:0 0 1.75rem;}
+    .lfield{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.25rem;}
+    .lfield label{font-size:.92rem;color:rgba(255,255,255,.9);letter-spacing:.02em;}
+    .lfield input{font-family:'Lora',serif;font-size:1rem;color:#fff;background:rgba(0,0,0,.14);border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:.8rem 1rem;outline:none;transition:border-color .2s,box-shadow .2s;}
+    .lfield input::placeholder{color:rgba(255,255,255,.3);font-style:italic;}
+    .lfield input:focus{border-color:#B9A8D6;box-shadow:0 0 0 3px rgba(185,168,214,.18);}
+    .login-error{font-size:.82rem;color:#FF9E9E;text-align:center;margin-bottom:.5rem;min-height:1.2em;}
+    .btn-login{width:100%;font-family:'Lora',serif;font-size:1.1rem;background:#C3B1E1;color:#26202E;border:none;border-radius:12px;padding:.9rem;cursor:pointer;transition:background .2s;margin-top:1rem;}
+    .btn-login:hover{background:#D3C4EC;}
     .btn-login:disabled{background:var(--ink-light);cursor:not-allowed;}
     /* HEADER */
     header{background:#D4C5E2;padding:1.25rem 2rem 1rem;text-align:center;position:relative;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;}
@@ -288,23 +285,18 @@
 <body>
 <!-- LOGIN -->
 <div id="login-screen">
-  <div class="login-top">
-    <button class="btn-admin-login" onclick="mostrarLoginAdmin()">admin</button>
-  </div>
-  <div class="login-center">
     <div class="login-card">
-      <p class="login-logo">Casa Amatista</p>
-      <h2>Bienvenida/o</h2>
-      <p class="login-sub">Ingresa tu usuario para acceder</p>
+      <button class="btn-admin-login" onclick="mostrarLoginAdmin()">admin</button>
+      <img class="login-brand-logo" src="fotos/logo.png" alt="Casa Amatista">
+      <p class="login-sub">Bienvenido(a)</p>
       <div class="lfield">
         <label for="l-user">Usuario</label>
-        <input type="text" id="l-user" placeholder="garcia.lopez" autocomplete="username"
+        <input type="text" id="l-user" placeholder="ej. garcia.lopez" autocomplete="username"
           onkeydown="if(event.key==='Enter') doLogin()">
       </div>
       <p class="login-error" id="l-error"></p>
       <button class="btn-login" id="btn-login" onclick="doLogin()">Entrar</button>
     </div>
-  </div>
 </div>
 <!-- VISTA USUARIO -->
 <div id="vista-usuario" style="display:none;">
@@ -654,7 +646,8 @@ const CALENDARIOS = {
   'taller':'ca7c63526ea07f923b30a30bafc3d5149091d37c85546f16c1783b682382d952@group.calendar.google.com',
 };
 const NOMBRES={'consultorio-1':'Consultorio 1','consultorio-2':'Consultorio 2','consultorio-3':'Consultorio 3','taller':'Taller'};
-const ADMIN_PASSWORD='amatista2024';
+const ADMIN_HASH='deb409b616259106c95fa3bc1fe16566a6350e5f12df597ea3c101001e44e7de'; // SHA-256, la contraseña no aparece en el código
+async function sha256(t){const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('');}
 const TARIFA_ASISTIO=55, TARIFA_CANCELO=30;
 const H_INI=8, H_FIN=21;
 const SESSION_KEY='amatista_session';
@@ -891,7 +884,8 @@ function mostrarLoginAdmin(){
 }
 function cerrarLoginAdmin(){document.getElementById('modal-admin').classList.remove('open');}
 async function verificarAdmin(){
-  if(document.getElementById('admin-pw').value!==ADMIN_PASSWORD){
+  const hashIngresado=await sha256(document.getElementById('admin-pw').value);
+  if(hashIngresado!==ADMIN_HASH){
     document.getElementById('admin-error').style.display='block';return;
   }
   cerrarLoginAdmin();
