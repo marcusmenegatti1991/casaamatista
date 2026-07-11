@@ -84,6 +84,13 @@
     .slot.available:hover::after{content:'+ Reservar';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:var(--sage-dark);letter-spacing:.05em;pointer-events:none;}
     .slot.occupied{cursor:default;}
     .chip{display:flex;align-items:center;height:100%;min-height:30px;border-radius:4px;padding:3px 5px;font-size:.65rem;font-family:'Lora',serif;font-weight:500;color:white;line-height:1.2;overflow:hidden;}
+    .slot.mine{cursor:pointer;}
+    .slot.mine .chip{outline:2px solid var(--gold);outline-offset:-2px;justify-content:space-between;gap:4px;}
+    .slot.mine .chip::after{content:'✕';font-size:.7rem;opacity:.85;flex:0 0 auto;}
+    .slot.mine:hover .chip{filter:brightness(1.15);}
+    .cancel-warning{background:var(--red-light);border:1px solid var(--red);border-radius:8px;padding:.7rem .9rem;font-size:.82rem;color:var(--red);margin-bottom:1rem;line-height:1.45;}
+    .cancel-free{background:var(--green-light);border:1px solid var(--green);border-radius:8px;padding:.7rem .9rem;font-size:.82rem;color:var(--green);margin-bottom:1rem;line-height:1.45;}
+    .filtro-sc{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--ink-mid);cursor:pointer;user-select:none;justify-content:center;margin:.4rem 0 .2rem;}
     .slot.loading{background:var(--cream);animation:pulse 1.2s ease-in-out infinite;}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
     .idle-state{text-align:center;padding:4rem 1rem;color:var(--ink-light);}
@@ -387,6 +394,7 @@
           <h3 id="cal-titulo">—</h3>
           <button class="btn-nav" onclick="navSemana(1)">Semana siguiente &#8594;</button>
         </div>
+        <label class="filtro-sc"><input type="checkbox" id="chk-sin-cargo" onchange="mostrarSinCargo=this.checked;renderCalAdmin();"> Mostrar canceladas sin cargo</label>
         <div class="cal-wrapper"><div class="cal-grid" id="cal-grid"></div></div>
       </div>
       <!-- Totales separados -->
@@ -536,6 +544,19 @@
     <div class="mactions">
       <button class="btnc" onclick="cerrarModal()">Cancelar</button>
       <button class="btnok" id="btnok" onclick="confirmar()">Confirmar reserva</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL cancelar cita usuario -->
+<div class="overlay" id="modal-cancelar">
+  <div class="modal">
+    <h3>Cancelar cita</h3>
+    <p class="modal-sub">Revisa los datos de la cita a cancelar.</p>
+    <div class="modal-detail" id="cancel-detail">Buscando tu cita…</div>
+    <div id="cancel-aviso"></div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarModalCancelar()">Volver</button>
+      <button class="btnok" id="btn-cancelar-ok" onclick="confirmarCancelacion()" style="background:var(--red);" disabled>Cancelar cita</button>
     </div>
   </div>
 </div>
@@ -799,6 +820,13 @@ function renderGrid(data,fecha){
       const raw=data[id]?.[key];const estado=typeof raw==='object'?raw.estado:raw;const psyNom=typeof raw==='object'?raw.nombre:null;
       if(estado==='ocupada'){
         const col=colorPsy(psyNom||'');
+        const session=getSession();
+        const nomSes=normNombre(session?.nombreCompleto||'');
+        const nomPsy=normNombre(psyNom||'');
+        const esMia=nomPsy&&nomSes&&(nomPsy===nomSes||nomSes.startsWith(nomPsy)||nomPsy.startsWith(nomSes));
+        if(esMia){
+          return`<div class="slot occupied mine ${cls}" onclick="abrirModalCancelar('${id}',${v},'${fecha}')" title="Tu cita — toca para cancelar"><div class="chip" style="background:${col};"><span>${primerNombre(psyNom)}</span></div></div>`;
+        }
         return`<div class="slot occupied ${cls}"><div class="chip" style="background:${col};">${primerNombre(psyNom)||'Ocupado'}</div></div>`;
       }
       return`<div class="slot available ${cls}" onclick="abrirModal('${id}',${v},'${fecha}')"></div>`;
@@ -844,6 +872,63 @@ async function confirmar(){
     cargarDisponibilidad();
   }catch(e){showToast('Error al conectar','error');}
   finally{btn.disabled=false;btn.textContent='Confirmar reserva';}
+}
+// ══════════════════════════════════════════════════════════════
+//  CANCELAR CITA (USUARIO)
+//  ≤2h de anticipación → cargo de $30. Siempre queda registrada
+//  en admin; las sin cargo se marcan con '|SC' en roomNombre.
+// ══════════════════════════════════════════════════════════════
+const HORAS_LIMITE_CANCELACION=2;
+let citaACancelar=null;
+async function abrirModalCancelar(roomId,slot,fecha){
+  const session=getSession();if(!session){doLogout();return;}
+  citaACancelar=null;
+  document.getElementById('cancel-detail').innerHTML='Buscando tu cita…';
+  document.getElementById('cancel-aviso').innerHTML='';
+  document.getElementById('btn-cancelar-ok').disabled=true;
+  document.getElementById('modal-cancelar').classList.add('open');
+  try{
+    const evs=await fetchJSONP(`${SCRIPT_URL}?accion=listarEventos&fechaIni=${fecha}&fechaFin=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[roomId])}&roomId=${roomId}`);
+    const nomSes=normNombre(session.nombreCompleto);
+    const ev=(Array.isArray(evs)?evs:[]).find(e=>{
+      const evI=parseFloat(e.inicio.slice(11,13))+(e.inicio.slice(14,16)==='30'?0.5:0);
+      const evF=parseFloat(e.fin.slice(11,13))+(e.fin.slice(14,16)==='30'?0.5:0);
+      const nomEv=normNombre(e.nombreBase||'');
+      const esMia=nomEv===nomSes||nomSes.startsWith(nomEv)||nomEv.startsWith(nomSes);
+      return esMia&&slot>=evI&&slot<evF;
+    });
+    if(!ev){document.getElementById('cancel-detail').innerHTML='No se encontró la cita. Actualiza la página e intenta de nuevo.';return;}
+    const inicio=new Date(ev.inicio);
+    if(inicio<=new Date()){
+      document.getElementById('cancel-detail').innerHTML='Esta cita ya inició o pasó; no se puede cancelar desde aquí.';
+      return;
+    }
+    citaACancelar={...ev,roomId,roomNombre:NOMBRES[roomId],calId:CALENDARIOS[roomId]};
+    const horasFaltan=(inicio-new Date())/36e5;
+    citaACancelar.conCargo=horasFaltan<=HORAS_LIMITE_CANCELACION;
+    document.getElementById('cancel-detail').innerHTML=
+      `<strong>Espacio:</strong> ${NOMBRES[roomId]}<br><strong>Fecha:</strong> ${fmtFecha(fecha)}<br><strong>Horario:</strong> ${horaLeg(ev.inicio)}–${horaLeg(ev.fin)}<br><strong>Psicólogo/a:</strong> ${primerNombre(session.nombreCompleto)}`;
+    document.getElementById('cancel-aviso').innerHTML=citaACancelar.conCargo
+      ?`<div class="cancel-warning">⚠️ Faltan menos de ${HORAS_LIMITE_CANCELACION} horas para tu cita. Esta cancelación tendrá un <strong>cargo de $30 pesos</strong>.</div>`
+      :`<div class="cancel-free">✓ Cancelación sin cargo (con más de ${HORAS_LIMITE_CANCELACION} horas de anticipación).</div>`;
+    document.getElementById('btn-cancelar-ok').disabled=false;
+  }catch(e){document.getElementById('cancel-detail').innerHTML='Error al conectar. Intenta de nuevo.';}
+}
+function cerrarModalCancelar(){document.getElementById('modal-cancelar').classList.remove('open');citaACancelar=null;}
+async function confirmarCancelacion(){
+  if(!citaACancelar)return;
+  const btn=document.getElementById('btn-cancelar-ok');
+  btn.disabled=true;btn.textContent='Cancelando…';
+  const ev=citaACancelar;
+  // Marca '|SC' en roomNombre cuando es sin cargo → el admin la distingue
+  const roomNom=ev.conCargo?ev.roomNombre:ev.roomNombre+'|SC';
+  try{
+    await fetchJSONP(`${SCRIPT_URL}?accion=cancelarEvento&eventoId=${encodeURIComponent(ev.id)}&calendarioId=${encodeURIComponent(ev.calId)}&roomId=${encodeURIComponent(ev.roomId)}&roomNombre=${encodeURIComponent(roomNom)}&nombreBase=${encodeURIComponent(ev.nombreBase)}&inicio=${encodeURIComponent(ev.inicio)}&fin=${encodeURIComponent(ev.fin)}`);
+    cerrarModalCancelar();
+    showToast(ev.conCargo?'Cita cancelada · se registró el cargo de $30':'Cita cancelada sin cargo','success');
+    cargarDisponibilidad();
+  }catch(e){showToast('Error al cancelar. Intenta de nuevo.','error');}
+  finally{btn.disabled=false;btn.textContent='Cancelar cita';}
 }
 // ══════════════════════════════════════════════════════════════
 //  EQUIPO PROFESIONAL
@@ -956,7 +1041,10 @@ async function cargarAdmin(){
       estado:estadosMap[ev.id]?.estado||'asistio',
       monto:estadosMap[ev.id]?.monto||TARIFA_ASISTIO,
     }));
-    const cancelados=Array.isArray(canceladosRaw)?canceladosRaw.map(ev=>({...ev,estado:'cancelo',monto:TARIFA_CANCELO})):[];
+    const cancelados=Array.isArray(canceladosRaw)?canceladosRaw.map(ev=>{
+      const sinCargo=(ev.roomNombre||'').includes('|SC');
+      return{...ev,roomNombre:(ev.roomNombre||'').replace('|SC',''),estado:'cancelo',cargo:!sinCargo,monto:sinCargo?0:TARIFA_CANCELO};
+    }):[];
     todosLosEventos=[...activosConEstado,...cancelados].sort((a,b)=>a.inicio.localeCompare(b.inicio));
   }catch(err){showToast('Error: '+err.message,'error');document.getElementById('admin-loading').style.display='none';return;}
   document.getElementById('admin-loading').style.display='none';
@@ -969,7 +1057,7 @@ function renderTotales(){
   const rentas=todosLosEventos.filter(ev=>!esSary(ev));
   const totalRentas=rentas.reduce((s,ev)=>{
     if(ev.estado==='asistio')  return s+(ev.monto||TARIFA_ASISTIO);
-    if(ev.estado==='cancelo')  return s+TARIFA_CANCELO;
+    if(ev.estado==='cancelo')  return s+(ev.cargo===false?0:TARIFA_CANCELO);
     if(ev.estado==='descuento')return s+(ev.monto||0);
     return s;
   },0);
@@ -996,7 +1084,7 @@ function renderPsyTable(){
     if(!psyMap[n])psyMap[n]={ag:0,can:0,desc:0,monto:0,base:ev.nombreBase};
     const p=psyMap[n];
     if(ev.estado==='asistio')  {p.ag++;  p.monto+=ev.monto||TARIFA_ASISTIO;}
-    if(ev.estado==='cancelo')  {p.can++; p.monto+=TARIFA_CANCELO;}
+    if(ev.estado==='cancelo')  {p.can++; p.monto+=(ev.cargo===false?0:TARIFA_CANCELO);}
     if(ev.estado==='descuento'){p.desc++;p.monto+=ev.monto||0;}
   });
   document.getElementById('psy-tbody').innerHTML=Object.entries(psyMap).map(([nombre,d])=>{
@@ -1051,6 +1139,7 @@ async function partirEventosLargos(){
   }
   btn.disabled=false;btn.textContent='✂️ Partir citas largas';
 }
+let mostrarSinCargo=false;
 function renderCalAdmin(){
   const base=new Date(fechaIniAdmin+'T00:00:00');
   const lunes=startOfWeek(base);
@@ -1077,6 +1166,7 @@ function renderCalAdmin(){
     const cols=dias.map(d=>{
       const fecha=dateStr(d);
       const evs=todosLosEventos.filter(ev=>{
+        if(ev.estado==='cancelo'&&ev.cargo===false&&!mostrarSinCargo)return false;
         const evF=ev.inicio.slice(0,10);
         const evI=parseFloat(ev.inicio.slice(11,13))+(ev.inicio.slice(14,16)==='30'?0.5:0);
         const evF2=parseFloat(ev.fin.slice(11,13))+(ev.fin.slice(14,16)==='30'?0.5:0);
@@ -1092,7 +1182,7 @@ function renderCalAdmin(){
         const esMoviendo=citaSeleccionada&&citaSeleccionada.id===ev.id;
         const displayNombre=esSaryEv?primerNombre(ev.paciente||'—'):primerNombre(ev.nombreBase);
         let bg=esSaryEv?COLOR_SARY:colorPsy(ev.nombreBase),badge='',statusCls='';
-        if(ev.estado==='cancelo')  {bg='#c07070';badge='✕';statusCls='cancelo';}
+        if(ev.estado==='cancelo')  {bg=ev.cargo===false?'#9a9a9a':'#c07070';badge=ev.cargo===false?'SC':'✕';statusCls='cancelo';}
         if(ev.estado==='descuento'){bg='#c09030';badge='%';}
         // Click: citas Sary movibles, psicólogos → estado
         let onclick='';
@@ -1580,9 +1670,9 @@ function showToast(msg,tipo=''){
   setTimeout(()=>{t.className=`toast ${tipo}`;},3800);
 }
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){cerrarModal();cerrarLoginAdmin();cerrarEstadoModal();cerrarBatchModal();cerrarEditarPaciente();}
+  if(e.key==='Escape'){cerrarModal();cerrarLoginAdmin();cerrarEstadoModal();cerrarBatchModal();cerrarEditarPaciente();cerrarModalCancelar();}
 });
-[document.getElementById('modal'),document.getElementById('modal-admin'),document.getElementById('modal-estado'),document.getElementById('modal-batch'),document.getElementById('modal-edit-pac')]
+[document.getElementById('modal'),document.getElementById('modal-admin'),document.getElementById('modal-estado'),document.getElementById('modal-batch'),document.getElementById('modal-edit-pac'),document.getElementById('modal-cancelar')]
   .forEach(m=>m&&m.addEventListener('click',e=>{if(e.target===e.currentTarget)e.target.classList.remove('open');}));
 </script>
 </body></html>
