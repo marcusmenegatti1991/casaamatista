@@ -754,11 +754,57 @@ function dateStr(d){return d.toISOString().slice(0,10);}
 function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 function horaLeg(iso){return iso.slice(11,16);}
 function startOfWeek(d){const r=new Date(d);r.setDate(r.getDate()-(r.getDay()||7)+1);return r;}
+// ══════════════════════════════════════════════════════════════
+//  LLAMADAS AL BACKEND (Google Apps Script)
+// ══════════════════════════════════════════════════════════════
+//  EL PROBLEMA QUE ESTO RESUELVE:
+//  Si el usuario tiene VARIAS cuentas de Google abiertas en su
+//  navegador, Google reescribe la URL del script:
+//
+//     script.google.com/macros/s/AKfy.../exec
+//     script.google.com/macros/u/2/s/AKfy.../exec     ← la reescribe
+//                              ↑↑↑
+//
+//  y responde con una página de error de Google Drive en vez del
+//  JSON. Como esa página no es JavaScript válido, el <script> del
+//  JSONP falla y el usuario ve "Error de conexión".
+//
+//  Por eso en modo incógnito sí funciona: sin cuentas iniciadas,
+//  Google sirve la versión anónima, que es la que necesitamos
+//  (el deployment tiene acceso "Cualquier usuario").
+//
+//  LA SOLUCIÓN: pedir con credentials:'omit'. Sin cookies, Google
+//  no puede enrutar a ninguna cuenta y devuelve el JSON anónimo.
+//
+//  Si por lo que sea el fetch no se puede hacer (CORS, navegador
+//  viejo), cae automáticamente al JSONP de siempre. Nunca queda
+//  peor que antes.
+// ──────────────────────────────────────────────────────────────
+const TIMEOUT_BACKEND = 30000;   // Apps Script tarda al despertar
+
+async function llamarBackend(url){
+  // 1º intento — fetch anónimo, inmune al problema de multicuenta
+  try{
+    const ctrl = new AbortController();
+    const t = setTimeout(()=>ctrl.abort(), TIMEOUT_BACKEND);
+    const r = await fetch(url, {method:'GET', credentials:'omit', redirect:'follow', signal:ctrl.signal});
+    clearTimeout(t);
+    if(r.ok){
+      const txt = await r.text();
+      try{ return JSON.parse(txt); }
+      catch(_){ /* no vino JSON (¿página de error?) → probamos JSONP */ }
+    }
+  }catch(_){ /* CORS, red caída o timeout → probamos JSONP */ }
+
+  // 2º intento — JSONP de toda la vida
+  return fetchJSONP(url);
+}
+
 function fetchJSONP(url){
   return new Promise((resolve,reject)=>{
     const cb='cb_'+Math.random().toString(36).slice(2);
     const s=document.createElement('script');
-    const t=setTimeout(()=>{cleanup();reject(new Error('Timeout'));},15000);
+    const t=setTimeout(()=>{cleanup();reject(new Error('Timeout'));},TIMEOUT_BACKEND);
     function cleanup(){delete window[cb];if(s.parentNode)document.head.removeChild(s);clearTimeout(t);}
     window[cb]=data=>{cleanup();resolve(data);};
     s.onerror=()=>{cleanup();reject(new Error('Script error'));};
@@ -797,10 +843,19 @@ async function doLogin(){
   if(!username){err.textContent='Ingresa tu usuario';return;}
   btn.disabled=true;btn.textContent='Verificando…';err.textContent='';
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=login&username=${encodeURIComponent(username)}`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=login&username=${encodeURIComponent(username)}`);
     if(data.ok){saveSession({username:data.username,nombreCompleto:data.nombreCompleto,id:data.id,profesion:data.profesion||'psicologo'});mostrarVistaUsuario(data.nombreCompleto,data.profesion||'psicologo');}
     else err.textContent='Usuario no registrado. Contacta a la administración.';
-  }catch(e){err.textContent='Error de conexión. Intenta de nuevo.';}
+  }catch(e){
+    // Mensajes que de verdad orientan, en vez de un "error de conexión" genérico
+    if(navigator.onLine===false){
+      err.textContent='Sin conexión a internet. Revisa tu wifi o datos móviles.';
+    }else if(/timeout/i.test(e.message||'')){
+      err.textContent='El servidor tardó demasiado. Espera unos segundos y vuelve a intentar.';
+    }else{
+      err.textContent='No se pudo conectar con el servidor. Intenta de nuevo; si sigue fallando avisa a la administración.';
+    }
+  }
   finally{btn.disabled=false;btn.textContent='Entrar';}
 }
 function mostrarVistaUsuario(nombreCompleto,profesion){
@@ -847,7 +902,7 @@ async function cargarDisponibilidad(){
   try{
     await Promise.all(IDS.map(async id=>{
       const url=`${SCRIPT_URL}?accion=consultarDisponibilidadHoras&fecha=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
-      res[id]=await fetchJSONP(url);
+      res[id]=await llamarBackend(url);
     }));
     dispon=res;
   }catch(err){
@@ -916,7 +971,7 @@ async function confirmar(){
   const fISO=v=>`${fecha}T${toISO(v)}`;
   const url=`${SCRIPT_URL}?accion=crearEvento&titulo=${encodeURIComponent(nombre)}&inicio=${encodeURIComponent(fISO(hIni))}&fin=${encodeURIComponent(fISO(hFin))}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
   try{
-    const data=await fetchJSONP(url);
+    const data=await llamarBackend(url);
     if(data&&data.error){showToast(data.mensaje||data.error,'error');btn.disabled=false;btn.textContent='Confirmar reserva';return;}
     cerrarModal();
     const extra=data&&data.total>1?` · dividido en ${data.total} hrs`:'';
@@ -940,7 +995,7 @@ async function abrirModalCancelar(roomId,slot,fecha){
   document.getElementById('btn-cancelar-ok').disabled=true;
   document.getElementById('modal-cancelar').classList.add('open');
   try{
-    const evs=await fetchJSONP(`${SCRIPT_URL}?accion=listarEventos&fechaIni=${fecha}&fechaFin=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[roomId])}&roomId=${roomId}`);
+    const evs=await llamarBackend(`${SCRIPT_URL}?accion=listarEventos&fechaIni=${fecha}&fechaFin=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[roomId])}&roomId=${roomId}`);
     const nomSes=normNombre(session.nombreCompleto);
     const ev=(Array.isArray(evs)?evs:[]).find(e=>{
       const evI=parseFloat(e.inicio.slice(11,13))+(e.inicio.slice(14,16)==='30'?0.5:0);
@@ -975,7 +1030,7 @@ async function confirmarCancelacion(){
   // Marca '|SC' en roomNombre cuando es sin cargo → el admin la distingue
   const roomNom=ev.conCargo?ev.roomNombre:ev.roomNombre+'|SC';
   try{
-    await fetchJSONP(`${SCRIPT_URL}?accion=cancelarEvento&eventoId=${encodeURIComponent(ev.id)}&calendarioId=${encodeURIComponent(ev.calId)}&roomId=${encodeURIComponent(ev.roomId)}&roomNombre=${encodeURIComponent(roomNom)}&nombreBase=${encodeURIComponent(ev.nombreBase)}&inicio=${encodeURIComponent(ev.inicio)}&fin=${encodeURIComponent(ev.fin)}`);
+    await llamarBackend(`${SCRIPT_URL}?accion=cancelarEvento&eventoId=${encodeURIComponent(ev.id)}&calendarioId=${encodeURIComponent(ev.calId)}&roomId=${encodeURIComponent(ev.roomId)}&roomNombre=${encodeURIComponent(roomNom)}&nombreBase=${encodeURIComponent(ev.nombreBase)}&inicio=${encodeURIComponent(ev.inicio)}&fin=${encodeURIComponent(ev.fin)}`);
     cerrarModalCancelar();
     showToast(ev.conCargo?'Cita cancelada · se registró el cargo de $30':'Cita cancelada sin cargo','success');
     cargarDisponibilidad();
@@ -1044,7 +1099,7 @@ async function verificarAdmin(){
   document.getElementById('vista-usuario').style.display='none';
   document.getElementById('admin-panel').style.display='block';
   try{
-    const r=await fetchJSONP(`${SCRIPT_URL}?accion=inicializar`);
+    const r=await llamarBackend(`${SCRIPT_URL}?accion=inicializar`);
     if(r.ok&&r.total>0&&r.mensaje==='Psicólogos cargados'){
       document.getElementById('init-box').classList.add('show');
       setTimeout(()=>document.getElementById('init-box').classList.remove('show'),4000);
@@ -1080,11 +1135,11 @@ async function cargarAdmin(){
     const [activos,estadosRaw,canceladosRaw]=await Promise.all([
       Promise.all(IDS.map(async id=>{
         const url=`${SCRIPT_URL}?accion=listarEventos&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}&roomId=${id}`;
-        const data=await fetchJSONP(url).catch(()=>[]);
+        const data=await llamarBackend(url).catch(()=>[]);
         return Array.isArray(data)?data.map(ev=>({...ev,roomId:id,roomNombre:NOMBRES[id],calId:CALENDARIOS[id]})):[];
       })).then(a=>a.flat()),
-      fetchJSONP(`${SCRIPT_URL}?accion=listarEstados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}`).catch(()=>[]),
-      fetchJSONP(`${SCRIPT_URL}?accion=listarCancelados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&roomId=todos`).catch(()=>[]),
+      llamarBackend(`${SCRIPT_URL}?accion=listarEstados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}`).catch(()=>[]),
+      llamarBackend(`${SCRIPT_URL}?accion=listarCancelados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&roomId=todos`).catch(()=>[]),
     ]);
     estadosMap={};
     if(Array.isArray(estadosRaw)) estadosRaw.forEach(e=>{estadosMap[e.eventoId]={estado:e.estado,monto:e.monto};});
@@ -1162,7 +1217,7 @@ async function partirEventosLargos(){
   for(const ev of largos){
     try{
       // 1. Borrar evento original del calendario
-      await fetchJSONP(`${SCRIPT_URL}?accion=eliminarCitaSary`+
+      await llamarBackend(`${SCRIPT_URL}?accion=eliminarCitaSary`+
         `&eventoId=${encodeURIComponent(ev.id)}`+
         `&calendarioId=${encodeURIComponent(ev.calId)}`+
         `&inicio=${encodeURIComponent(ev.inicio)}`);
@@ -1173,7 +1228,7 @@ async function partirEventosLargos(){
       let cursor=hIni;
       while(cursor<hFin){
         const slotFin=Math.min(cursor+1,hFin);
-        await fetchJSONP(`${SCRIPT_URL}?accion=crearEvento`+
+        await llamarBackend(`${SCRIPT_URL}?accion=crearEvento`+
           `&titulo=${encodeURIComponent(ev.nombreBase)}`+
           `&inicio=${encodeURIComponent(fecha+'T'+toISO(cursor))}`+
           `&fin=${encodeURIComponent(fecha+'T'+toISO(slotFin))}`+
@@ -1286,7 +1341,7 @@ async function confirmarMovimiento(fecha,hora){
   if(!confirm(`¿Mover cita de ${paciente}?\n\nNuevo horario: ${fmtCorta(fecha)} · ${fmtHora(hora)} – ${fmtHora(nuevaHoraFin)}`))return;
   const fISO=(f,v)=>`${f}T${toISO(v)}`;
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=moverCitaSary`+
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=moverCitaSary`+
       `&eventoId=${encodeURIComponent(ev.id)}&calendarioId=${encodeURIComponent(ev.calId)}`+
       `&inicio=${encodeURIComponent(ev.inicio)}`+
       `&nuevaFechaIni=${encodeURIComponent(fISO(fecha,hora))}&nuevaFechaFin=${encodeURIComponent(fISO(fecha,nuevaHoraFin))}`+
@@ -1332,7 +1387,7 @@ async function borrarEventoSinCargo(){
   const btnBorrar=document.getElementById('btn-borrar-evento');
   btnOk.disabled=true;btnBorrar.disabled=true;btnBorrar.textContent='Borrando…';
   try{
-    await fetchJSONP(`${SCRIPT_URL}?accion=eliminarCitaSary&eventoId=${encodeURIComponent(eventoActual.id)}&calendarioId=${encodeURIComponent(eventoActual.calId)}`);
+    await llamarBackend(`${SCRIPT_URL}?accion=eliminarCitaSary&eventoId=${encodeURIComponent(eventoActual.id)}&calendarioId=${encodeURIComponent(eventoActual.calId)}`);
     todosLosEventos=todosLosEventos.filter(e=>e.id!==eventoActual.id);
     cerrarEstadoModal();
     renderTotales();renderStats();renderPsyTable();renderCalAdmin();
@@ -1347,11 +1402,11 @@ async function guardarEstado(){
   const monto=estadoSel==='descuento'?parseFloat(document.getElementById('desc-amount').value)||0:(estadoSel==='asistio'?TARIFA_ASISTIO:TARIFA_CANCELO);
   try{
     if(estadoSel==='cancelo'){
-      await fetchJSONP(`${SCRIPT_URL}?accion=cancelarEvento&eventoId=${encodeURIComponent(eventoActual.id)}&calendarioId=${encodeURIComponent(eventoActual.calId)}&roomId=${encodeURIComponent(eventoActual.roomId)}&roomNombre=${encodeURIComponent(eventoActual.roomNombre)}&nombreBase=${encodeURIComponent(eventoActual.nombreBase)}&inicio=${encodeURIComponent(eventoActual.inicio)}&fin=${encodeURIComponent(eventoActual.fin)}`);
+      await llamarBackend(`${SCRIPT_URL}?accion=cancelarEvento&eventoId=${encodeURIComponent(eventoActual.id)}&calendarioId=${encodeURIComponent(eventoActual.calId)}&roomId=${encodeURIComponent(eventoActual.roomId)}&roomNombre=${encodeURIComponent(eventoActual.roomNombre)}&nombreBase=${encodeURIComponent(eventoActual.nombreBase)}&inicio=${encodeURIComponent(eventoActual.inicio)}&fin=${encodeURIComponent(eventoActual.fin)}`);
       const idx=todosLosEventos.findIndex(e=>e.id===eventoActual.id);
       if(idx>=0)todosLosEventos[idx]={...todosLosEventos[idx],estado:'cancelo',monto:TARIFA_CANCELO};
     }else{
-      await fetchJSONP(`${SCRIPT_URL}?accion=guardarEstado&eventoId=${encodeURIComponent(eventoActual.id)}&estado=${encodeURIComponent(estadoSel)}&monto=${monto}&calendarioId=${encodeURIComponent(eventoActual.calId)}&fechaIni=${encodeURIComponent(eventoActual.inicio)}&fechaFin=${encodeURIComponent(eventoActual.fin)}&nombreBase=${encodeURIComponent(eventoActual.nombreBase)}`);
+      await llamarBackend(`${SCRIPT_URL}?accion=guardarEstado&eventoId=${encodeURIComponent(eventoActual.id)}&estado=${encodeURIComponent(estadoSel)}&monto=${monto}&calendarioId=${encodeURIComponent(eventoActual.calId)}&fechaIni=${encodeURIComponent(eventoActual.inicio)}&fechaFin=${encodeURIComponent(eventoActual.fin)}&nombreBase=${encodeURIComponent(eventoActual.nombreBase)}`);
       const idx=todosLosEventos.findIndex(e=>e.id===eventoActual.id);
       if(idx>=0)todosLosEventos[idx]={...todosLosEventos[idx],estado:estadoSel,monto};
       estadosMap[eventoActual.id]={estado:estadoSel,monto};
@@ -1371,7 +1426,7 @@ async function registrarPsicologo(){
   const profesion=document.getElementById('psy-profesion').value||'psicologo';
   if(!nombre||!apellido){showToast('Ingresa nombre y apellido','error');return;}
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=registrarPsicologo&nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}&profesion=${encodeURIComponent(profesion)}`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=registrarPsicologo&nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}&profesion=${encodeURIComponent(profesion)}`);
     if(data.ok){
       showToast(`${nombre} ${apellido} registrado · usuario: ${data.username}`,'success');
       document.getElementById('psy-nombre').value='';document.getElementById('psy-apellido').value='';
@@ -1383,7 +1438,7 @@ async function cargarListaPsicologos(){
   document.getElementById('psy-loading').style.display='block';
   ['psy-list-psicologos','psy-list-nutriologos','psy-list-masajistas'].forEach(id=>document.getElementById(id).innerHTML='');
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=listarPsicologos`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=listarPsicologos`);
     document.getElementById('psy-loading').style.display='none';
     if(!Array.isArray(data)||!data.length){
       document.getElementById('psy-list-psicologos').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin profesionales registrados.</td></tr>';
@@ -1421,7 +1476,7 @@ async function cargarListaPsicologos(){
 }
 async function cambiarProfesion(id,nuevaProfesion){
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=actualizarProfesional&id=${encodeURIComponent(id)}&profesion=${encodeURIComponent(nuevaProfesion)}`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=actualizarProfesional&id=${encodeURIComponent(id)}&profesion=${encodeURIComponent(nuevaProfesion)}`);
     if(data.ok){showToast('Profesión actualizada','success');cargarListaPsicologos();}
     else showToast(data.error||'Error','error');
   }catch(e){showToast('Error: '+e.message,'error');}
@@ -1429,7 +1484,7 @@ async function cambiarProfesion(id,nuevaProfesion){
 async function eliminarPsicologo(id,nombre){
   if(!confirm(`¿Eliminar a ${nombre}? Ya no podrá iniciar sesión.`))return;
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=eliminarPsicologo&id=${encodeURIComponent(id)}`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=eliminarPsicologo&id=${encodeURIComponent(id)}`);
     if(data.ok){showToast(`${nombre} eliminado`,'success');cargarListaPsicologos();}
     else showToast('Error al eliminar','error');
   }catch(e){showToast('Error: '+e.message,'error');}
@@ -1441,7 +1496,7 @@ let pacientesRegistry=[];
 async function cargarPacientesRegistry(){
   document.getElementById('pac-loading').style.display='block';
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=listarPacientesRegistry`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=listarPacientesRegistry`);
     pacientesRegistry=Array.isArray(data)?data:[];
     renderPacientesTable();
     poblarSelectPacientes();
@@ -1518,7 +1573,7 @@ async function agendarSary(){
   const fISO=v=>`${fecha}T${toISO(v)}`;
   const url=`${SCRIPT_URL}?accion=agendarSary&calendarioId=${encodeURIComponent(CALENDARIOS[roomId])}&roomId=${encodeURIComponent(roomId)}&roomNombre=${encodeURIComponent(NOMBRES[roomId])}&inicio=${encodeURIComponent(fISO(hIni))}&fin=${encodeURIComponent(fISO(hFin))}&paciente=${encodeURIComponent(pacNombre)}&fee=${fee}`;
   try{
-    const data=await fetchJSONP(url);
+    const data=await llamarBackend(url);
     if(data.ok){
       showToast(`Cita de ${pacNombre} agendada en ${NOMBRES[roomId]}`,'success');
       cargarAgendaSary();
@@ -1532,7 +1587,7 @@ async function cargarAgendaSary(){
   document.getElementById('sary-loading').style.display='block';
   document.getElementById('sary-list').innerHTML='';
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=listarAgendaSary&fechaIni=${ini}&fechaFin=${fin}`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=listarAgendaSary&fechaIni=${ini}&fechaFin=${fin}`);
     document.getElementById('sary-loading').style.display='none';
     if(!Array.isArray(data)||!data.length){
       document.getElementById('sary-list').innerHTML='<div class="admin-empty">Sin citas en este período.</div>';
@@ -1571,7 +1626,7 @@ async function eliminarCitaSary(eventoIdEnc,calIdEnc,pacienteEnc,idx){
   if(!confirm(`¿Eliminar la cita de ${paciente}? También se borrará del calendario.`)) return;
   try{
     if(eventoId&&calId){
-      await fetchJSONP(`${SCRIPT_URL}?accion=eliminarCitaSary&eventoId=${encodeURIComponent(eventoId)}&calendarioId=${encodeURIComponent(calId)}`);
+      await llamarBackend(`${SCRIPT_URL}?accion=eliminarCitaSary&eventoId=${encodeURIComponent(eventoId)}&calendarioId=${encodeURIComponent(calId)}`);
     }
     showToast(`Cita de ${paciente} eliminada`,'success');
     cargarAgendaSary();
@@ -1640,7 +1695,7 @@ async function guardarBatch(){
   let count=0;
   try{
     for(const p of pacientes){
-      await fetchJSONP(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(p.nombre)}&tel=${encodeURIComponent(p.tel)}&fee=${p.fee}`);
+      await llamarBackend(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(p.nombre)}&tel=${encodeURIComponent(p.tel)}&fee=${p.fee}`);
       count++;
     }
     showToast(`${count} paciente${count!==1?'s':''} registrado${count!==1?'s':''}!`,'success');
@@ -1670,7 +1725,7 @@ async function guardarEditarPaciente(){
   const fee=parseFloat(document.getElementById('edit-pac-fee').value)||0;
   if(!nombre){showToast('Ingresa el nombre del paciente','error');return;}
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=actualizarPaciente&id=${pacienteEditando.id}&nombre=${encodeURIComponent(nombre)}&tel=${encodeURIComponent(tel)}&fee=${fee}`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=actualizarPaciente&id=${pacienteEditando.id}&nombre=${encodeURIComponent(nombre)}&tel=${encodeURIComponent(tel)}&fee=${fee}`);
     if(data.ok){
       showToast('Paciente actualizado','success');
       cerrarEditarPaciente();
@@ -1686,7 +1741,7 @@ async function guardarEditarPaciente(){
 async function eliminarPaciente(id,nombre){
   if(!confirm(`¿Eliminar a ${nombre}?`)) return;
   try{
-    const data=await fetchJSONP(`${SCRIPT_URL}?accion=eliminarPacienteSary&id=${encodeURIComponent(id)}`);
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=eliminarPacienteSary&id=${encodeURIComponent(id)}`);
     if(data.ok){
       showToast(`${nombre} eliminado`,'success');
       cargarPacientesRegistry();
@@ -1703,7 +1758,7 @@ function registrarPaciente(){
   const tel=document.getElementById('pac-tel').value.trim();
   const fee=parseFloat(document.getElementById('pac-fee').value)||0;
   if(!nombre){showToast('Ingresa el nombre del paciente','error');return;}
-  fetchJSONP(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(nombre)}&tel=${encodeURIComponent(tel)}&fee=${fee}`).then(data=>{
+  llamarBackend(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(nombre)}&tel=${encodeURIComponent(tel)}&fee=${fee}`).then(data=>{
     if(data.ok){
       showToast(`${nombre} registrado`,'success');
       document.getElementById('pac-nombre').value='';
