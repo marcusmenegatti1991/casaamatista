@@ -2,10 +2,13 @@
 <html lang="es"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <title>Casa Amatista</title>
+  <!-- Los meta http-equiv de Cache-Control NO funcionan: los navegadores los ignoran
+       para el propio documento. El control de caché vive ahora en el archivo _headers
+       (Cloudflare Pages) + el detector de versión que está más abajo en el JS. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://script.google.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -675,16 +678,62 @@ async function sha256(t){const d=await crypto.subtle.digest('SHA-256',new TextEn
 const TARIFA_ASISTIO=55, TARIFA_CANCELO=30;
 const H_INI=8, H_FIN=21;
 const SESSION_KEY='amatista_session';
-// ── Limpieza de caché: si hay una versión nueva publicada, recarga automáticamente ──
-(async function(){
-  try{
-    const r=await fetch(location.pathname,{method:'HEAD',cache:'no-store'});
-    const v=r.headers.get('etag')||r.headers.get('last-modified')||'';
-    if(!v)return;
-    const prev=localStorage.getItem('amatista_version');
-    localStorage.setItem('amatista_version',v);
-    if(prev&&prev!==v)location.replace(location.pathname+'?v='+Date.now());
-  }catch(_){/* modo local (file://): se ignora */}
+// ══════════════════════════════════════════════════════════════
+//  CONTROL DE VERSIÓN — evita que se quede corriendo código viejo
+// ══════════════════════════════════════════════════════════════
+//  Cubre los 3 casos por los que un psicólogo puede quedarse atascado
+//  en una versión antigua (sobre todo en Safari de iPhone/iPad):
+//
+//   1. Carga normal de la página.
+//   2. Volver a una pestaña que llevaba días o semanas abierta.
+//      Safari la restaura desde memoria (bfcache) SIN pedirle nada al
+//      servidor, así que las cabeceras de caché no ayudan aquí.
+//      El evento 'pageshow' con e.persisted===true detecta justo eso.
+//   3. Volver a la app después de cambiar a otra app del teléfono.
+//
+//  Al detectar una publicación nueva, recarga sola. El contador en
+//  sessionStorage evita cualquier bucle de recargas si algo va mal.
+// ──────────────────────────────────────────────────────────────
+(function(){
+  const KEY='amatista_version', GUARD='amatista_recargas';
+  let ocupado=false, ultimaRevision=0;
+
+  function leerGuard(){try{return +(sessionStorage.getItem(GUARD)||0);}catch(_){return 0;}}
+  function escribirGuard(n){try{n===0?sessionStorage.removeItem(GUARD):sessionStorage.setItem(GUARD,n);}catch(_){}}
+  function leerVer(){try{return localStorage.getItem(KEY);}catch(_){return null;}}
+  function escribirVer(v){try{localStorage.setItem(KEY,v);}catch(_){}}
+
+  async function comprobar(forzar){
+    const ahora=Date.now();
+    if(ocupado) return;
+    if(!forzar && ahora-ultimaRevision < 60000) return;   // como mucho 1 revisión por minuto
+    if(navigator.onLine===false) return;
+    ocupado=true; ultimaRevision=ahora;
+    try{
+      // cache:'reload' obliga a ir a la red saltándose cualquier copia local
+      const r=await fetch(location.pathname,{method:'HEAD',cache:'reload'});
+      const v=r.headers.get('etag')||r.headers.get('last-modified')||'';
+      if(v){
+        const prev=leerVer();
+        escribirVer(v);
+        if(prev && prev!==v){
+          const intentos=leerGuard();
+          if(intentos<2){ escribirGuard(intentos+1); location.reload(); return; }
+        }else if(prev===v){
+          escribirGuard(0);
+        }
+      }
+    }catch(_){/* sin conexión, o abierto como archivo local: se ignora */}
+    ocupado=false;
+  }
+
+  comprobar(true);
+  // Safari restauró la pestaña desde bfcache → revisar sí o sí
+  window.addEventListener('pageshow',e=>{ if(e.persisted) comprobar(true); });
+  // El usuario volvió a la pestaña después de estar en otra app
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible') comprobar(false);
+  });
 })();
 // ══════════════════════════════════════════════════════════════
 const COLORES=['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#84CC16','#F97316','#6366F1','#14B8A6','#BE185D'];
@@ -719,7 +768,10 @@ function fetchJSONP(url){
 }
 // SESIÓN
 function getSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY));}catch{return null;}}
-function saveSession(d){localStorage.setItem(SESSION_KEY,JSON.stringify(d));}
+// Safari en Navegación Privada lanza excepción al escribir en localStorage.
+// Sin este try/catch, doLogin() se rompía justo aquí y el usuario se quedaba
+// mirando el botón "Entrar" sin ningún mensaje de error.
+function saveSession(d){try{localStorage.setItem(SESSION_KEY,JSON.stringify(d));}catch(_){/* sesión no persiste, pero la app sigue funcionando */}}
 function clearSession(){localStorage.removeItem(SESSION_KEY);}
 document.addEventListener('DOMContentLoaded',()=>{
   const hoy=new Date().toISOString().slice(0,10);

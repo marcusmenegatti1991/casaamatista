@@ -1,0 +1,39 @@
+# ══════════════════════════════════════════════════════════════
+#  Casa Amatista — cabeceras HTTP (Cloudflare Pages)
+# ══════════════════════════════════════════════════════════════
+#  Este archivo va en la RAÍZ del repo, junto al index.html.
+#  Cloudflare Pages lo lee en cada deploy. GitHub Pages lo ignora,
+#  así que es seguro subirlo antes de migrar.
+#
+#  Las reglas se aplican en orden: las de abajo pisan a las de arriba
+#  cuando repiten la misma cabecera.
+# ──────────────────────────────────────────────────────────────
+
+# Base para todo el sitio
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+# ── EL HTML SE REVALIDA SIEMPRE ──────────────────────────────
+# "no-cache" NO significa "no guardar". Significa: guárdalo, pero
+# pregúntale al servidor antes de usarlo. Si no cambió, el servidor
+# responde 304 (unos bytes) y se usa la copia local: sigue siendo
+# rápido, pero nunca se sirve una versión vieja.
+# Esto es lo que arregla el problema de Safari en iPhone/iPad.
+
+/
+  Cache-Control: no-cache, must-revalidate
+
+/index.html
+  Cache-Control: no-cache, must-revalidate
+
+# ── LAS FOTOS SÍ SE CACHEAN ──────────────────────────────────
+# 1 día "fresca" + 7 días sirviéndola mientras se refresca por detrás.
+# Así las fotos no se vuelven a descargar en cada visita, pero si
+# reemplazas una, se corrige sola en menos de un día.
+# (Si necesitas que un cambio de foto se vea al instante, súbela con
+#  otro nombre y actualiza el src en el index.html.)
+
+/fotos/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

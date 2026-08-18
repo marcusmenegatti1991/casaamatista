@@ -1,0 +1,10 @@
+# ══════════════════════════════════════════════════════════════
+#  Casa Amatista — redirecciones (Cloudflare Pages)
+# ══════════════════════════════════════════════════════════════
+#  Manda www.casaamatista.mom al dominio sin www, para que exista
+#  una sola dirección real y no se dupliquen las sesiones guardadas
+#  (localStorage NO se comparte entre www y sin-www: un psicólogo que
+#   entre por www tendría que hacer login otra vez).
+# ──────────────────────────────────────────────────────────────
+
+https://www.casaamatista.mom/*  https://casaamatista.mom/:splat  301
