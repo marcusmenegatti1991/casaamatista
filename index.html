@@ -75,6 +75,7 @@
     .time-grid{display:grid;grid-template-columns:62px repeat(4,1fr);min-width:480px;}
     .gh{background:var(--ink);color:#FAF7F2;font-size:.75rem;font-weight:500;letter-spacing:.04em;padding:.7rem .4rem;text-align:center;border-right:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:50;}
     .gh:first-child{border-right:1px solid rgba(255,255,255,.15);position:sticky;left:0;z-index:51;}
+    .gh-corto{display:none;}  /* solo se muestra en celular (ver media query) */
     .tl{background:var(--cream);color:var(--ink-mid);font-size:.62rem;text-align:center;border-right:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;min-height:36px;line-height:1.2;padding:2px 0;position:sticky;left:0;z-index:10;}
     .tl.hora-entera{border-top:1px solid var(--cream-dark);font-weight:500;}
     .tl.media-hora{border-top:1px dashed #E5DDD3;font-size:.57rem;color:#B8AF9F;}
@@ -265,33 +266,106 @@
     .team-link{width:28px;height:28px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--plum);font-size:.9rem;text-decoration:none;transition:all .15s;border:1px solid var(--cream-dark);}
     .team-link:hover{background:var(--plum);color:white;}
     @media(max-width:768px){
-      header{flex-direction:column;gap:1rem;padding:1rem 1.5rem;}
+      header{flex-direction:row;gap:1rem;padding:1rem 1.5rem;}
       .header-logo{height:70px;}
       .header-logo img{max-height:70px;}
       .header-content{gap:.2rem;}
       header h1{font-size:clamp(1rem,2.5vw,1.4rem);}
       .eyebrow{margin-bottom:.2rem;}
     }
+
+    /* ══════════════════════════════════════════════════════════
+       CELULAR (≤520px)
+       Objetivo: que el psicólogo vea horarios sin hacer scroll y
+       sin deslizar de lado. Todo lo de aquí está medido contra
+       iPhone SE (375px) e iPhone 13/14 (390px).
+       ══════════════════════════════════════════════════════════ */
     @media(max-width:520px){
-      main{padding:1rem 0.5rem 2rem;}
-      .form-bar{flex-direction:column;padding:.7rem 1rem;gap:.6rem;}.btn-primary{width:100%;align-self:stretch;}.legend{display:none;}
-      .field{min-width:auto;}
-      .admin-filters{flex-direction:column;}.stats-row{grid-template-columns:1fr;}
-      .totales-grid{grid-template-columns:1fr;}.sary-form{grid-template-columns:1fr;padding:1rem;}
-      #equipo-grid{grid-template-columns:1fr;padding:0 0.5rem 2rem;}
-      .team-photo{aspect-ratio:2/3;}
-      .team-info{padding:1rem;}
-      .time-grid{grid-template-columns:45px repeat(4,1fr);font-size:0.65rem;}
-      .gh{padding:.5rem .2rem;font-size:.65rem;}
+
+      /* ── HEADER COMPACTO ──────────────────────────────────────
+         Antes: logo, título y barra de sesión apilados se comían
+         ~450px de 844px — más de media pantalla antes del primer
+         horario. Ahora el logo va al lado del título.            */
+      header{flex-direction:row;align-items:center;justify-content:center;
+             gap:.7rem;padding:.55rem 2.4rem .55rem .8rem;}
+      .header-logo{height:44px;}
+      .header-logo img{max-height:44px;}
+      .header-content{align-items:flex-start;gap:.1rem;}
+      header h1{font-size:1.02rem;line-height:1.15;}
+      .eyebrow{font-size:.5rem;letter-spacing:.18em;margin-bottom:0;}
+
+      /* El botón "admin" se encimaba sobre el título. Ahora vive en
+         la esquina superior derecha, donde no estorba a nadie.    */
+      .admin-trigger{top:.3rem;right:.35rem;bottom:auto;font-size:.55rem;padding:.35rem .45rem;}
+
+      /* Barra de sesión en una sola línea, no apilada */
+      .session-bar{flex-direction:row;align-items:center;gap:.5rem;
+                   padding:.35rem .8rem;font-size:.68rem;}
+      .btn-logout{flex:0 0 auto;}
+
+      /* ── PESTAÑAS ─────────────────────────────────────────────
+         "Conoce nuestro equipo" se salía por el borde derecho.
+         Ahora se reparten el ancho a partes iguales.             */
+      .admin-tabs{padding:0;overflow-x:visible;}
+      .admin-tabs .atab{flex:1 1 0;min-width:0;text-align:center;
+                        font-size:.72rem;padding:.55rem .2rem;}
+
+      /* ── BARRA DE FECHA ───────────────────────────────────────
+         El campo no se estiraba y quedaba alineado a la derecha
+         con un hueco enorme a la izquierda.                      */
+      /* Fecha y botón en la misma fila: apilados se comían ~70px de
+         alto y empujaban la cuadrícula fuera de la primera pantalla */
+      .form-bar{flex-direction:row;align-items:flex-end;padding:.55rem .7rem;gap:.5rem;flex-wrap:nowrap;}
+      .field{min-width:0;flex:1 1 auto;}
+      .field input,.field select{width:100%;}
+      .field label{font-size:.55rem;}
+      .btn-primary{width:auto;flex:0 0 auto;align-self:flex-end;font-size:.78rem;padding:.55rem .8rem;}
+      .legend{display:none;}
+
+      /* ── CUADRÍCULA: QUE QUEPAN LOS 4 ESPACIOS ────────────────
+         Antes: min-width 480px en una pantalla de 390 → el Taller
+         quedaba fuera y sin ninguna pista de que se podía deslizar.
+         Ahora: sin ancho mínimo, columna de horas estrecha y
+         encabezados abreviados (Cons 1 / Cons 2 / Cons 3 / Taller).
+         46 + 4×82 = 374px, entra en 390 y también en 375.         */
+      main{padding:.7rem .4rem 2rem;}
+      .grid-wrapper-x{overflow-x:visible;}
+      .time-grid{min-width:0;grid-template-columns:46px repeat(4,minmax(0,1fr));font-size:.6rem;}
+      .gh{padding:.5rem .1rem;font-size:.6rem;letter-spacing:0;}
+      .gh-largo{display:none;}
+      .gh-corto{display:inline;}
       .tl{padding:1px 0;font-size:.55rem;}
-      .chip{font-size:.55rem;padding:2px 3px;}
-      .session-bar{flex-direction:column;gap:.5rem;padding:.3rem 1rem;font-size:.7rem;}
-      .admin-tabs{padding:0 1rem;}
-      header{padding:0.8rem 1rem;gap:0.8rem;flex-direction:column;}
-      .header-logo{height:60px;}
-      .header-logo img{max-height:60px;}
-      header h1{font-size:1.1rem;}
-      .eyebrow{font-size:.55rem;}
+      .tl.media-hora{font-size:.5rem;}
+      .slot{padding:2px;}
+      /* min-width:0 deja que el nombre se recorte en vez de empujar
+         la columna y romper el ancho de la cuadrícula */
+      .chip{font-size:.55rem;padding:2px 3px;letter-spacing:-.01em;min-width:0;white-space:nowrap;}
+      .chip span{overflow:hidden;text-overflow:ellipsis;min-width:0;}
+      .date-banner h2{font-size:.95rem;}
+
+      /* ── EQUIPO ───────────────────────────────────────────────
+         Cada foto ocupaba una pantalla entera. Ahora se ve la foto
+         y el principio de la ficha de un vistazo.                */
+      #equipo-grid{grid-template-columns:1fr;padding:0 .4rem 2rem;gap:1rem;}
+      .team-photo{aspect-ratio:auto;height:210px;}
+      /* Al recortar un retrato a formato apaisado, encuadrar hacia arriba
+         para no cortar la cara */
+      .team-photo img{object-position:center 22%;}
+      .team-info{padding:.9rem;}
+
+      /* ── PANEL ADMIN ──────────────────────────────────────────  */
+      .admin-filters{flex-direction:column;}
+      .stats-row{grid-template-columns:1fr;}
+      .totales-grid{grid-template-columns:1fr;}
+      .sary-form{grid-template-columns:1fr;padding:1rem;}
+    }
+
+    /* Pantallas muy angostas (iPhone SE y similares) */
+    @media(max-width:380px){
+      .time-grid{grid-template-columns:42px repeat(4,minmax(0,1fr));}
+      .gh{font-size:.56rem;}
+      .chip{font-size:.52rem;}
+      header h1{font-size:.95rem;}
     }
   </style>
 </head>
@@ -673,6 +747,11 @@ const CALENDARIOS = {
   'taller':'ca7c63526ea07f923b30a30bafc3d5149091d37c85546f16c1783b682382d952@group.calendar.google.com',
 };
 const NOMBRES={'consultorio-1':'Consultorio 1','consultorio-2':'Consultorio 2','consultorio-3':'Consultorio 3','taller':'Taller'};
+// Versión corta de los encabezados para la cuadrícula en celular: así caben los
+// 4 espacios en pantalla sin scroll horizontal. Se alternan por CSS
+// (.gh-largo / .gh-corto), no por JavaScript.
+const NOMBRES_CORTOS={'consultorio-1':'Cons 1','consultorio-2':'Cons 2','consultorio-3':'Cons 3','taller':'Taller'};
+function encabezadoEspacio(id){return `<span class="gh-largo">${NOMBRES[id]}</span><span class="gh-corto">${NOMBRES_CORTOS[id]}</span>`;}
 const ADMIN_HASH='deb409b616259106c95fa3bc1fe16566a6350e5f12df597ea3c101001e44e7de'; // SHA-256, la contraseña no aparece en el código
 async function sha256(t){const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('');}
 const TARIFA_ASISTIO=55, TARIFA_CANCELO=30;
@@ -916,7 +995,7 @@ function renderGrid(data,fecha){
   if(!data){
     el.innerHTML=`<div class="date-banner"><h2>Cargando…</h2></div>
       <div class="grid-wrapper"><div class="grid-wrapper-x"><div class="time-grid">
-        <div class="gh"></div>${IDS.map(id=>`<div class="gh">${NOMBRES[id]}</div>`).join('')}
+        <div class="gh"></div>${IDS.map(id=>`<div class="gh">${encabezadoEspacio(id)}</div>`).join('')}
         ${SLOTS.map(()=>`<div class="tl"></div>${IDS.map(()=>`<div class="slot loading"></div>`).join('')}`).join('')}
       </div></div></div>`;
     return;
@@ -948,7 +1027,7 @@ function renderGrid(data,fecha){
       </div>
     </div>
     <div class="grid-wrapper"><div class="grid-wrapper-x"><div class="time-grid">
-      <div class="gh"></div>${IDS.map(id=>`<div class="gh">${NOMBRES[id]}</div>`).join('')}
+      <div class="gh"></div>${IDS.map(id=>`<div class="gh">${encabezadoEspacio(id)}</div>`).join('')}
       ${rows}
     </div></div></div>`;
 }
