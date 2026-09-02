@@ -28,6 +28,9 @@
 /index.html
   Cache-Control: no-cache, must-revalidate
 
+/agenda.html
+  Cache-Control: no-cache, must-revalidate
+
 # ── LAS FOTOS SÍ SE CACHEAN ──────────────────────────────────
 # 1 día "fresca" + 7 días sirviéndola mientras se refresca por detrás.
 # Así las fotos no se vuelven a descargar en cada visita, pero si

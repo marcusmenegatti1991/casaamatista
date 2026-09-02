@@ -1,0 +1,2831 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casa Amatista — Psicología, nutrición y bienestar</title>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SEO — para que Google encuentre la página y se vea bien al
+       compartirla por WhatsApp o redes.
+       ⚠️ CAMBIAR: añade tu ciudad en la descripción de abajo (por
+       ejemplo "en Torreón"). Google le da mucho peso a la ciudad
+       cuando alguien busca "psicólogo cerca de mí".
+       ════════════════════════════════════════════════════════════════ -->
+  <meta name="description" content="Casa Amatista es un espacio de psicología, nutrición y bienestar. Encuentra al especialista que acompañe tu proceso: terapia individual, de pareja y familiar, para niños, adolescentes y adultos.">
+  <link rel="canonical" href="https://casaamatista.mom/">
+  <meta name="theme-color" content="#3E374F">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="Casa Amatista">
+  <meta property="og:title" content="Casa Amatista — Psicología, nutrición y bienestar">
+  <meta property="og:description" content="Un espacio para cuidar de ti. Psicólogos, nutriólogos y terapeutas en un mismo lugar.">
+  <meta property="og:url" content="https://casaamatista.mom/">
+  <meta property="og:image" content="https://casaamatista.mom/fotos/logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Casa Amatista — Psicología, nutrición y bienestar">
+  <meta name="twitter:description" content="Un espacio para cuidar de ti. Psicólogos, nutriólogos y terapeutas en un mismo lugar.">
+  <meta name="twitter:image" content="https://casaamatista.mom/fotos/logo.png">
+
+  <!-- Datos estructurados: le explican a Google qué tipo de negocio eres.
+       ⚠️ Cuando quieras aparecer en el mapa y en "cerca de mí", descomenta
+       el bloque "address" y llénalo con la dirección real. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalBusiness",
+    "name": "Casa Amatista",
+    "description": "Espacio de psicología, nutrición y bienestar.",
+    "url": "https://casaamatista.mom/",
+    "logo": "https://casaamatista.mom/fotos/logo.png",
+    "image": "https://casaamatista.mom/fotos/logo.png",
+    "medicalSpecialty": "Psychiatric",
+    "availableService": [
+      {"@type":"MedicalTherapy","name":"Psicoterapia individual"},
+      {"@type":"MedicalTherapy","name":"Terapia de pareja y familiar"},
+      {"@type":"MedicalTherapy","name":"Nutrición clínica"}
+    ]
+    ,"comment": "Para aparecer en Google Maps añade aquí: \"address\": {\"@type\":\"PostalAddress\",\"streetAddress\":\"…\",\"addressLocality\":\"…\",\"addressRegion\":\"…\",\"postalCode\":\"…\",\"addressCountry\":\"MX\"}, \"telephone\": \"+52…\""
+  }
+  </script>
+
+  <!-- Los meta http-equiv de Cache-Control NO funcionan: los navegadores los ignoran
+       para el propio documento. El control de caché vive ahora en el archivo _headers
+       (Cloudflare Pages) + el detector de versión que está más abajo en el JS. -->
+  <!-- Activa las animaciones de scroll ANTES del primer pintado, para que no
+       haya parpadeo. Si el JS estuviera desactivado, esta clase nunca se pone
+       y todo el contenido se ve normal. -->
+  <script>document.documentElement.className+=' anim';</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://script.google.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --cream:#FAF7F2;--cream-mid:#F0EAE0;--cream-dark:#DDD4C6;
+      --sage:#6B9080;--sage-light:#EAF2EE;--sage-dark:#3D6457;
+      --plum:#7A6F8F;--plum-dark:#4A4256;
+      --ink:#2A2520;--ink-mid:#5C5248;--ink-light:#9C9188;
+      --gold:#C4983A;--white:#FFFFFF;
+      --red:#b94040;--red-light:#FDEAEA;
+      --amber:#b07020;--amber-light:#FEF3E2;
+      --green:#2e7d52;--green-light:#E8F5EE;
+    }
+    body{background:var(--cream);font-family:'Lora',Georgia,serif;color:var(--ink);min-height:100vh;}
+    /* LOGIN */
+    #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1rem;background:linear-gradient(160deg,#2B2635 0%,#3A3348 55%,#4A4059 100%);}
+    .login-card{position:relative;background:#3E374F;border-radius:18px;padding:2.75rem 2.25rem 3rem;width:100%;max-width:430px;box-shadow:0 8px 24px rgba(0,0,0,.25),0 28px 70px rgba(0,0,0,.35);}
+    .btn-admin-login{position:absolute;top:1.1rem;right:1.3rem;font-size:0.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);cursor:pointer;border:none;background:none;font-family:'Lora',serif;padding:.25rem .4rem;transition:color .2s;}
+    .btn-admin-login:hover{color:rgba(255,255,255,.7);}
+    .login-brand-logo{display:block;width:min(185px,55vw);margin:0 auto .35rem;border-radius:16px;-webkit-mask-image:radial-gradient(ellipse 78% 82% at 50% 50%,#000 62%,transparent 94%);mask-image:radial-gradient(ellipse 78% 82% at 50% 50%,#000 62%,transparent 94%);}
+    .login-sub{font-family:'Playfair Display',serif;font-size:1rem;color:#B9A8D6;text-align:center;letter-spacing:.06em;margin:0 0 1.75rem;}
+    .lfield{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.25rem;}
+    .lfield label{font-size:.92rem;color:rgba(255,255,255,.9);letter-spacing:.02em;}
+    .lfield input{font-family:'Lora',serif;font-size:1rem;color:#fff;background:rgba(0,0,0,.14);border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:.8rem 1rem;outline:none;transition:border-color .2s,box-shadow .2s;}
+    .lfield input::placeholder{color:rgba(255,255,255,.3);font-style:italic;}
+    .lfield input:focus{border-color:#B9A8D6;box-shadow:0 0 0 3px rgba(185,168,214,.18);}
+    .login-error{font-size:.82rem;color:#FF9E9E;text-align:center;margin-bottom:.5rem;min-height:1.2em;}
+    .btn-login{width:100%;font-family:'Lora',serif;font-size:1.1rem;background:#C3B1E1;color:#26202E;border:none;border-radius:12px;padding:.9rem;cursor:pointer;transition:background .2s;margin-top:1rem;}
+    .btn-login:hover{background:#D3C4EC;}
+    .btn-login:disabled{background:var(--ink-light);cursor:not-allowed;}
+    /* HEADER */
+    header{background:#D4C5E2;padding:1.25rem 2rem 1rem;text-align:center;position:relative;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;}
+    header > *{flex:0 0 auto;}
+    .header-content{display:flex;flex-direction:column;align-items:center;gap:.3rem;}
+    .eyebrow{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem;}
+    .header-logo{height:90px;display:flex;align-items:center;justify-content:center;}
+    .header-logo img{max-height:90px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3));}
+    header h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.75rem);font-weight:400;color:#FAF7F2;}
+    header h1 em{font-style:italic;color:var(--gold);}
+    .admin-trigger{position:absolute;bottom:.4rem;right:1rem;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.18);cursor:pointer;border:none;background:none;font-family:'Lora',serif;padding:.2rem .4rem;transition:color .2s;}
+    .admin-trigger:hover{color:rgba(255,255,255,.5);}
+    .session-bar{background:var(--plum-dark);padding:.4rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;color:rgba(255,255,255,.75);}
+    /* Candado físico del consultorio (combinación que ve el psicólogo) */
+    #candado-box{display:flex;align-items:center;gap:.9rem;padding:.8rem 1.5rem;background:linear-gradient(90deg,#efe6f6,#f7f2ea);border-bottom:1px solid var(--cream-dark);}
+    #candado-box .cand-ico{font-size:1.5rem;line-height:1;}
+    #candado-box .cand-main{display:flex;flex-direction:column;line-height:1.25;min-width:0;}
+    #candado-box .cand-label{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--plum);}
+    #candado-box .cand-codigo{font-family:'Playfair Display',serif;font-weight:600;font-size:1.4rem;letter-spacing:.1em;color:var(--plum-dark);}
+    #candado-box .cand-nota{font-size:.76rem;color:var(--ink-mid);font-style:italic;}
+    #candado-box .cand-fecha{margin-left:auto;font-size:.66rem;color:var(--ink-light);text-align:right;white-space:nowrap;}
+    @media(max-width:520px){#candado-box .cand-fecha{display:none;}}
+    .session-bar strong{color:var(--gold);}
+    .btn-logout{font-family:'Lora',serif;font-size:.68rem;color:rgba(255,255,255,.6);background:none;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:.2rem .65rem;cursor:pointer;transition:all .15s;}
+    .btn-logout:hover{color:white;border-color:rgba(255,255,255,.5);}
+    /* FORM BAR */
+    .form-bar{background:var(--white);border-bottom:1px solid var(--cream-dark);padding:.9rem 1.5rem;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+    .field{display:flex;flex-direction:column;gap:.3rem;flex:1;min-width:150px;}
+    .field label{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mid);}
+    .field input,.field select{font-family:'Lora',serif;font-size:.88rem;color:var(--ink);background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:.5rem .8rem;outline:none;transition:border-color .2s;}
+    .field input:focus,.field select:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(107,144,128,.12);}
+    .btn-primary{font-family:'Lora',serif;font-size:.83rem;color:#fff;background:var(--sage-dark);border:none;border-radius:8px;padding:.55rem 1.25rem;cursor:pointer;white-space:nowrap;transition:background .2s;align-self:flex-end;}
+    .btn-primary:hover{background:var(--sage);}
+    .btn-primary:disabled{background:var(--ink-light);cursor:not-allowed;}
+    /* GRID USUARIO */
+    main{padding:1.5rem 1rem 4rem;max-width:1000px;margin:0 auto;}
+    .date-banner{display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem;flex-wrap:wrap;}
+    .date-banner h2{font-family:'Playfair Display',serif;font-weight:400;font-size:1.1rem;}
+    .legend{display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;margin-left:auto;}
+    .leg{display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--ink-mid);}
+    .leg-dot{width:10px;height:10px;border-radius:3px;}
+    .grid-wrapper{overflow-y:auto;max-height:600px;border-radius:12px;border:1px solid var(--cream-dark);background:var(--white);}
+    .grid-wrapper-x{overflow-x:auto;}
+    .time-grid{display:grid;grid-template-columns:62px repeat(var(--cols,4),1fr);min-width:calc(62px + var(--cols,4) * 104px);}
+    .gh{background:var(--ink);color:#FAF7F2;font-size:.75rem;font-weight:500;letter-spacing:.04em;padding:.7rem .4rem;text-align:center;border-right:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:50;}
+    .gh:first-child{border-right:1px solid rgba(255,255,255,.15);position:sticky;left:0;z-index:51;}
+    .gh-corto{display:none;}  /* solo se muestra en celular (ver media query) */
+    .tl{background:var(--cream);color:var(--ink-mid);font-size:.62rem;text-align:center;border-right:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;min-height:36px;line-height:1.2;padding:2px 0;position:sticky;left:0;z-index:10;}
+    .tl.hora-entera{border-top:1px solid var(--cream-dark);font-weight:500;}
+    .tl.media-hora{border-top:1px dashed #E5DDD3;font-size:.57rem;color:#B8AF9F;}
+    .slot{min-height:36px;border-right:1px solid var(--cream-dark);padding:3px;position:relative;}
+    /* ── Pestaña ESPACIOS del panel admin ── */
+    .hint-espacios{font-size:.8rem;color:var(--ink-mid);line-height:1.6;margin:-.4rem 0 1.2rem;}
+    .esp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.9rem;}
+    .esp-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;
+              padding:1rem;text-align:center;transition:opacity .2s;}
+    .esp-card.off{background:#F4F1EC;opacity:.72;}
+    .esp-nombre{font-family:'Playfair Display',serif;font-size:1.02rem;color:var(--ink);}
+    .esp-estado{font-size:.72rem;color:var(--ink-light);margin:.3rem 0 .8rem;min-height:2.1em;}
+    .esp-card.off .esp-estado{color:var(--red);}
+    .esp-btn{font-family:'Lora',serif;font-size:.76rem;border:none;border-radius:18px;
+             padding:.42rem 1rem;cursor:pointer;color:#fff;transition:filter .15s;width:100%;}
+    .esp-btn:hover{filter:brightness(1.1);}
+    .esp-btn-off{background:var(--red);}
+    .esp-btn-on{background:var(--sage-dark);}
+
+    /* Espacio deshabilitado por Sary: en gris, sin poder tocarse */
+    .slot.cerrado{background:repeating-linear-gradient(135deg,#F2EFEA,#F2EFEA 6px,#EAE5DE 6px,#EAE5DE 12px);cursor:not-allowed;}
+    .gh.gh-cerrado{background:#4A453F;color:rgba(250,247,242,.45);}
+    .gh.gh-cerrado em{display:block;font-style:normal;font-size:.52rem;letter-spacing:.06em;
+                      text-transform:uppercase;opacity:.75;margin-top:2px;}
+    .slot:last-child{border-right:none;}
+    .slot.hora-entera{border-top:1px solid var(--cream-dark);}
+    .slot.media-hora{border-top:1px dashed #E5DDD3;}
+    .slot.available{cursor:pointer;background:var(--white);transition:background .15s;}
+    .slot.available:hover{background:var(--sage-light);}
+    .slot.available:hover::after{content:'+ Reservar';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:var(--sage-dark);letter-spacing:.05em;pointer-events:none;}
+    .slot.occupied{cursor:default;}
+    .chip{display:flex;align-items:center;height:100%;min-height:30px;border-radius:4px;padding:3px 5px;font-size:.65rem;font-family:'Lora',serif;font-weight:500;color:white;line-height:1.2;overflow:hidden;}
+    .slot.mine{cursor:pointer;}
+    .slot.mine .chip{outline:2px solid var(--gold);outline-offset:-2px;justify-content:space-between;gap:4px;}
+    .slot.mine .chip::after{content:'✕';font-size:.7rem;opacity:.85;flex:0 0 auto;}
+    .slot.mine:hover .chip{filter:brightness(1.15);}
+    .cancel-warning{background:var(--red-light);border:1px solid var(--red);border-radius:8px;padding:.7rem .9rem;font-size:.82rem;color:var(--red);margin-bottom:1rem;line-height:1.45;}
+    .cancel-free{background:var(--green-light);border:1px solid var(--green);border-radius:8px;padding:.7rem .9rem;font-size:.82rem;color:var(--green);margin-bottom:1rem;line-height:1.45;}
+    .filtro-sc{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--ink-mid);cursor:pointer;user-select:none;justify-content:center;margin:.4rem 0 .2rem;}
+    .slot.loading{background:var(--cream);animation:pulse 1.2s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .idle-state{text-align:center;padding:4rem 1rem;color:var(--ink-light);}
+    .idle-icon{font-size:2rem;margin-bottom:.6rem;opacity:.3;}
+    .idle-state p{font-size:.88rem;line-height:1.6;}
+    /* MODALES */
+    .overlay{position:fixed;inset:0;background:rgba(42,37,32,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s;}
+    .overlay.open{opacity:1;pointer-events:all;}
+    .modal{background:var(--white);border-radius:16px;padding:1.75rem;max-width:390px;width:100%;transform:translateY(14px);transition:transform .2s;}
+    .overlay.open .modal{transform:translateY(0);}
+    .modal h3{font-family:'Playfair Display',serif;font-weight:400;font-size:1.2rem;margin-bottom:.35rem;}
+    .modal-sub{font-size:.8rem;color:var(--ink-mid);margin-bottom:1.1rem;}
+    .modal-detail{background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:.8rem .9rem;font-size:.82rem;line-height:1.9;margin-bottom:1rem;}
+    .modal-detail strong{color:var(--sage-dark);}
+    .ffield{display:flex;flex-direction:column;gap:.3rem;margin-bottom:1rem;}
+    .ffield label{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mid);}
+    .ffield select,.ffield input{font-family:'Lora',serif;font-size:.86rem;color:var(--ink);background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:.5rem .8rem;outline:none;}
+    .mactions{display:flex;gap:.7rem;}
+    .btnc{flex:1;font-family:'Lora',serif;font-size:.83rem;background:none;border:1px solid var(--cream-dark);border-radius:8px;padding:.55rem;cursor:pointer;color:var(--ink-mid);transition:background .15s;}
+    .btnc:hover{background:var(--cream);}
+    .btnok{flex:2;font-family:'Lora',serif;font-size:.83rem;background:var(--sage-dark);border:none;border-radius:8px;padding:.55rem;cursor:pointer;color:#fff;transition:background .15s;}
+    .btnok:hover{background:var(--sage);}
+    .btnok:disabled{background:var(--ink-light);cursor:not-allowed;}
+    .modal-sm{max-width:320px;}
+    .modal-sm input{font-family:'Lora',serif;font-size:.9rem;width:100%;background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:.55rem .85rem;outline:none;margin-bottom:.75rem;}
+    .modal-error{font-size:.75rem;color:var(--red);margin-bottom:.75rem;display:none;}
+    /* ADMIN */
+    #admin-panel{display:none;background:var(--cream);}
+    #admin-panel.visible{display:block;}
+    .admin-inner{max-width:1080px;margin:0 auto;padding:1.5rem 1rem 4rem;}
+    .admin-topbar{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+    .admin-topbar h2{font-family:'Playfair Display',serif;font-weight:400;font-size:1.2rem;flex:1;}
+    .btn-ghost{font-family:'Lora',serif;font-size:.78rem;color:var(--ink-mid);background:none;border:1px solid var(--cream-dark);border-radius:8px;padding:.4rem .9rem;cursor:pointer;transition:background .15s;}
+    .btn-ghost:hover{background:var(--cream-dark);}
+    .admin-tabs{display:flex;border-bottom:2px solid var(--cream-dark);margin-bottom:1.5rem;gap:0;overflow-x:auto;}
+    .atab{font-family:'Lora',serif;font-size:.82rem;padding:.6rem 1.25rem;border:none;background:none;color:var(--ink-mid);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;white-space:nowrap;}
+    .atab:hover{color:var(--ink);}
+    .atab.active{color:var(--plum);border-bottom-color:var(--plum);font-weight:500;}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+    /* Stats */
+    .admin-filters{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;padding:1rem 1.25rem;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.85rem;margin-bottom:1.25rem;}
+    .stat-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;padding:.9rem 1rem;}
+    .stat-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:.3rem;}
+    .stat-value{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:400;line-height:1;}
+    .sv-green{color:var(--green);}.sv-red{color:var(--red);}.sv-amber{color:var(--amber);}.sv-gold{color:var(--gold);}.sv-plum{color:var(--plum);}
+    /* Totales dobles */
+    .totales-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.75rem;}
+    .total-box{background:var(--white);border:1.5px solid var(--cream-dark);border-radius:14px;padding:1.1rem 1.25rem;}
+    .total-box.rentas{border-color:#a5c8be;}
+    .total-box.terapias{border-color:var(--plum);}
+    .total-box-label{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-light);margin-bottom:.3rem;}
+    .total-box-value{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;line-height:1;}
+    .total-box.rentas .total-box-value{color:var(--sage-dark);}
+    .total-box.terapias .total-box-value{color:var(--plum);}
+    .total-box-sub{font-size:.72rem;color:var(--ink-light);margin-top:.3rem;}
+    /* Tablas */
+    .section-title{font-family:'Playfair Display',serif;font-weight:400;font-size:1rem;margin-bottom:.85rem;}
+    .table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--cream-dark);margin-bottom:1.75rem;}
+    table{width:100%;border-collapse:collapse;background:var(--white);font-size:.8rem;}
+    thead th{background:var(--ink);color:#FAF7F2;font-weight:500;font-size:.68rem;letter-spacing:.05em;padding:.6rem .85rem;text-align:left;white-space:nowrap;}
+    thead th:last-child{text-align:right;}
+    tbody tr{border-top:1px solid var(--cream-dark);}
+    tbody tr:hover{background:var(--cream);}
+    tbody td{padding:.6rem .85rem;vertical-align:middle;}
+    .psy-name-cell{display:flex;align-items:center;gap:.5rem;}
+    .psy-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+    .badge{display:inline-block;font-size:.63rem;border-radius:20px;padding:.15rem .55rem;}
+    .b-green{background:var(--green-light);color:var(--green);}
+    .b-red{background:var(--red-light);color:var(--red);}
+    .b-amber{background:var(--amber-light);color:var(--amber);}
+    .b-plum{background:#EDE9F5;color:var(--plum);}
+    .monto-cell{font-family:'Playfair Display',serif;font-size:.9rem;text-align:right;}
+    .btn-danger{font-family:'Lora',serif;font-size:.72rem;color:var(--red);background:var(--red-light);border:1px solid #e8bebe;border-radius:6px;padding:.28rem .7rem;cursor:pointer;transition:background .15s;white-space:nowrap;}
+    .btn-danger:hover{background:#f5cccc;}
+    .btn-info{font-family:'Lora',serif;font-size:.72rem;color:var(--sage-dark);background:#DFE9E6;border:1px solid #c5d9d4;border-radius:6px;padding:.28rem .7rem;cursor:pointer;transition:background .15s;white-space:nowrap;margin-right:.3rem;}
+    .btn-info:hover{background:#cfe0dd;}
+    /* Calendario admin */
+    .cal-nav{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;}
+    .cal-nav h3{font-family:'Playfair Display',serif;font-weight:400;font-size:1rem;flex:1;text-align:center;}
+    .btn-nav{font-family:'Lora',serif;font-size:.8rem;background:var(--white);border:1px solid var(--cream-dark);border-radius:8px;padding:.4rem .85rem;cursor:pointer;color:var(--ink-mid);transition:background .15s;white-space:nowrap;}
+    .btn-nav:hover{background:var(--cream-dark);}
+    .cal-wrapper{overflow-x:auto;border-radius:12px;border:1px solid var(--cream-dark);background:var(--white);margin-bottom:1.75rem;}
+    .cal-grid{display:grid;grid-template-columns:58px repeat(7,1fr);}
+    .cgh{background:var(--ink);color:#FAF7F2;font-size:.72rem;font-weight:500;padding:.6rem .3rem;text-align:center;border-right:1px solid rgba(255,255,255,.08);line-height:1.3;}
+    .cgh:first-child{border-right:1px solid rgba(255,255,255,.18);}
+    .cgh small{display:block;font-size:.58rem;opacity:.5;}
+    .ctl{background:var(--cream);color:var(--ink-mid);font-size:.6rem;text-align:center;border-right:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;min-height:34px;padding:2px 0;}
+    .ctl.he{border-top:1px solid var(--cream-dark);font-weight:500;}
+    .ctl.mh{border-top:1px dashed #E5DDD3;font-size:.55rem;color:#B8AF9F;}
+    .cslot{min-height:34px;border-right:1px solid var(--cream-dark);padding:2px;position:relative;}
+    .cslot:last-child{border-right:none;}
+    .cslot.he{border-top:1px solid var(--cream-dark);}
+    .cslot.mh{border-top:1px dashed #E5DDD3;}
+    .cslot.empty{background:var(--white);}
+    .cslot.has-event{display:flex;gap:1px;align-items:stretch;}
+    .ac{border-radius:4px;padding:2px 5px;font-size:.62rem;font-family:'Lora',serif;font-weight:500;color:white;line-height:1.25;overflow:hidden;flex:1;min-width:0;min-height:30px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;transition:opacity .15s;position:relative;}
+    .ac:hover{opacity:.82;}
+    .ac .ac-name{display:block;}
+    .ac .ac-room{display:block;font-size:.54rem;opacity:.85;margin-top:1px;}
+    .ac.cancelo{opacity:.55;cursor:default;}
+    .ac::after{content:attr(data-badge);position:absolute;top:2px;right:3px;font-size:.5rem;background:rgba(0,0,0,.22);border-radius:3px;padding:0 3px;line-height:1.5;}
+    /* Mover citas */
+    .ac.moving{outline:2.5px solid var(--gold);outline-offset:1px;animation:pulse 1.1s ease-in-out infinite;cursor:pointer;}
+    .ac.sary-movible{cursor:grab;}
+    .cslot.move-target{background:rgba(107,144,128,.13);cursor:pointer;transition:background .12s;}
+    .cslot.move-target:hover{background:rgba(107,144,128,.28);}
+    .cslot.move-target::after{content:'📍';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--sage-dark);}
+    #move-banner{display:none;background:var(--plum);color:white;border-radius:10px;padding:.65rem 1rem;margin-bottom:.85rem;font-size:.8rem;align-items:center;gap:.6rem;flex-wrap:wrap;}
+    .cal-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;font-size:.72rem;color:var(--ink-mid);}
+    .cl-item{display:flex;align-items:center;gap:.4rem;}
+    .cl-dot{width:10px;height:10px;border-radius:2px;}
+    /* Status modal */
+    .status-options{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.1rem;}
+    .status-opt{display:flex;align-items:center;gap:.85rem;border:1.5px solid var(--cream-dark);border-radius:10px;padding:.75rem 1rem;cursor:pointer;transition:border-color .15s,background .15s;font-family:'Lora',serif;}
+    .status-opt:hover{background:var(--cream);}
+    .status-opt.opt-asistio{color:var(--green);}.status-opt.opt-asistio.selected{background:var(--green-light);border-color:var(--green);}
+    .status-opt.opt-cancelo{color:var(--red);}.status-opt.opt-cancelo.selected{background:var(--red-light);border-color:var(--red);}
+    .status-opt.opt-descuento{color:var(--amber);}.status-opt.opt-descuento.selected{background:var(--amber-light);border-color:var(--amber);}
+    .opt-icon{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0;}
+    .opt-title{font-size:.88rem;font-weight:500;}
+    .opt-desc{font-size:.72rem;opacity:.7;margin-top:.1rem;}
+    .desc-amount-wrap{display:none;margin-top:.5rem;}
+    .desc-amount-wrap.visible{display:block;}
+    .desc-amount-wrap label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:.3rem;}
+    .desc-amount-wrap input{font-family:'Lora',serif;font-size:.88rem;color:var(--ink);background:var(--white);border:1px solid var(--cream-dark);border-radius:8px;padding:.45rem .75rem;outline:none;width:120px;}
+    /* Pacientes Sary / Add forms */
+    .add-form{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;padding:1.25rem;display:flex;gap:.9rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .sary-form{background:var(--white);border:1px solid var(--cream-dark);border-radius:12px;padding:1.25rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;align-items:flex-end;margin-bottom:1.5rem;}
+    .sary-bookings{display:flex;flex-direction:column;gap:.55rem;}
+    .sary-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:10px;padding:.8rem 1rem;display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;}
+    .sc-info{flex:1;min-width:160px;}
+    .sc-nombre{font-weight:500;font-size:.86rem;}
+    .sc-meta{font-size:.73rem;color:var(--ink-mid);margin-top:.1rem;}
+    .init-box{background:var(--green-light);border:1px solid #a5d4b8;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.84rem;line-height:1.8;display:none;}
+    .init-box.show{display:block;}
+    .admin-empty{text-align:center;padding:2.5rem 1rem;color:var(--ink-light);font-size:.86rem;}
+    .loading-msg{text-align:center;padding:2rem;color:var(--ink-mid);font-size:.85rem;font-style:italic;}
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#FAF7F2;font-family:'Lora',serif;font-size:.83rem;padding:.65rem 1.3rem;border-radius:30px;z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;}
+    .toast.success{background:var(--sage-dark);}.toast.error{background:var(--red);}.toast.show{transform:translateX(-50%) translateY(0);}
+    /* MODAL BATCH PACIENTES */
+    .batch-modal{max-width:650px;max-height:80vh;overflow-y:auto;}
+    .batch-table{width:100%;border-collapse:collapse;margin:1rem 0;}
+    .batch-table th{background:var(--ink);color:#FAF7F2;font-size:.65rem;letter-spacing:.06em;padding:.5rem .6rem;text-align:left;}
+    .batch-table td{padding:.5rem .4rem;}
+    .batch-table input{width:100%;font-family:'Lora',serif;font-size:.85rem;color:var(--ink);background:var(--cream);border:1px solid var(--cream-dark);border-radius:6px;padding:.45rem;outline:none;}
+    .batch-table input:focus{border-color:var(--sage);box-shadow:0 0 0 2px rgba(107,144,128,.1);}
+    .batch-add-row{margin:.75rem 0;}
+    .btn-add-row{font-family:'Lora',serif;font-size:.8rem;background:none;border:1px dashed var(--cream-dark);border-radius:6px;padding:.4rem .8rem;color:var(--sage-dark);cursor:pointer;transition:all .15s;}
+    .btn-add-row:hover{border-color:var(--sage);background:var(--sage-light);}
+    /* GALERÍA EQUIPO */
+    .user-tab-content{display:none;}
+    .user-tab-content.active{display:block;}
+    #equipo-grid,#portada-equipo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;padding:0 1rem 3rem;}
+    .team-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:default;}
+    .team-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(42,37,32,.12);}
+    .team-photo{width:100%;aspect-ratio:3/4;background:linear-gradient(135deg,var(--plum-dark),var(--plum));display:flex;align-items:center;justify-content:center;color:white;font-size:3.5rem;font-weight:bold;overflow:hidden;}
+    .team-photo img{width:100%;height:100%;object-fit:cover;}
+    .team-initials{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;font-weight:bold;color:white;background:linear-gradient(135deg,var(--plum-dark),var(--plum));}
+    .team-info{padding:1.25rem;}
+    .team-nombre{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;margin-bottom:.25rem;color:var(--ink);}
+    .team-prof{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;display:block;}
+    .team-especialidad{font-size:.82rem;color:var(--ink-mid);margin-bottom:.8rem;line-height:1.5;font-weight:500;}
+    .team-detail{font-size:.75rem;color:var(--ink-light);margin-bottom:.4rem;line-height:1.4;}
+    .team-detail strong{color:var(--ink-mid);display:block;margin-top:.3rem;}
+    .team-frase{background:var(--cream);border-left:3px solid var(--plum);padding:.75rem;font-size:.8rem;font-style:italic;color:var(--ink-mid);margin-top:.8rem;border-radius:4px;}
+    .team-contacto{display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap;}
+    .team-link{width:28px;height:28px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--plum);font-size:.9rem;text-decoration:none;transition:all .15s;border:1px solid var(--cream-dark);}
+    .team-link:hover{background:var(--plum);color:white;}
+    /* ══════════════════════════════════════════════════════════
+       PORTADA PÚBLICA
+       Lo primero que ve alguien que llega a casaamatista.mom sin
+       haber iniciado sesión. Está pensada para pacientes que
+       buscan terapia, no para los profesionales.
+       ══════════════════════════════════════════════════════════ */
+    #portada{background:var(--cream);}
+
+    /* ── APARICIÓN SUAVE AL HACER SCROLL ──────────────────────────
+       El estado oculto SOLO se aplica si el <body> tiene la clase
+       "anim", que la pone el JavaScript. Así, si el JS falla o está
+       desactivado, todo el contenido se ve igual de bien (y Google
+       lo indexa sin problema).                                      */
+    html.anim .reveal{opacity:0;transform:translateY(26px);
+                      transition:opacity .7s cubic-bezier(.22,.61,.36,1),
+                                 transform .7s cubic-bezier(.22,.61,.36,1);}
+    html.anim .reveal.visible{opacity:1;transform:none;}
+
+    /* Quien tenga activado "reducir movimiento" en su sistema ve la
+       página completamente estática. En un sitio de salud mental esto
+       no es opcional: el movimiento puede provocar mareo y ansiedad. */
+    @media (prefers-reduced-motion: reduce){
+      html.anim .reveal{opacity:1 !important;transform:none !important;transition:none !important;}
+      html{scroll-behavior:auto !important;}
+    }
+    html{scroll-behavior:smooth;}
+
+    /* Frase de respiro entre secciones */
+    .pfrase{background:var(--cream-mid);padding:4rem 1.5rem;text-align:center;}
+    .pfrase p{font-family:'Playfair Display',serif;font-weight:400;font-style:italic;
+              font-size:clamp(1.25rem,3.2vw,1.9rem);line-height:1.5;color:var(--plum-dark);
+              max-width:30rem;margin:0 auto;}
+    .pfrase span{color:var(--gold);font-style:normal;}
+
+    /* Barra superior mínima */
+    .pnav{position:sticky;top:0;z-index:80;display:flex;align-items:center;justify-content:space-between;
+          padding:.6rem 1.5rem;background:rgba(250,247,242,.92);backdrop-filter:blur(8px);
+          border-bottom:1px solid var(--cream-dark);}
+    .pnav-marca{display:flex;align-items:center;gap:.6rem;font-family:'Playfair Display',serif;
+                font-size:1rem;color:var(--plum-dark);}
+    .pnav-marca img{height:34px;width:auto;}
+    .pnav-acceso{font-family:'Lora',serif;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+                 color:var(--ink-light);background:none;border:1px solid var(--cream-dark);border-radius:20px;
+                 padding:.4rem .9rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .pnav-acceso:hover{color:var(--plum);border-color:var(--plum);}
+
+    /* Portada / hero */
+    .phero{background:linear-gradient(160deg,#2B2635 0%,#3A3348 55%,#4A4059 100%);
+           padding:3.5rem 1.5rem 4rem;text-align:center;color:#fff;}
+    .phero-logo{width:min(190px,52vw);margin:0 auto 1.2rem;display:block;
+                -webkit-mask-image:radial-gradient(ellipse 78% 82% at 50% 50%,#000 62%,transparent 94%);
+                mask-image:radial-gradient(ellipse 78% 82% at 50% 50%,#000 62%,transparent 94%);}
+    .phero h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(1.9rem,5vw,3rem);
+              line-height:1.15;margin-bottom:1rem;}
+    .phero h1 em{font-style:italic;color:#C9B6E8;}
+    .phero p{max-width:34rem;margin:0 auto;font-size:clamp(.95rem,2.2vw,1.08rem);
+             line-height:1.7;color:rgba(255,255,255,.82);}
+    .phero-ctas{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;}
+    .pbtn{font-family:'Lora',serif;font-size:.92rem;padding:.8rem 1.6rem;border-radius:30px;
+          border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;
+          gap:.5rem;transition:transform .15s,box-shadow .15s,background .2s;}
+    .pbtn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.22);}
+    .pbtn-1{background:#C9B6E8;color:#2B2635;}
+    .pbtn-2{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3);}
+
+    /* Secciones genéricas de la portada */
+    .psec{padding:3.5rem 1.5rem;max-width:1180px;margin:0 auto;}
+    .psec-alt{background:var(--white);max-width:none;}
+    .psec-alt > *{max-width:1180px;margin-left:auto;margin-right:auto;}
+    .peyebrow{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);
+              text-align:center;margin-bottom:.7rem;}
+    .ptitulo{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(1.5rem,3.5vw,2.1rem);
+             text-align:center;color:var(--ink);margin-bottom:.8rem;}
+    .psub{text-align:center;color:var(--ink-mid);max-width:36rem;margin:0 auto 2.5rem;line-height:1.7;
+          font-size:.95rem;}
+
+    /* Tarjetas de servicio */
+    .pserv{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.3rem;}
+    .pserv-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:16px;
+                padding:1.8rem 1.5rem;text-align:center;transition:transform .2s,box-shadow .2s;}
+    .pserv-card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(42,37,32,.09);}
+    .psec-alt .pserv-card{background:var(--cream);}
+    .pserv-card h3{font-family:'Playfair Display',serif;font-weight:400;font-size:1.2rem;
+                   color:var(--plum-dark);margin:.7rem 0 .5rem;}
+    .pserv-card p{font-size:.88rem;color:var(--ink-mid);line-height:1.6;}
+    .pserv-ico{width:46px;height:46px;border-radius:50%;margin:0 auto;display:flex;align-items:center;
+               justify-content:center;background:var(--sage-light);}
+    .pserv-ico svg{width:24px;height:24px;stroke:var(--sage-dark);fill:none;stroke-width:1.6;}
+
+    /* Filtro de especialistas */
+    .pfiltros{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;}
+    .pchip{font-family:'Lora',serif;font-size:.8rem;padding:.42rem 1rem;border-radius:20px;
+           border:1px solid var(--cream-dark);background:var(--white);color:var(--ink-mid);
+           cursor:pointer;transition:all .18s;}
+    .pchip:hover{border-color:var(--plum);color:var(--plum);}
+    .pchip.on{background:var(--plum);border-color:var(--plum);color:#fff;}
+
+    /* El espacio (hueco para fotos y tour 3D) */
+    .pespacio{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.1rem;}
+    .pfoto{border-radius:14px;overflow:hidden;background:var(--cream-mid);aspect-ratio:4/3;
+           display:flex;align-items:center;justify-content:center;border:1px dashed var(--cream-dark);}
+    .pfoto img{width:100%;height:100%;object-fit:cover;}
+    .pfoto-vacia{color:var(--ink-light);font-size:.82rem;text-align:center;padding:1rem;line-height:1.5;}
+
+    /* Contacto */
+    .pcontacto{background:linear-gradient(160deg,#3A3348 0%,#4A4059 100%);color:#fff;
+               padding:3.5rem 1.5rem;text-align:center;}
+    .pcontacto .ptitulo{color:#fff;}
+    .pcontacto .psub{color:rgba(255,255,255,.75);}
+    .pcontacto-links{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;}
+
+    /* Pie */
+    .pfooter{background:var(--ink);color:rgba(255,255,255,.55);padding:1.8rem 1.5rem;
+             text-align:center;font-size:.78rem;line-height:1.9;}
+    .pfooter a{color:rgba(255,255,255,.75);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.25);}
+    .pfooter a:hover{color:#fff;}
+
+    /* Aviso para quien ya tiene sesión abierta */
+    .pvolver{background:var(--sage-light);border-bottom:1px solid var(--cream-dark);
+             padding:.6rem 1.5rem;text-align:center;font-size:.85rem;color:var(--sage-dark);}
+    .pvolver button{font-family:'Lora',serif;font-size:.85rem;background:var(--sage-dark);color:#fff;
+                    border:none;border-radius:16px;padding:.35rem .9rem;margin-left:.6rem;cursor:pointer;}
+
+    /* Botón para volver a la portada desde el login */
+    /* Login en dos pasos (usuario → código al correo) */
+    .login-aviso{font-size:.82rem;color:#B9A8D6;text-align:center;line-height:1.5;margin-bottom:1rem;}
+    .btn-texto{display:block;margin:.7rem auto 0;background:none;border:none;font-family:'Lora',serif;
+               font-size:.76rem;color:rgba(255,255,255,.45);cursor:pointer;text-decoration:underline;}
+    .btn-texto:hover{color:rgba(255,255,255,.8);}
+    /* Aviso para quien aún no registró su correo */
+    .aviso-correo{background:var(--amber-light);border-bottom:1px solid #EAD9BC;color:#7A5418;
+                  padding:.6rem 1rem;font-size:.8rem;text-align:center;line-height:1.5;}
+    .aviso-correo button{font-family:'Lora',serif;font-size:.78rem;background:var(--amber);color:#fff;
+                         border:none;border-radius:14px;padding:.3rem .8rem;margin-left:.5rem;cursor:pointer;}
+
+    .btn-volver-portada{position:absolute;top:1.1rem;left:1.3rem;font-size:.68rem;letter-spacing:.08em;
+                        color:rgba(255,255,255,.4);cursor:pointer;border:none;background:none;
+                        font-family:'Lora',serif;padding:.25rem .4rem;transition:color .2s;}
+    .btn-volver-portada:hover{color:rgba(255,255,255,.8);}
+
+    @media(max-width:520px){
+      .pnav{padding:.5rem .8rem;}
+      .pnav-marca{font-size:.9rem;}
+      .pnav-marca img{height:28px;}
+      .pnav-acceso{font-size:.62rem;padding:.35rem .7rem;}
+      /* Logo más chico en celular para que el titular y los botones
+         entren en la primera pantalla sin tener que hacer scroll */
+      .phero-logo{width:min(128px,34vw);margin-bottom:.8rem;}
+      .phero{padding:1.8rem 1rem 2.4rem;}
+      .phero p{font-size:.92rem;line-height:1.6;}
+      .phero-ctas{margin-top:1.5rem;}
+      .pfrase{padding:2.8rem 1.2rem;}
+      .psec{padding:2.4rem 1rem;}
+      .pcontacto{padding:2.4rem 1rem;}
+      .psub{margin-bottom:1.8rem;}
+      .pbtn{font-size:.86rem;padding:.7rem 1.2rem;}
+      .phero-ctas{gap:.6rem;}
+    }
+
+    @media(max-width:768px){
+      header{flex-direction:row;gap:1rem;padding:1rem 1.5rem;}
+      .header-logo{height:70px;}
+      .header-logo img{max-height:70px;}
+      .header-content{gap:.2rem;}
+      header h1{font-size:clamp(1rem,2.5vw,1.4rem);}
+      .eyebrow{margin-bottom:.2rem;}
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       CELULAR (≤520px)
+       Objetivo: que el psicólogo vea horarios sin hacer scroll y
+       sin deslizar de lado. Todo lo de aquí está medido contra
+       iPhone SE (375px) e iPhone 13/14 (390px).
+       ══════════════════════════════════════════════════════════ */
+    @media(max-width:520px){
+
+      /* ── HEADER COMPACTO ──────────────────────────────────────
+         Antes: logo, título y barra de sesión apilados se comían
+         ~450px de 844px — más de media pantalla antes del primer
+         horario. Ahora el logo va al lado del título.            */
+      header{flex-direction:row;align-items:center;justify-content:center;
+             gap:.7rem;padding:.55rem 2.4rem .55rem .8rem;}
+      .header-logo{height:44px;}
+      .header-logo img{max-height:44px;}
+      .header-content{align-items:flex-start;gap:.1rem;}
+      header h1{font-size:1.02rem;line-height:1.15;}
+      .eyebrow{font-size:.5rem;letter-spacing:.18em;margin-bottom:0;}
+
+      /* El botón "admin" se encimaba sobre el título. Ahora vive en
+         la esquina superior derecha, donde no estorba a nadie.    */
+      .admin-trigger{top:.3rem;right:.35rem;bottom:auto;font-size:.55rem;padding:.35rem .45rem;}
+
+      /* Barra de sesión en una sola línea, no apilada */
+      .session-bar{flex-direction:row;align-items:center;gap:.5rem;
+                   padding:.35rem .8rem;font-size:.68rem;}
+      .btn-logout{flex:0 0 auto;}
+
+      /* ── PESTAÑAS ─────────────────────────────────────────────
+         "Conoce nuestro equipo" se salía por el borde derecho.
+         Ahora se reparten el ancho a partes iguales.             */
+      .admin-tabs{padding:0;overflow-x:visible;}
+      .admin-tabs .atab{flex:1 1 0;min-width:0;text-align:center;
+                        font-size:.72rem;padding:.55rem .2rem;}
+
+      /* ── BARRA DE FECHA ───────────────────────────────────────
+         El campo no se estiraba y quedaba alineado a la derecha
+         con un hueco enorme a la izquierda.                      */
+      /* Fecha y botón en la misma fila: apilados se comían ~70px de
+         alto y empujaban la cuadrícula fuera de la primera pantalla */
+      .form-bar{flex-direction:row;align-items:flex-end;padding:.55rem .7rem;gap:.5rem;flex-wrap:nowrap;}
+      .field{min-width:0;flex:1 1 auto;}
+      .field input,.field select{width:100%;}
+      .field label{font-size:.55rem;}
+      .btn-primary{width:auto;flex:0 0 auto;align-self:flex-end;font-size:.78rem;padding:.55rem .8rem;}
+      .legend{display:none;}
+
+      /* ── CUADRÍCULA: QUE QUEPAN LOS 4 ESPACIOS ────────────────
+         Antes: min-width 480px en una pantalla de 390 → el Taller
+         quedaba fuera y sin ninguna pista de que se podía deslizar.
+         Ahora: sin ancho mínimo, columna de horas estrecha y
+         encabezados abreviados (Cons 1 / Cons 2 / Cons 3 / Taller).
+         46 + 4×82 = 374px, entra en 390 y también en 375.         */
+      main{padding:.7rem .4rem 2rem;}
+      .grid-wrapper-x{overflow-x:visible;}
+      .time-grid{min-width:0;grid-template-columns:46px repeat(var(--cols,4),minmax(0,1fr));font-size:.6rem;}
+      .gh{padding:.5rem .1rem;font-size:.6rem;letter-spacing:0;}
+      .gh-largo{display:none;}
+      .gh-corto{display:inline;}
+      .tl{padding:1px 0;font-size:.55rem;}
+      .tl.media-hora{font-size:.5rem;}
+      .slot{padding:2px;}
+      /* min-width:0 deja que el nombre se recorte en vez de empujar
+         la columna y romper el ancho de la cuadrícula */
+      .chip{font-size:.55rem;padding:2px 3px;letter-spacing:-.01em;min-width:0;white-space:nowrap;}
+      .chip span{overflow:hidden;text-overflow:ellipsis;min-width:0;}
+      .date-banner h2{font-size:.95rem;}
+
+      /* ── EQUIPO ───────────────────────────────────────────────
+         Cada foto ocupaba una pantalla entera. Ahora se ve la foto
+         y el principio de la ficha de un vistazo.                */
+      #equipo-grid,#portada-equipo-grid{grid-template-columns:1fr;padding:0 .4rem 2rem;gap:1rem;}
+      .team-photo{aspect-ratio:auto;height:210px;}
+      /* Al recortar un retrato a formato apaisado, encuadrar hacia arriba
+         para no cortar la cara */
+      .team-photo img{object-position:center 22%;}
+      .team-info{padding:.9rem;}
+
+      /* ── PANEL ADMIN ──────────────────────────────────────────  */
+      .admin-filters{flex-direction:column;}
+      .stats-row{grid-template-columns:1fr;}
+      .totales-grid{grid-template-columns:1fr;}
+      .sary-form{grid-template-columns:1fr;padding:1rem;}
+    }
+
+    /* Pantallas muy angostas (iPhone SE y similares) */
+    @media(max-width:380px){
+      .time-grid{grid-template-columns:42px repeat(var(--cols,4),minmax(0,1fr));}
+      .gh{font-size:.56rem;}
+      .chip{font-size:.52rem;}
+      header h1{font-size:.95rem;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PORTADA PÚBLICA
+     Es lo primero que ve quien llega sin sesión iniciada. Los
+     profesionales con sesión activa no la ven: entran directo a la
+     agenda, igual que siempre (ver DOMContentLoaded).
+     ══════════════════════════════════════════════════════════════ -->
+<div id="portada">
+
+  <nav class="pnav">
+    <div class="pnav-marca">
+      <img src="fotos/logo.png" alt="" onerror="this.style.display='none'">
+      <span>Casa Amatista</span>
+    </div>
+    <button class="pnav-acceso" onclick="mostrarLogin()">Acceso profesionales</button>
+  </nav>
+
+  <!-- Aviso para quien ya inició sesión antes y vuelve a la portada -->
+  <div class="pvolver" id="pvolver" style="display:none;">
+    <span id="pvolver-txt"></span>
+    <button onclick="volverASesion()">Ir a mi agenda</button>
+  </div>
+
+  <section class="phero">
+    <img class="phero-logo reveal" src="fotos/logo.png" alt="Casa Amatista" onerror="this.style.display='none'">
+    <h1 class="reveal">Un espacio para <em>cuidar de ti</em></h1>
+    <p class="reveal">Psicólogos, nutriólogos y terapeutas en un mismo lugar. Encuentra al
+       profesional que acompañe tu proceso, con la calidez y la privacidad
+       que mereces.</p>
+    <div class="phero-ctas reveal">
+      <a href="#especialistas" class="pbtn pbtn-1">Conoce a nuestros especialistas</a>
+      <a href="#contacto" class="pbtn pbtn-2">Contáctanos</a>
+    </div>
+  </section>
+
+  <!-- QUÉ OFRECEMOS -->
+  <section class="psec psec-alt">
+    <p class="peyebrow reveal">Nuestros servicios</p>
+    <h2 class="ptitulo reveal">Acompañamiento profesional</h2>
+    <p class="psub reveal">Cada especialista trabaja de forma independiente, con su propio
+       enfoque, horarios y tarifas. Tú eliges con quién.</p>
+    <div class="pserv" data-escalonar>
+      <div class="pserv-card reveal">
+        <div class="pserv-ico"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-6 6c0 2 .8 3 .8 4.5V16a2 2 0 0 0 2 2h6.4a2 2 0 0 0 2-2v-2.5c0-1.5.8-2.5.8-4.5a6 6 0 0 0-6-6z"/><path d="M9.5 21h5"/></svg></div>
+        <h3>Psicología</h3>
+        <p>Terapia individual, de pareja y familiar. Niños, adolescentes y adultos.
+           Ansiedad, depresión, duelo, trauma y desarrollo personal.</p>
+      </div>
+      <div class="pserv-card reveal">
+        <div class="pserv-ico"><svg viewBox="0 0 24 24"><path d="M12 8c0-3 2-5 5-5 0 3-2 5-5 5z"/><path d="M12 8c-3.3 0-6 2.4-6 6.5S8.7 21 12 21s6-2.9 6-6.5S15.3 8 12 8z"/></svg></div>
+        <h3>Nutrición</h3>
+        <p>Nutrición clínica con enfoque en psiconutrición y alimentación
+           consciente, sin castigos ni dietas restrictivas.</p>
+      </div>
+      <div class="pserv-card reveal">
+        <div class="pserv-ico"><svg viewBox="0 0 24 24"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12"/><path d="M11 12V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M14 12V6.5a1.5 1.5 0 0 1 3 0V15c0 3.3-2.2 6-5.5 6S6 18.3 6 15v-2.5a1.5 1.5 0 0 1 2-1.4"/></svg></div>
+        <h3>Bienestar</h3>
+        <p>Masaje y terapias corporales para acompañar el trabajo emocional
+           desde el cuerpo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FRASE DE RESPIRO -->
+  <section class="pfrase">
+    <p class="reveal">Pedir ayuda no es debilidad.<br>
+       Es el primer paso <span>—</span> y no tienes que darlo solo.</p>
+  </section>
+
+  <!-- ESPECIALISTAS -->
+  <section class="psec" id="especialistas">
+    <p class="peyebrow reveal">Nuestro equipo</p>
+    <h2 class="ptitulo reveal">Conoce a los especialistas</h2>
+    <p class="psub reveal">Escríbeles directamente por WhatsApp para agendar tu cita.</p>
+    <div class="pfiltros reveal" id="pfiltros"></div>
+    <div id="portada-equipo-grid" data-escalonar></div>
+  </section>
+
+  <!-- EL ESPACIO -->
+  <section class="psec psec-alt" id="espacio">
+    <p class="peyebrow reveal">El lugar</p>
+    <h2 class="ptitulo reveal">Un espacio pensado para ti</h2>
+    <p class="psub reveal">Consultorios privados, sala de espera y un taller para
+       actividades grupales.</p>
+    <div class="pespacio" id="pespacio" data-escalonar>
+      <!-- ↓ Para poner fotos reales: cambia el div por
+           <div class="pfoto reveal"><img src="fotos/espacio-1.jpg" alt="Consultorio 1"></div>
+           Para el tour 3D, sustituye toda esta sección por el <iframe> del escaneo. -->
+      <div class="pfoto reveal"><p class="pfoto-vacia">Consultorio 1<br><small>foto próximamente</small></p></div>
+      <div class="pfoto reveal"><p class="pfoto-vacia">Consultorio 2<br><small>foto próximamente</small></p></div>
+      <div class="pfoto reveal"><p class="pfoto-vacia">Taller<br><small>foto próximamente</small></p></div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="pcontacto" id="contacto">
+    <p class="peyebrow reveal">Estamos para ayudarte</p>
+    <h2 class="ptitulo reveal">Contáctanos</h2>
+    <p class="psub reveal">Escríbenos y con gusto te orientamos sobre qué especialista
+       puede acompañarte mejor.</p>
+    <div class="pcontacto-links reveal" id="pcontacto-links"></div>
+  </section>
+
+  <footer class="pfooter">
+    Casa Amatista · Espacio de salud mental y bienestar<br>
+    <a href="#" onclick="mostrarLogin();return false;">Acceso para profesionales</a>
+  </footer>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen" style="display:none;">
+    <div class="login-card">
+      <button class="btn-volver-portada" onclick="volverAPortada()">← Volver</button>
+      <button class="btn-admin-login" onclick="mostrarLoginAdmin()">admin</button>
+      <img class="login-brand-logo" src="fotos/logo.png" alt="Casa Amatista">
+      <p class="login-sub">Bienvenido(a)</p>
+      <!-- PASO 1: usuario + contraseña -->
+      <div id="paso-usuario">
+        <div class="lfield">
+          <label for="l-user">Usuario</label>
+          <input type="text" id="l-user" placeholder="ej. garcia.lopez" autocomplete="username"
+            onkeydown="if(event.key==='Enter') document.getElementById('l-pass').focus()">
+        </div>
+        <div class="lfield">
+          <label for="l-pass">Contraseña</label>
+          <input type="password" id="l-pass" placeholder="Tu contraseña" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter') doLogin()">
+        </div>
+        <button class="btn-texto" type="button" onclick="olvideContrasena()" style="align-self:flex-start;margin-top:-.4rem;">¿Olvidaste tu contraseña?</button>
+      </div>
+
+      <!-- PASO 2: código que llega al correo -->
+      <div id="paso-codigo" style="display:none;">
+        <p class="login-aviso" id="l-enviado"></p>
+        <div class="lfield">
+          <label for="l-codigo">Código de 6 dígitos</label>
+          <input type="text" id="l-codigo" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+            placeholder="······" style="text-align:center;letter-spacing:.5em;font-size:1.3rem;"
+            onkeydown="if(event.key==='Enter') enviarCodigo()">
+        </div>
+        <button class="btn-texto" onclick="volverAUsuario()">Usar otro usuario</button>
+      </div>
+
+      <p class="login-error" id="l-error"></p>
+      <button class="btn-login" id="btn-login" onclick="doLogin()">Entrar</button>
+    </div>
+</div>
+<!-- VISTA USUARIO -->
+<div id="vista-usuario" style="display:none;">
+  <header>
+    <div class="header-logo">
+      <img src="fotos/logo.png" alt="Casa Amatista" onerror="this.style.display='none'">
+    </div>
+    <div class="header-content">
+      <p class="eyebrow">Casa Amatista</p>
+      <h1>Reserva tu <em>horario</em></h1>
+    </div>
+    <button class="admin-trigger" onclick="mostrarLoginAdmin()">admin</button>
+  </header>
+  <div class="aviso-correo" id="aviso-correo" style="display:none;">
+    Registra tu correo para poder entrar con un código seguro.
+    <button onclick="guardarMiCorreo()">Registrar correo</button>
+  </div>
+  <div class="session-bar">
+    <span>Sesión: <strong id="session-nombre">—</strong><span id="mes-saludo" style="display:none;margin-left:.85rem;font-size:.68rem;color:var(--gold);font-style:italic;"></span></span>
+    <span style="display:flex;gap:.5rem;">
+      <button class="btn-logout" onclick="cambiarMiPasswordUI()">Cambiar contraseña</button>
+      <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+    </span>
+  </div>
+  <!-- Candado físico del consultorio · lo registra la admin, cambia cada mes -->
+  <div id="candado-box" style="display:none;">
+    <span class="cand-ico">🔒</span>
+    <div class="cand-main">
+      <span class="cand-label">Candado del consultorio</span>
+      <span class="cand-codigo" id="cand-codigo-ver">—</span>
+      <span class="cand-nota" id="cand-nota-ver"></span>
+    </div>
+    <span class="cand-fecha" id="cand-fecha-ver"></span>
+  </div>
+  <!-- PESTAÑAS USUARIO -->
+  <div class="admin-tabs" style="border-bottom:2px solid var(--cream-dark);background:var(--white);padding:0 1.5rem;margin:0;">
+    <button class="atab active" onclick="switchUserTab('agenda')">📅 Reservar horarios</button>
+    <button class="atab" onclick="switchUserTab('equipo')">👥 Conoce nuestro equipo</button>
+  </div>
+  <!-- TAB AGENDA (RESERVAR) -->
+  <div class="user-tab-content active" id="tab-user-agenda">
+    <div class="form-bar">
+      <div class="field"><label for="fecha">Fecha</label><input type="date" id="fecha"></div>
+      <button class="btn-primary" onclick="cargarDisponibilidad()">Ver disponibilidad</button>
+    </div>
+    <main>
+      <div id="contenido">
+        <div class="idle-state">
+          <div class="idle-icon">🗓</div>
+          <p>Selecciona una fecha para ver los horarios disponibles.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+  <!-- TAB EQUIPO -->
+  <div class="user-tab-content" id="tab-user-equipo">
+    <main style="padding-top:1.5rem;">
+      <div id="equipo-grid"></div>
+    </main>
+  </div>
+</div>
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <header style="margin-bottom:0;">
+    <div class="header-logo">
+      <img src="fotos/logo.png" alt="Casa Amatista" onerror="this.style.display='none'">
+    </div>
+    <div class="header-content">
+      <p class="eyebrow">Casa Amatista</p>
+      <h1><em>Administración</em></h1>
+    </div>
+  </header>
+  <div class="admin-inner">
+    <div class="admin-topbar">
+      <h2>Panel de administración</h2>
+      <button class="btn-ghost" onclick="salirAdmin()">← Volver a la agenda</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="atab active" onclick="switchAdminTab('agenda')">📅 Agenda</button>
+      <button class="atab" onclick="switchAdminTab('psicologos')">👥 Psicólogos</button>
+      <button class="atab" onclick="switchAdminTab('sary')">💜 Pacientes Sary</button>
+      <button class="atab" onclick="switchAdminTab('espacios')">🚪 Espacios</button>
+    </div>
+    <!-- TAB AGENDA -->
+    <div class="tab-content active" id="tab-agenda">
+      <div class="admin-filters">
+        <div class="field"><label for="a-ini">Desde</label><input type="date" id="a-ini"></div>
+        <div class="field"><label for="a-fin">Hasta</label><input type="date" id="a-fin"></div>
+        <button class="btn-primary" onclick="cargarAdmin()">Consultar período</button>
+        <button class="btn-primary" id="btn-partir" onclick="partirEventosLargos()" style="background:var(--plum);white-space:nowrap;" title="Divide automáticamente citas de más de 1 hora en bloques de 1 hora">✂️ Partir citas largas</button>
+      </div>
+      <div id="cal-section" style="display:none;">
+        <p class="section-title">Calendario — toca una cita para registrar estado o moverla</p>
+        <div id="move-banner"></div>
+        <div class="cal-legend">
+          <div class="cl-item"><div class="cl-dot" style="background:#3B82F6;"></div>Sin marcar</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--red);opacity:.6;"></div>Canceló</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--amber);"></div>Descuento</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--plum);"></div>Sary (toca para mover)</div>
+        </div>
+        <div class="cal-nav">
+          <button class="btn-nav" onclick="navSemana(-1)">&#8592; Semana anterior</button>
+          <h3 id="cal-titulo">—</h3>
+          <button class="btn-nav" onclick="navSemana(1)">Semana siguiente &#8594;</button>
+        </div>
+        <label class="filtro-sc"><input type="checkbox" id="chk-sin-cargo" onchange="mostrarSinCargo=this.checked;renderCalAdmin();"> Mostrar canceladas sin cargo</label>
+        <div class="cal-wrapper"><div class="cal-grid" id="cal-grid"></div></div>
+      </div>
+      <!-- Totales separados -->
+      <div class="totales-grid" id="totales-grid" style="display:none;">
+        <div class="total-box rentas">
+          <div class="total-box-label">💰 Total rentas</div>
+          <div class="total-box-value" id="total-rentas">$0</div>
+          <div class="total-box-sub" id="total-rentas-sub">— citas</div>
+        </div>
+        <div class="total-box terapias">
+          <div class="total-box-label">💜 Total terapias Sary</div>
+          <div class="total-box-value" id="total-terapias">$0</div>
+          <div class="total-box-sub" id="total-terapias-sub">— sesiones</div>
+        </div>
+      </div>
+      <!-- Stats rentas -->
+      <div class="stats-row" id="admin-stats" style="display:none;">
+        <div class="stat-card"><div class="stat-label">Asistieron</div><div class="stat-value sv-green" id="st-asistio">—</div></div>
+        <div class="stat-card"><div class="stat-label">Cancelaron</div><div class="stat-value sv-red" id="st-cancelo">—</div></div>
+        <div class="stat-card"><div class="stat-label">Descuento</div><div class="stat-value sv-amber" id="st-desc">—</div></div>
+        <div class="stat-card"><div class="stat-label">Sesiones Sary</div><div class="stat-value sv-plum" id="st-sary">—</div></div>
+      </div>
+      <div id="psy-section" style="display:none;">
+        <p class="section-title">Resumen por psicólogo (rentas)</p>
+        <div class="table-wrap">
+          <table><thead><tr><th>Psicólogo/a</th><th>Asistió</th><th>Canceló</th><th>Descuento</th><th style="text-align:right;">Total</th></tr></thead>
+          <tbody id="psy-tbody"></tbody></table>
+        </div>
+      </div>
+      <div class="admin-empty" id="admin-empty" style="display:none;">No se encontraron citas en el periodo seleccionado.</div>
+      <div class="loading-msg" id="admin-loading" style="display:none;">Cargando citas…</div>
+    </div>
+    <!-- TAB PSICÓLOGOS -->
+    <div class="tab-content" id="tab-psicologos">
+      <div class="init-box" id="init-box">✓ Base de datos inicializada con los psicólogos registrados.</div>
+      <p class="section-title">Registrar nuevo profesional</p>
+      <div class="add-form">
+        <div class="field"><label for="psy-nombre">Nombre</label><input type="text" id="psy-nombre" placeholder="María"></div>
+        <div class="field"><label for="psy-apellido">Apellido</label><input type="text" id="psy-apellido" placeholder="García"></div>
+        <div class="field"><label for="psy-profesion">Profesión</label>
+          <select id="psy-profesion">
+            <option value="psicologo">Psicólogo/a</option>
+            <option value="nutriologo">Nutriólogo/a</option>
+            <option value="masajista">Masajista</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="registrarPsicologo()">Registrar</button>
+      </div>
+      <p class="section-title">🧠 Psicólogos</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="psy-list-psicologos"></tbody>
+        </table>
+      </div>
+      <p class="section-title">🥗 Nutriólogos</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="psy-list-nutriologos"></tbody>
+        </table>
+      </div>
+      <p class="section-title">💆 Masajistas</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="psy-list-masajistas"></tbody>
+        </table>
+      </div>
+      <div class="loading-msg" id="psy-loading" style="display:none;">Cargando…</div>
+    </div>
+    <!-- TAB PACIENTES SARY -->
+    <div class="tab-content" id="tab-sary">
+      <p class="section-title">Agendar cita de paciente (aparece como "Sary" públicamente)</p>
+      <div class="sary-form">
+        <div class="field">
+          <label for="s-paciente-sel">Paciente</label>
+          <select id="s-paciente-sel" onchange="autoFillFee()">
+            <option value="">— Selecciona —</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="s-room">Consultorio</label>
+          <!-- Se rellena solo desde NOMBRES (ver poblarSelectEspacios) -->
+          <select id="s-room"></select>
+        </div>
+        <div class="field"><label for="s-fecha">Fecha</label><input type="date" id="s-fecha"></div>
+        <div class="field"><label for="s-ini">Hora inicio</label><select id="s-ini" onchange="autoCalcFin()"></select></div>
+        <div class="field">
+          <label for="s-duracion">Duración</label>
+          <select id="s-duracion" onchange="autoCalcFin()">
+            <option value="1">1h</option>
+            <option value="1.5">1h 30min</option>
+            <option value="2">2h</option>
+            <option value="otra">Otra (manual)</option>
+          </select>
+        </div>
+        <div class="field" id="s-fin-wrapper" style="display:none;">
+          <label for="s-fin-hora">Hora fin</label>
+          <select id="s-fin-hora"></select>
+        </div>
+        <div class="field"><label for="s-fee">Monto cobrado ($)</label><input type="number" id="s-fee" min="0" placeholder="550"></div>
+        <button class="btn-primary" onclick="agendarSary()">Agendar</button>
+      </div>
+      <!-- Ver citas agendadas -->
+      <div class="admin-filters" style="margin-bottom:1rem;">
+        <div class="field"><label for="s-ver-ini">Desde</label><input type="date" id="s-ver-ini"></div>
+        <div class="field"><label for="s-ver-fin">Hasta</label><input type="date" id="s-ver-fin"></div>
+        <button class="btn-primary" onclick="cargarAgendaSary()">Ver citas</button>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+        <button class="btn-primary" style="background:var(--green);" onclick="enviarMensajeATodos()">📱 Enviar a todos</button>
+      </div>
+      <div class="sary-bookings" id="sary-list" style="margin-bottom:2rem;"></div>
+      <div class="loading-msg" id="sary-loading" style="display:none;">Cargando citas…</div>
+      <hr style="border:none;border-top:1px solid var(--cream-dark);margin-bottom:1.5rem;">
+      <!-- Registro de pacientes -->
+      <p class="section-title">Directorio de pacientes</p>
+      <div class="add-form">
+        <div class="field"><label for="pac-nombre">Nombre del paciente</label><input type="text" id="pac-nombre" placeholder="Nombre completo"></div>
+        <div class="field"><label for="pac-tel">Teléfono WhatsApp</label><input type="tel" id="pac-tel" placeholder="87-12-34-56-78"></div>
+        <div class="field"><label for="pac-fee">Tarifa por sesión ($)</label><input type="number" id="pac-fee" min="0" placeholder="550"></div>
+        <button class="btn-primary" onclick="registrarPaciente()">+ Agregar uno</button>
+        <button class="btn-primary" style="background:var(--plum);" onclick="abrirBatchModal()">+ Agregar varios</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Paciente</th><th>Teléfono</th><th>Tarifa/sesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <tbody id="pac-tbody"></tbody>
+        </table>
+      </div>
+      <div class="loading-msg" id="pac-loading" style="display:none;">Cargando…</div>
+    </div>
+    <!-- TAB ESPACIOS — habilitar / deshabilitar consultorios -->
+    <div class="tab-content" id="tab-espacios">
+      <p class="section-title">🔒 Candado del consultorio</p>
+      <p class="hint-espacios">La combinación que ven los psicólogos al entrar a su cuenta. Cámbiala cuando toque (cada mes).</p>
+      <div class="form-bar" style="border-radius:12px;border:1px solid var(--cream-dark);">
+        <div class="field"><label for="cand-codigo">Combinación</label>
+          <input type="text" id="cand-codigo" placeholder="ej. 4 7 2 9" maxlength="40"></div>
+        <div class="field" style="flex:2;"><label for="cand-nota">Nota (opcional)</label>
+          <input type="text" id="cand-nota" placeholder="ej. gira 2 veces a la derecha" maxlength="80"></div>
+        <button class="btn-primary" onclick="guardarCandadoAdmin()">Guardar candado</button>
+      </div>
+      <p class="hint-espacios" id="cand-info" style="margin-top:.6rem;"></p>
+
+      <p class="section-title" style="margin-top:2rem;">Espacios · abre o cierra consultorios</p>
+      <p class="hint-espacios">Cerrar un espacio impide reservas nuevas.
+         Las citas que ya estén agendadas <strong>no se borran</strong>.</p>
+
+      <div class="esp-grid" id="esp-grid"></div>
+
+      <p class="section-title" style="margin-top:2rem;">Cerrar un día concreto</p>
+      <div class="form-bar" style="border-radius:12px;border:1px solid var(--cream-dark);">
+        <div class="field">
+          <label for="blq-room">Espacio</label>
+          <select id="blq-room"></select>
+        </div>
+        <div class="field"><label for="blq-fecha">Fecha</label><input type="date" id="blq-fecha"></div>
+        <button class="btn-primary" onclick="bloquearDia()">Cerrar ese día</button>
+      </div>
+
+      <div id="blq-lista" style="margin-top:1.2rem;"></div>
+      <div class="loading-msg" id="esp-loading" style="display:none;">Cargando…</div>
+    </div>
+
+  </div>
+</div>
+<!-- MODAL reserva usuario -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <h3>Confirmar reserva</h3>
+    <p class="modal-sub">Revisa los datos antes de confirmar.</p>
+    <div class="modal-detail" id="mdetail"></div>
+    <div class="ffield"><label for="hora-fin">Hora de término</label><select id="hora-fin"></select></div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarModal()">Cancelar</button>
+      <button class="btnok" id="btnok" onclick="confirmar()">Confirmar reserva</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL cancelar cita usuario -->
+<div class="overlay" id="modal-cancelar">
+  <div class="modal">
+    <h3>Cancelar cita</h3>
+    <p class="modal-sub">Revisa los datos de la cita a cancelar.</p>
+    <div class="modal-detail" id="cancel-detail">Buscando tu cita…</div>
+    <div id="cancel-aviso"></div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarModalCancelar()">Volver</button>
+      <button class="btnok" id="btn-cancelar-ok" onclick="confirmarCancelacion()" style="background:var(--red);" disabled>Cancelar cita</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL login admin -->
+<div class="overlay" id="modal-admin">
+  <div class="modal modal-sm">
+    <h3>Acceso administrador</h3>
+    <p class="modal-sub" style="margin-bottom:1rem;">Contraseña de administración</p>
+    <input type="password" id="admin-pw" placeholder="Contraseña"
+      onkeydown="if(event.key==='Enter') verificarAdmin()">
+    <p class="modal-error" id="admin-error">Contraseña incorrecta.</p>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarLoginAdmin()">Cancelar</button>
+      <button class="btnok" onclick="verificarAdmin()">Entrar</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL estado de cita -->
+<div class="overlay" id="modal-estado">
+  <div class="modal" style="max-width:360px;">
+    <h3>Registrar estado</h3>
+    <p class="modal-sub" id="estado-sub"></p>
+    <div class="modal-detail" id="estado-detail"></div>
+    <div class="status-options">
+      <div class="status-opt opt-asistio selected" id="opt-asistio" onclick="selStatus('asistio')">
+        <div class="opt-icon">✓</div>
+        <div><div class="opt-title">Asistió</div><div class="opt-desc">Tarifa completa ($55)</div></div>
+      </div>
+      <div class="status-opt opt-cancelo" id="opt-cancelo" onclick="selStatus('cancelo')">
+        <div class="opt-icon">✕</div>
+        <div><div class="opt-title">Canceló</div><div class="opt-desc">Slot libre ($30)</div></div>
+      </div>
+      <div class="status-opt opt-descuento" id="opt-descuento" onclick="selStatus('descuento')">
+        <div class="opt-icon">%</div>
+        <div>
+          <div class="opt-title">Descuento</div><div class="opt-desc">Monto especial</div>
+          <div class="desc-amount-wrap" id="desc-amount-wrap">
+            <label>Monto ($)</label>
+            <input type="number" id="desc-amount" value="30" min="0" max="55">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarEstadoModal()">Cancelar</button>
+      <button class="btnok" id="btn-estado-ok" onclick="guardarEstado()">Guardar</button>
+    </div>
+    <div style="border-top:1px solid var(--cream-dark);margin-top:.9rem;padding-top:.75rem;text-align:center;display:flex;flex-direction:column;gap:.45rem;align-items:center;">
+      <button onclick="moverDesdModal()"
+        style="font-family:'Lora',serif;font-size:.78rem;color:var(--sage-dark);background:var(--sage-light);border:1px solid #a5c8be;border-radius:8px;cursor:pointer;padding:.3rem .9rem;width:100%;">
+        📍 Mover esta cita a otro horario
+      </button>
+      <button id="btn-borrar-evento" onclick="borrarEventoSinCargo()"
+        style="font-family:'Lora',serif;font-size:.75rem;color:var(--ink-light);background:none;border:none;cursor:pointer;text-decoration:underline;padding:.25rem .5rem;"
+        title="Elimina la cita del calendario sin registrar cancelación ni cargo">
+        🗑 Borrar cita sin cargo (psicólogo pidió excluirla)
+      </button>
+    </div>
+  </div>
+</div>
+<!-- MODAL BATCH PACIENTES — FIX #3: ahora incluye campo de teléfono -->
+<div class="overlay" id="modal-batch">
+  <div class="modal batch-modal">
+    <h3>Agregar múltiples pacientes</h3>
+    <p class="modal-sub">Completa nombre, teléfono y tarifa. Puedes agregar tantas filas como necesites.</p>
+    <table class="batch-table" id="batch-table">
+      <thead>
+        <tr>
+          <th>Nombre completo</th>
+          <th>Teléfono WhatsApp</th>
+          <th>Tarifa ($)</th>
+        </tr>
+      </thead>
+      <tbody id="batch-tbody"></tbody>
+    </table>
+    <div class="batch-add-row">
+      <button class="btn-add-row" onclick="agregarFilaBatch()">+ Agregar fila</button>
+    </div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarBatchModal()">Cancelar</button>
+      <button class="btnok" onclick="guardarBatch()">Guardar todo</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL EDITAR PACIENTE -->
+<div class="overlay" id="modal-edit-pac">
+  <div class="modal">
+    <h3>Editar paciente</h3>
+    <p class="modal-sub">Actualiza la información del paciente.</p>
+    <div class="add-form" style="flex-direction:column;">
+      <div class="field"><label for="edit-pac-nombre">Nombre</label><input type="text" id="edit-pac-nombre" placeholder="Nombre completo"></div>
+      <div class="field"><label for="edit-pac-tel">Teléfono WhatsApp</label><input type="tel" id="edit-pac-tel" placeholder="87-12-34-56-78"></div>
+      <div class="field"><label for="edit-pac-fee">Tarifa por sesión ($)</label><input type="number" id="edit-pac-fee" min="0" placeholder="550"></div>
+    </div>
+    <div class="mactions">
+      <button class="btnc" onclick="cerrarEditarPaciente()">Cancelar</button>
+      <button class="btnok" onclick="guardarEditarPaciente()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+// ══════════════════════════════════════════════════════════════
+//  CONFIGURACIÓN
+// ══════════════════════════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRIO6Yw8VIBgDKryr3T3b4tW8QjtN57W-Bt7a3-DVG8OkqLO9gTL8VBmOB3eY7JsvS/exec';
+const CALENDARIOS = {
+  'consultorio-1':'f6b359cdadfa144d836290602caf1b796c8999515bf216a4c819c345cda71d6f@group.calendar.google.com',
+  'consultorio-2':'e6ec7606cf0cb7e3340401ed80eb55aea734fc516bbd2ee9983513d7f01dbaa7@group.calendar.google.com',
+  'consultorio-3':'d925e13197852e408a82591d060a7c03598e16bf2e77200b2aa7bcd46d09414c@group.calendar.google.com',
+  'consultorio-4':'a55181b1ab90fe9d633ec279bb813027634debe1b05833e8e6589bdd5f884dd2@group.calendar.google.com',
+  'taller':'ca7c63526ea07f923b30a30bafc3d5149091d37c85546f16c1783b682382d952@group.calendar.google.com',
+};
+const NOMBRES={'consultorio-1':'Consultorio 1','consultorio-2':'Consultorio 2','consultorio-3':'Consultorio 3','consultorio-4':'Consultorio 4','taller':'Taller'};
+// Versión corta de los encabezados para la cuadrícula en celular: así caben los
+// 4 espacios en pantalla sin scroll horizontal. Se alternan por CSS
+// (.gh-largo / .gh-corto), no por JavaScript.
+const NOMBRES_CORTOS={'consultorio-1':'Cons 1','consultorio-2':'Cons 2','consultorio-3':'Cons 3','consultorio-4':'Cons 4','taller':'Taller'};
+function encabezadoEspacio(id){return `<span class="gh-largo">${NOMBRES[id]}</span><span class="gh-corto">${NOMBRES_CORTOS[id]}</span>`;}
+
+// ══════════════════════════════════════════════════════════════
+//  ⚠️  DATOS DE CONTACTO DE LA PORTADA — CAMBIA ESTO
+// ══════════════════════════════════════════════════════════════
+//  Estos son los únicos datos que faltan por llenar. Se usan en la
+//  sección "Contáctanos" de la portada pública.
+//    whatsapp  → solo dígitos, sin +52, sin espacios ni guiones
+//    instagram → solo el usuario, sin la @
+//  Si dejas alguno vacío (''), ese botón simplemente no aparece.
+const CONTACTO = {
+  whatsapp : '8711234567',      // ← CAMBIAR por el WhatsApp de Casa Amatista
+  instagram: 'casaamatista',    // ← CAMBIAR por el Instagram real
+};
+// La contraseña de administración ya NO vive aquí. Antes estaba su hash
+// SHA-256 en este archivo público: cualquiera podía descargarlo y probarlo
+// sin límite en su propia computadora. Ahora se comprueba en el servidor,
+// que además frena los intentos seguidos.
+const TARIFA_ASISTIO=55, TARIFA_CANCELO=30;
+const H_INI=8, H_FIN=21;
+const SESSION_KEY='amatista_session';
+// ══════════════════════════════════════════════════════════════
+//  CONTROL DE VERSIÓN — evita que se quede corriendo código viejo
+// ══════════════════════════════════════════════════════════════
+//  Cubre los 3 casos por los que un psicólogo puede quedarse atascado
+//  en una versión antigua (sobre todo en Safari de iPhone/iPad):
+//
+//   1. Carga normal de la página.
+//   2. Volver a una pestaña que llevaba días o semanas abierta.
+//      Safari la restaura desde memoria (bfcache) SIN pedirle nada al
+//      servidor, así que las cabeceras de caché no ayudan aquí.
+//      El evento 'pageshow' con e.persisted===true detecta justo eso.
+//   3. Volver a la app después de cambiar a otra app del teléfono.
+//
+//  Al detectar una publicación nueva, recarga sola. El contador en
+//  sessionStorage evita cualquier bucle de recargas si algo va mal.
+// ──────────────────────────────────────────────────────────────
+(function(){
+  const KEY='amatista_version', GUARD='amatista_recargas';
+  let ocupado=false, ultimaRevision=0;
+
+  function leerGuard(){try{return +(sessionStorage.getItem(GUARD)||0);}catch(_){return 0;}}
+  function escribirGuard(n){try{n===0?sessionStorage.removeItem(GUARD):sessionStorage.setItem(GUARD,n);}catch(_){}}
+  function leerVer(){try{return localStorage.getItem(KEY);}catch(_){return null;}}
+  function escribirVer(v){try{localStorage.setItem(KEY,v);}catch(_){}}
+
+  async function comprobar(forzar){
+    const ahora=Date.now();
+    if(ocupado) return;
+    if(!forzar && ahora-ultimaRevision < 60000) return;   // como mucho 1 revisión por minuto
+    if(navigator.onLine===false) return;
+    ocupado=true; ultimaRevision=ahora;
+    try{
+      // cache:'reload' obliga a ir a la red saltándose cualquier copia local
+      const r=await fetch(location.pathname,{method:'HEAD',cache:'reload'});
+      const v=r.headers.get('etag')||r.headers.get('last-modified')||'';
+      if(v){
+        const prev=leerVer();
+        escribirVer(v);
+        if(prev && prev!==v){
+          const intentos=leerGuard();
+          if(intentos<2){ escribirGuard(intentos+1); location.reload(); return; }
+        }else if(prev===v){
+          escribirGuard(0);
+        }
+      }
+    }catch(_){/* sin conexión, o abierto como archivo local: se ignora */}
+    ocupado=false;
+  }
+
+  comprobar(true);
+  // Safari restauró la pestaña desde bfcache → revisar sí o sí
+  window.addEventListener('pageshow',e=>{ if(e.persisted) comprobar(true); });
+  // El usuario volvió a la pestaña después de estar en otra app
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible') comprobar(false);
+  });
+})();
+// ══════════════════════════════════════════════════════════════
+const COLORES=['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#84CC16','#F97316','#6366F1','#14B8A6','#BE185D'];
+const COLOR_SARY='#7A6F8F';
+function normNombre(n){if(!n)return'';return n.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();}
+function primerNombre(n){return normNombre(n).split(' ')[0]||normNombre(n);}
+function colorPsy(n){const norm=normNombre(n);if(norm==='SARY'||norm.startsWith('SARY - '))return COLOR_SARY;let h=5381;for(let i=0;i<norm.length;i++)h=((h<<5)+h)+norm.charCodeAt(i);return COLORES[Math.abs(h)%COLORES.length];}
+const SLOTS=[];for(let h=H_INI;h<H_FIN;h++){SLOTS.push(h);SLOTS.push(h+0.5);}
+const IDS=Object.keys(CALENDARIOS);
+// La cuadrícula se dibuja con tantas columnas como espacios haya. Si algún día
+// abren un sexto consultorio, basta con añadirlo a CALENDARIOS: el CSS se adapta.
+document.documentElement.style.setProperty('--cols',IDS.length);
+
+// ══════════════════════════════════════════════════════════════
+//  ESPACIOS DESHABILITADOS
+// ══════════════════════════════════════════════════════════════
+//  Sary puede cerrar un espacio de dos formas:
+//    tipo 'total' → cerrado hasta nuevo aviso
+//    tipo 'dia'   → cerrado solo esa fecha
+//  Los bloqueos viven en el Apps Script, no en el navegador, para que
+//  todos los psicólogos vean lo mismo. Bloquear NO borra citas que ya
+//  existan: solo impide reservar nuevas.
+let BLOQUEOS=[];
+
+function estaBloqueado(roomId,fecha){
+  return BLOQUEOS.some(b=>b.roomId===roomId &&
+    (b.tipo==='total' || (b.tipo==='dia' && b.fecha===fecha)));
+}
+async function cargarBloqueos(){
+  try{
+    const r=await llamarBackend(`${SCRIPT_URL}?accion=listarBloqueos`);
+    BLOQUEOS=Array.isArray(r)?r:[];
+  }catch(_){ /* si falla, se sigue como si no hubiera bloqueos */ }
+  return BLOQUEOS;
+}
+// Rellena cualquier <select> de espacios desde NOMBRES, para que no queden
+// listas escritas a mano que se desincronicen al añadir un consultorio.
+function poblarSelectEspacios(id){
+  const sel=document.getElementById(id);
+  if(!sel) return;
+  const previo=sel.value;
+  sel.innerHTML=IDS.map(k=>`<option value="${k}">${NOMBRES[k]}</option>`).join('');
+  if(previo) sel.value=previo;
+}
+
+const DIAS_ES=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MESES_ES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function slotKey(v){const h=Math.floor(v);const m=v%1===0.5?'30':'00';return`${String(h).padStart(2,'0')}:${m}`;}
+function fmtHora(v){const h=Math.floor(v);const m=v%1===0.5?':30':':00';if(h===12)return`12${m}pm`;if(h>12)return`${h-12}${m}pm`;return`${h}${m}am`;}
+function toISO(v){const h=Math.floor(v);const m=v%1===0.5?'30':'00';return`${String(h).padStart(2,'0')}:${m}:00`;}
+function fmtFecha(f){const[y,m,d]=f.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+function fmtCorta(f){const[y,m,d]=f.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});}
+function dateStr(d){return d.toISOString().slice(0,10);}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function horaLeg(iso){return iso.slice(11,16);}
+function startOfWeek(d){const r=new Date(d);r.setDate(r.getDate()-(r.getDay()||7)+1);return r;}
+// ══════════════════════════════════════════════════════════════
+//  LLAMADAS AL BACKEND (Google Apps Script)
+// ══════════════════════════════════════════════════════════════
+//  EL PROBLEMA QUE ESTO RESUELVE:
+//  Si el usuario tiene VARIAS cuentas de Google abiertas en su
+//  navegador, Google reescribe la URL del script:
+//
+//     script.google.com/macros/s/AKfy.../exec
+//     script.google.com/macros/u/2/s/AKfy.../exec     ← la reescribe
+//                              ↑↑↑
+//
+//  y responde con una página de error de Google Drive en vez del
+//  JSON. Como esa página no es JavaScript válido, el <script> del
+//  JSONP falla y el usuario ve "Error de conexión".
+//
+//  Por eso en modo incógnito sí funciona: sin cuentas iniciadas,
+//  Google sirve la versión anónima, que es la que necesitamos
+//  (el deployment tiene acceso "Cualquier usuario").
+//
+//  LA SOLUCIÓN: pedir con credentials:'omit'. Sin cookies, Google
+//  no puede enrutar a ninguna cuenta y devuelve el JSON anónimo.
+//
+//  Si por lo que sea el fetch no se puede hacer (CORS, navegador
+//  viejo), cae automáticamente al JSONP de siempre. Nunca queda
+//  peor que antes.
+// ──────────────────────────────────────────────────────────────
+const TIMEOUT_BACKEND = 30000;   // Apps Script tarda al despertar
+
+async function llamarBackend(url){
+  // El token de sesión se añade AQUÍ, en un solo sitio, para que ninguna
+  // llamada se quede sin él por olvido. El servidor rechaza todo lo que
+  // llegue sin token, salvo las acciones de entrada.
+  const s=getSession();
+  if(s&&s.token&&url.indexOf('token=')<0){
+    url+='&token='+encodeURIComponent(s.token);
+  }
+  const res=await llamarBackendCrudo(url);
+  // Sesión caducada o revocada: se cierra y se manda a la pantalla de entrada
+  if(res&&res.error==='no_autorizado'){
+    clearSession();
+    if(typeof mostrarLogin==='function') mostrarLogin();
+    if(typeof showToast==='function') showToast(res.mensaje||'Tu sesión expiró. Vuelve a entrar.','error');
+    throw new Error(res.mensaje||'Sesión expirada');
+  }
+  return res;
+}
+
+async function llamarBackendCrudo(url){
+  // 1º intento — fetch anónimo, inmune al problema de multicuenta
+  try{
+    const ctrl = new AbortController();
+    const t = setTimeout(()=>ctrl.abort(), TIMEOUT_BACKEND);
+    const r = await fetch(url, {method:'GET', credentials:'omit', redirect:'follow', signal:ctrl.signal});
+    clearTimeout(t);
+    if(r.ok){
+      const txt = await r.text();
+      try{ return JSON.parse(txt); }
+      catch(_){ /* no vino JSON (¿página de error?) → probamos JSONP */ }
+    }
+  }catch(_){ /* CORS, red caída o timeout → probamos JSONP */ }
+
+  // 2º intento — JSONP de toda la vida
+  return fetchJSONP(url);
+}
+
+function fetchJSONP(url){
+  return new Promise((resolve,reject)=>{
+    const cb='cb_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    const t=setTimeout(()=>{cleanup();reject(new Error('Timeout'));},TIMEOUT_BACKEND);
+    function cleanup(){delete window[cb];if(s.parentNode)document.head.removeChild(s);clearTimeout(t);}
+    window[cb]=data=>{cleanup();resolve(data);};
+    s.onerror=()=>{cleanup();reject(new Error('Script error'));};
+    s.src=url+'&callback='+cb;
+    document.head.appendChild(s);
+  });
+}
+// SESIÓN
+function getSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY));}catch{return null;}}
+// Safari en Navegación Privada lanza excepción al escribir en localStorage.
+// Sin este try/catch, doLogin() se rompía justo aquí y el usuario se quedaba
+// mirando el botón "Entrar" sin ningún mensaje de error.
+function saveSession(d){try{localStorage.setItem(SESSION_KEY,JSON.stringify(d));}catch(_){/* sesión no persiste, pero la app sigue funcionando */}}
+function clearSession(){localStorage.removeItem(SESSION_KEY);}
+document.addEventListener('DOMContentLoaded',()=>{
+  const hoy=new Date().toISOString().slice(0,10);
+  document.getElementById('fecha').value=hoy;
+  poblarHorasSary();
+  autoCalcFin();
+  const lun=startOfWeek(new Date());
+  document.getElementById('a-ini').value=dateStr(lun);
+  document.getElementById('a-fin').value=dateStr(addDays(lun,6));
+  document.getElementById('s-fecha').value=hoy;
+  document.getElementById('s-ver-ini').value=hoy;
+  document.getElementById('s-ver-fin').value=hoy;
+  // Los desplegables de espacios se generan desde NOMBRES, nunca a mano
+  poblarSelectEspacios('s-room');    // agendar cita de Sary
+  poblarSelectEspacios('blq-room');  // cerrar un día en el panel admin
+  document.getElementById('blq-fecha').value=hoy;
+  cargarPortada();
+  const session=getSession();
+  // Con sesión activa se entra directo a la agenda.
+  if(session&&session.nombreCompleto) mostrarVistaUsuario(session.nombreCompleto,session.profesion||'psicologo');
+  // Sin sesión: esta página (agenda.html) es solo para profesionales —la
+  // portada pública ahora es el pasillo—, así que va directo al login.
+  else mostrarLogin();
+});
+// ══════════════════════════════════════════════════════════════
+//  LOGIN / LOGOUT
+// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+//  ENTRADA EN DOS PASOS
+// ══════════════════════════════════════════════════════════════
+//  1. El profesional escribe su usuario → le llega un código al correo
+//  2. Escribe el código → el servidor le entrega un token de 30 días
+//
+//  Mientras haya gente sin correo registrado, quien no lo tenga entra
+//  directo como antes y ve un aviso para registrarlo.
+// ──────────────────────────────────────────────────────────────
+let usuarioPendiente='';
+
+function volverAUsuario(){
+  usuarioPendiente='';
+  document.getElementById('paso-usuario').style.display='block';
+  document.getElementById('paso-codigo').style.display='none';
+  document.getElementById('l-error').textContent='';
+  document.getElementById('btn-login').textContent='Entrar';
+}
+
+async function doLogin(){
+  // Si estamos en el paso del código (recuperación), este botón lo envía
+  if(usuarioPendiente) return enviarCodigo();
+
+  const username=document.getElementById('l-user').value.trim();
+  const password=document.getElementById('l-pass').value;
+  const err=document.getElementById('l-error');
+  const btn=document.getElementById('btn-login');
+  if(!username){err.textContent='Ingresa tu usuario';return;}
+  if(!password){err.textContent='Ingresa tu contraseña';return;}
+  btn.disabled=true;btn.textContent='Entrando…';err.textContent='';
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=loginPassword&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
+    if(data.ok) return entrarConSesion(data);
+    if(data.error==='sin_password'){
+      err.textContent='Aún no tienes contraseña. Toca "¿Olvidaste tu contraseña?" para entrar con un código, o pídele a la administración que te asigne una.';
+    }else{
+      err.textContent=data.mensaje||'No se pudo entrar.';
+    }
+  }catch(e){
+    if(navigator.onLine===false){
+      err.textContent='Sin conexión a internet. Revisa tu wifi o datos móviles.';
+    }else if(/timeout/i.test(e.message||'')){
+      err.textContent='El servidor tardó demasiado. Espera unos segundos y vuelve a intentar.';
+    }else{
+      err.textContent='No se pudo conectar con el servidor. Intenta de nuevo; si sigue fallando avisa a la administración.';
+    }
+  }finally{ btn.disabled=false; btn.textContent=usuarioPendiente?'Confirmar código':'Entrar'; }
+}
+
+// "¿Olvidaste tu contraseña?" — recuperación con un código al correo
+async function olvideContrasena(){
+  const username=document.getElementById('l-user').value.trim();
+  const err=document.getElementById('l-error');
+  const btn=document.getElementById('btn-login');
+  if(!username){err.textContent='Escribe tu usuario y toca de nuevo.';document.getElementById('l-user').focus();return;}
+  btn.disabled=true;btn.textContent='Enviando código…';err.textContent='';
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=pedirCodigo&username=${encodeURIComponent(username)}`);
+    if(data.ok && data.sinCorreo){
+      const s=await llamarBackend(`${SCRIPT_URL}?accion=login&username=${encodeURIComponent(username)}`);
+      if(s.ok) return entrarConSesion(s);
+      err.textContent=s.mensaje||'No se pudo entrar.';
+    }else if(data.ok){
+      usuarioPendiente=username;
+      document.getElementById('paso-usuario').style.display='none';
+      document.getElementById('paso-codigo').style.display='block';
+      document.getElementById('l-enviado').textContent=
+        'Te enviamos un código a '+(data.enviadoA||'tu correo')+'. Caduca en 10 minutos.';
+      setTimeout(()=>document.getElementById('l-codigo').focus(),150);
+    }else if(data.error==='usuario_no_registrado'){
+      err.textContent='Usuario no registrado. Contacta a la administración.';
+    }else{
+      err.textContent=data.mensaje||'No se pudo enviar el código.';
+    }
+  }catch(e){
+    err.textContent='No se pudo enviar el código. Intenta de nuevo.';
+  }finally{ btn.disabled=false; btn.textContent=usuarioPendiente?'Confirmar código':'Entrar'; }
+}
+
+// Paso 2 — enviar el código de 6 dígitos
+async function enviarCodigo(){
+  const codigo=document.getElementById('l-codigo').value.trim();
+  const err=document.getElementById('l-error');
+  const btn=document.getElementById('btn-login');
+  if(codigo.length!==6){err.textContent='El código son 6 dígitos';return;}
+  btn.disabled=true;btn.textContent='Comprobando…';err.textContent='';
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=verificarCodigo`+
+      `&username=${encodeURIComponent(usuarioPendiente)}&codigo=${encodeURIComponent(codigo)}`);
+    if(data.ok) return entrarConSesion(data);
+    err.textContent=data.mensaje||'Código incorrecto.';
+    if(data.error==='codigo_expirado'||data.error==='demasiados_intentos') volverAUsuario();
+  }catch(e){
+    err.textContent='No se pudo comprobar el código. Intenta de nuevo.';
+  }finally{ btn.disabled=false;btn.textContent='Confirmar código'; }
+}
+
+// Guarda la sesión (con su token) y entra
+function entrarConSesion(data){
+  saveSession({
+    token:data.token, username:data.username, nombreCompleto:data.nombreCompleto,
+    id:data.id, profesion:data.profesion||'psicologo', rol:data.rol||'psicologo',
+    sinCorreo:!!data.sinCorreo,
+  });
+  usuarioPendiente='';
+  document.getElementById('l-codigo').value='';
+  volverAUsuario();
+  if(data.rol==='admin') return abrirPanelAdmin();
+  mostrarVistaUsuario(data.nombreCompleto,data.profesion||'psicologo');
+  avisoRegistrarCorreo();
+}
+
+// Banda naranja para quien todavía no tiene correo registrado
+function avisoRegistrarCorreo(){
+  const s=getSession();
+  const caja=document.getElementById('aviso-correo');
+  if(!caja) return;
+  caja.style.display=(s&&s.sinCorreo)?'block':'none';
+}
+
+async function guardarMiCorreo(){
+  const email=prompt('¿A qué correo te enviamos tu código para entrar?');
+  if(!email) return;
+  if(email.indexOf('@')<0){ showToast('Ese correo no parece válido','error'); return; }
+  try{
+    const r=await llamarBackend(`${SCRIPT_URL}?accion=registrarMiCorreo&email=${encodeURIComponent(email)}`);
+    if(r.ok){
+      const s=getSession(); s.sinCorreo=false; saveSession(s);
+      avisoRegistrarCorreo();
+      showToast('Correo guardado. La próxima vez entrarás con un código.','success');
+    }else showToast(r.error||'No se pudo guardar','error');
+  }catch(e){ showToast('No se pudo guardar el correo','error'); }
+}
+function mostrarVistaUsuario(nombreCompleto,profesion){
+  setTimeout(avisoRegistrarCorreo,0);
+  document.getElementById('portada').style.display='none';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('vista-usuario').style.display='block';
+  document.getElementById('session-nombre').textContent=primerNombre(nombreCompleto);
+  document.getElementById('fecha').value=document.getElementById('fecha').value||new Date().toISOString().slice(0,10);
+  // Saludo de mes según profesión
+  const SALUDOS={
+    psicologo:{mes:5, texto:'🎉 ¡Feliz Mes del Psicólogo!'},
+    nutriologo:{mes:1, texto:'🎉 ¡Feliz Mes del Nutriólogo!'},
+    masajista: {mes:12,texto:'🎉 ¡Feliz Mes del Masajista!'},
+  };
+  const prof=profesion||((getSession()||{}).profesion)||'psicologo';
+  const saludo=SALUDOS[prof];
+  const el=document.getElementById('mes-saludo');
+  if(el&&saludo&&(new Date().getMonth()+1)===saludo.mes){el.textContent=saludo.texto;el.style.display='inline';}
+  else if(el){el.style.display='none';}
+  cargarEquipo();
+  cargarCandadoUsuario();
+}
+
+// ── CANDADO DEL CONSULTORIO ──────────────────────────────────────
+// Combinación física que la admin registra y el psicólogo ve al entrar.
+function _fmtFechaCandado(iso){
+  if(!iso) return '';
+  try{ return 'Actualizada el '+new Date(iso).toLocaleDateString('es-MX',{day:'numeric',month:'long'}); }
+  catch(e){ return ''; }
+}
+async function cargarCandadoUsuario(){
+  const box=document.getElementById('candado-box'); if(!box) return;
+  try{
+    const d=await llamarBackend(`${SCRIPT_URL}?accion=verCandado`);
+    if(d&&d.ok&&d.codigo){
+      document.getElementById('cand-codigo-ver').textContent=d.codigo;
+      document.getElementById('cand-nota-ver').textContent=d.nota||'';
+      document.getElementById('cand-fecha-ver').textContent=_fmtFechaCandado(d.actualizadoEn);
+      box.style.display='flex';
+    }else{ box.style.display='none'; }
+  }catch(e){ box.style.display='none'; }
+}
+async function cargarCandadoAdmin(){
+  try{
+    const d=await llamarBackend(`${SCRIPT_URL}?accion=verCandado`);
+    if(d&&d.ok){
+      const ci=document.getElementById('cand-codigo'), cn=document.getElementById('cand-nota');
+      if(ci&&document.activeElement!==ci) ci.value=d.codigo||'';
+      if(cn&&document.activeElement!==cn) cn.value=d.nota||'';
+      const info=document.getElementById('cand-info');
+      if(info) info.textContent=d.codigo?_fmtFechaCandado(d.actualizadoEn):'Aún no hay combinación registrada.';
+    }
+  }catch(e){}
+}
+async function guardarCandadoAdmin(){
+  const codigo=(document.getElementById('cand-codigo').value||'').trim();
+  const nota=(document.getElementById('cand-nota').value||'').trim();
+  if(!codigo){ showToast('Escribe la combinación','error'); return; }
+  try{
+    const d=await llamarBackend(`${SCRIPT_URL}?accion=guardarCandado&codigo=${encodeURIComponent(codigo)}&nota=${encodeURIComponent(nota)}`);
+    if(d.ok){ showToast('Candado actualizado','success'); cargarCandadoAdmin(); }
+    else showToast(d.mensaje||d.error||'No se pudo guardar','error');
+  }catch(e){ showToast('Error: '+e.message,'error'); }
+}
+
+// El profesional cambia su propia contraseña de acceso
+async function cambiarMiPasswordUI(){
+  const nueva=prompt('Nueva contraseña de acceso (mínimo 6 caracteres):');
+  if(nueva===null) return;
+  if(nueva.trim().length<6){ showToast('La contraseña debe tener al menos 6 caracteres','error'); return; }
+  const actual=prompt('Confirma tu contraseña ACTUAL.\n(Si nunca has tenido contraseña, déjalo vacío.)')||'';
+  try{
+    const d=await llamarBackend(`${SCRIPT_URL}?accion=cambiarMiPassword&nueva=${encodeURIComponent(nueva.trim())}&actual=${encodeURIComponent(actual)}`);
+    if(d.ok) showToast('Contraseña actualizada','success');
+    else showToast(d.mensaje||d.error||'No se pudo cambiar','error');
+  }catch(e){ showToast('Error: '+e.message,'error'); }
+}
+
+function switchUserTab(tab){
+  const tabs=['agenda','equipo'];
+  document.querySelectorAll('#vista-usuario .atab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
+  tabs.forEach(t=>document.getElementById(`tab-user-${t}`).classList.toggle('active',t===tab));
+}
+function doLogout(){
+  // Avisar al servidor para que invalide el token (sin bloquear la salida)
+  const s=getSession();
+  if(s&&s.token){
+    llamarBackendCrudo(`${SCRIPT_URL}?accion=cerrarSesion&token=${encodeURIComponent(s.token)}`).catch(()=>{});
+  }
+  clearSession();
+  document.getElementById('vista-usuario').style.display='none';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('l-user').value='';
+  document.getElementById('l-error').textContent='';
+  volverAPortada();   // al cerrar sesión se vuelve a la portada pública
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NAVEGACIÓN ENTRE PORTADA Y APP
+// ══════════════════════════════════════════════════════════════
+function mostrarLogin(){
+  document.getElementById('portada').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('l-error').textContent='';
+  setTimeout(()=>{const c=document.getElementById('l-user'); if(c) c.focus();},150);
+}
+function volverAPortada(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('portada').style.display='block';
+  avisoSesionAbierta();
+  window.scrollTo(0,0);
+}
+function volverASesion(){
+  const s=getSession();
+  if(s&&s.nombreCompleto) mostrarVistaUsuario(s.nombreCompleto,s.profesion||'psicologo');
+  else mostrarLogin();
+}
+// Si alguien con sesión guardada llega a la portada, se le ofrece volver
+// a su agenda en vez de obligarlo a hacer login otra vez.
+function avisoSesionAbierta(){
+  const s=getSession(), caja=document.getElementById('pvolver');
+  if(!caja) return;
+  if(s&&s.nombreCompleto){
+    document.getElementById('pvolver-txt').textContent=
+      'Tienes una sesión abierta como '+s.nombreCompleto+'.';
+    caja.style.display='block';
+  }else{
+    caja.style.display='none';
+  }
+}
+// ══════════════════════════════════════════════════════════════
+//  VISTA USUARIO
+// ══════════════════════════════════════════════════════════════
+let dispon={},reserva={};
+async function cargarDisponibilidad(){
+  const session=getSession();if(!session){doLogout();return;}
+  const fecha=document.getElementById('fecha').value;
+  if(!fecha){showToast('Selecciona una fecha','error');return;}
+  renderGrid(null,fecha);
+  const res={};
+  try{
+    await cargarBloqueos();
+    await Promise.all(IDS.map(async id=>{
+      // Un espacio cerrado no se le pregunta al calendario: se ahorra una
+      // llamada al Apps Script y la pantalla carga más rápido.
+      if(estaBloqueado(id,fecha)){ res[id]=null; return; }
+      const url=`${SCRIPT_URL}?accion=consultarDisponibilidadHoras&fecha=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
+      res[id]=await llamarBackend(url);
+    }));
+    dispon=res;
+  }catch(err){
+    document.getElementById('contenido').innerHTML=`<div class="idle-state"><div class="idle-icon" style="opacity:1">⚠️</div><p>No se pudo conectar.<br>${err.message}</p></div>`;
+    return;
+  }
+  renderGrid(dispon,fecha);
+}
+function renderGrid(data,fecha){
+  const el=document.getElementById('contenido');
+  if(!data){
+    el.innerHTML=`<div class="date-banner"><h2>Cargando…</h2></div>
+      <div class="grid-wrapper"><div class="grid-wrapper-x"><div class="time-grid">
+        <div class="gh"></div>${IDS.map(id=>`<div class="gh">${encabezadoEspacio(id)}</div>`).join('')}
+        ${SLOTS.map(()=>`<div class="tl"></div>${IDS.map(()=>`<div class="slot loading"></div>`).join('')}`).join('')}
+      </div></div></div>`;
+    return;
+  }
+  const rows=SLOTS.map(v=>{
+    const key=slotKey(v);const cls=v%1===0?'hora-entera':'media-hora';
+    const cols=IDS.map(id=>{
+      // Espacio cerrado por Sary: celda en gris y sin poder reservar
+      if(estaBloqueado(id,fecha)) return`<div class="slot cerrado ${cls}"></div>`;
+      const raw=data[id]?.[key];const estado=typeof raw==='object'?raw.estado:raw;const psyNom=typeof raw==='object'?raw.nombre:null;
+      if(estado==='ocupada'){
+        const col=colorPsy(psyNom||'');
+        const session=getSession();
+        const nomSes=normNombre(session?.nombreCompleto||'');
+        const nomPsy=normNombre(psyNom||'');
+        const esMia=nomPsy&&nomSes&&(nomPsy===nomSes||nomSes.startsWith(nomPsy)||nomPsy.startsWith(nomSes));
+        if(esMia){
+          return`<div class="slot occupied mine ${cls}" onclick="abrirModalCancelar('${id}',${v},'${fecha}')" title="Tu cita — toca para cancelar"><div class="chip" style="background:${col};"><span>${primerNombre(psyNom)}</span></div></div>`;
+        }
+        return`<div class="slot occupied ${cls}"><div class="chip" style="background:${col};">${primerNombre(psyNom)||'Ocupado'}</div></div>`;
+      }
+      return`<div class="slot available ${cls}" onclick="abrirModal('${id}',${v},'${fecha}')"></div>`;
+    }).join('');
+    return`<div class="tl ${cls}">${fmtHora(v)}</div>${cols}`;
+  }).join('');
+  el.innerHTML=`
+    <div class="date-banner"><h2>${fmtFecha(fecha)}</h2>
+      <div class="legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--white);border:1.5px solid var(--sage);"></div>Disponible</div>
+        <div class="leg"><div class="leg-dot" style="background:#3B82F6;"></div>Ocupado</div>
+      </div>
+    </div>
+    <div class="grid-wrapper"><div class="grid-wrapper-x"><div class="time-grid">
+      <div class="gh"></div>${IDS.map(id=>estaBloqueado(id,fecha)
+        ?`<div class="gh gh-cerrado">${encabezadoEspacio(id)}<em>no disponible</em></div>`
+        :`<div class="gh">${encabezadoEspacio(id)}</div>`).join('')}
+      ${rows}
+    </div></div></div>`;
+}
+function abrirModal(id,hIni,fecha){
+  const session=getSession();if(!session){doLogout();return;}
+  reserva={id,hIni:parseFloat(hIni),fecha,nombre:session.nombreCompleto};
+  const sel=document.getElementById('hora-fin');
+  sel.innerHTML='';
+  for(let v=parseFloat(hIni)+0.5;v<=H_FIN;v+=0.5){const o=document.createElement('option');o.value=v;o.textContent=fmtHora(v);sel.appendChild(o);}
+  sel.value=parseFloat(hIni)+1;
+  document.getElementById('mdetail').innerHTML=`<strong>Espacio:</strong> ${NOMBRES[id]}<br><strong>Fecha:</strong> ${fmtFecha(fecha)}<br><strong>Inicio:</strong> ${fmtHora(parseFloat(hIni))}<br><strong>Psicólogo/a:</strong> ${primerNombre(session.nombreCompleto)}`;
+  document.getElementById('modal').classList.add('open');
+}
+function cerrarModal(){document.getElementById('modal').classList.remove('open');}
+async function confirmar(){
+  const btn=document.getElementById('btnok');
+  const hFin=parseFloat(document.getElementById('hora-fin').value);
+  const{id,hIni,fecha,nombre}=reserva;
+  btn.disabled=true;btn.textContent='Registrando…';
+  const fISO=v=>`${fecha}T${toISO(v)}`;
+  const url=`${SCRIPT_URL}?accion=crearEvento&titulo=${encodeURIComponent(nombre)}&inicio=${encodeURIComponent(fISO(hIni))}&fin=${encodeURIComponent(fISO(hFin))}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
+  try{
+    const data=await llamarBackend(url);
+    if(data&&data.error){showToast(data.mensaje||data.error,'error');btn.disabled=false;btn.textContent='Confirmar reserva';return;}
+    cerrarModal();
+    const extra=data&&data.total>1?` · dividido en ${data.total} hrs`:'';
+    showToast(`¡Reservado! ${NOMBRES[id]} · ${fmtHora(hIni)}–${fmtHora(hFin)}${extra}`,'success');
+    cargarDisponibilidad();
+  }catch(e){showToast('Error al conectar','error');}
+  finally{btn.disabled=false;btn.textContent='Confirmar reserva';}
+}
+// ══════════════════════════════════════════════════════════════
+//  CANCELAR CITA (USUARIO)
+//  ≤2h de anticipación → cargo de $30. Siempre queda registrada
+//  en admin; las sin cargo se marcan con '|SC' en roomNombre.
+// ══════════════════════════════════════════════════════════════
+const HORAS_LIMITE_CANCELACION=2;
+let citaACancelar=null;
+async function abrirModalCancelar(roomId,slot,fecha){
+  const session=getSession();if(!session){doLogout();return;}
+  citaACancelar=null;
+  document.getElementById('cancel-detail').innerHTML='Buscando tu cita…';
+  document.getElementById('cancel-aviso').innerHTML='';
+  document.getElementById('btn-cancelar-ok').disabled=true;
+  document.getElementById('modal-cancelar').classList.add('open');
+  try{
+    const evs=await llamarBackend(`${SCRIPT_URL}?accion=listarEventos&fechaIni=${fecha}&fechaFin=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[roomId])}&roomId=${roomId}`);
+    const nomSes=normNombre(session.nombreCompleto);
+    const ev=(Array.isArray(evs)?evs:[]).find(e=>{
+      const evI=parseFloat(e.inicio.slice(11,13))+(e.inicio.slice(14,16)==='30'?0.5:0);
+      const evF=parseFloat(e.fin.slice(11,13))+(e.fin.slice(14,16)==='30'?0.5:0);
+      const nomEv=normNombre(e.nombreBase||'');
+      const esMia=nomEv===nomSes||nomSes.startsWith(nomEv)||nomEv.startsWith(nomSes);
+      return esMia&&slot>=evI&&slot<evF;
+    });
+    if(!ev){document.getElementById('cancel-detail').innerHTML='No se encontró la cita. Actualiza la página e intenta de nuevo.';return;}
+    const inicio=new Date(ev.inicio);
+    if(inicio<=new Date()){
+      document.getElementById('cancel-detail').innerHTML='Esta cita ya inició o pasó; no se puede cancelar desde aquí.';
+      return;
+    }
+    citaACancelar={...ev,roomId,roomNombre:NOMBRES[roomId],calId:CALENDARIOS[roomId]};
+    const horasFaltan=(inicio-new Date())/36e5;
+    citaACancelar.conCargo=horasFaltan<=HORAS_LIMITE_CANCELACION;
+    document.getElementById('cancel-detail').innerHTML=
+      `<strong>Espacio:</strong> ${NOMBRES[roomId]}<br><strong>Fecha:</strong> ${fmtFecha(fecha)}<br><strong>Horario:</strong> ${horaLeg(ev.inicio)}–${horaLeg(ev.fin)}<br><strong>Psicólogo/a:</strong> ${primerNombre(session.nombreCompleto)}`;
+    document.getElementById('cancel-aviso').innerHTML=citaACancelar.conCargo
+      ?`<div class="cancel-warning">⚠️ Faltan menos de ${HORAS_LIMITE_CANCELACION} horas para tu cita. Esta cancelación tendrá un <strong>cargo de $30 pesos</strong>.</div>`
+      :`<div class="cancel-free">✓ Cancelación sin cargo (con más de ${HORAS_LIMITE_CANCELACION} horas de anticipación).</div>`;
+    document.getElementById('btn-cancelar-ok').disabled=false;
+  }catch(e){document.getElementById('cancel-detail').innerHTML='Error al conectar. Intenta de nuevo.';}
+}
+function cerrarModalCancelar(){document.getElementById('modal-cancelar').classList.remove('open');citaACancelar=null;}
+async function confirmarCancelacion(){
+  if(!citaACancelar)return;
+  const btn=document.getElementById('btn-cancelar-ok');
+  btn.disabled=true;btn.textContent='Cancelando…';
+  const ev=citaACancelar;
+  // Marca '|SC' en roomNombre cuando es sin cargo → el admin la distingue
+  const roomNom=ev.conCargo?ev.roomNombre:ev.roomNombre+'|SC';
+  try{
+    await llamarBackend(`${SCRIPT_URL}?accion=cancelarEvento&eventoId=${encodeURIComponent(ev.id)}&calendarioId=${encodeURIComponent(ev.calId)}&roomId=${encodeURIComponent(ev.roomId)}&roomNombre=${encodeURIComponent(roomNom)}&nombreBase=${encodeURIComponent(ev.nombreBase)}&inicio=${encodeURIComponent(ev.inicio)}&fin=${encodeURIComponent(ev.fin)}`);
+    cerrarModalCancelar();
+    showToast(ev.conCargo?'Cita cancelada · se registró el cargo de $30':'Cita cancelada sin cargo','success');
+    cargarDisponibilidad();
+  }catch(e){showToast('Error al cancelar. Intenta de nuevo.','error');}
+  finally{btn.disabled=false;btn.textContent='Cancelar cita';}
+}
+// ══════════════════════════════════════════════════════════════
+//  EQUIPO PROFESIONAL
+// ══════════════════════════════════════════════════════════════
+const EQUIPO=[
+  {nombre:'María Ramos',prof:'Psicóloga y Tanatóloga',cert:'Certificación en PNL',grupo:'Duelo en la infancia, adolescentes y adultos',desc:'Facilitadora de talleres para el desarrollo personal',horarios:'Mar, Mié, Jue de 9:00 am a 8:00pm',precio:'$350/paquete 5x $1400',modalidad:'Presencial y Online',frase:'Te acompaño en tu proceso terapéutico con herramientas de PNL y tanatología que impactará positivamente tu salud mental y conducirán a tu recuperación',tel:'87-15-24-12-07',ig:'@psic_mariaramos',foto:'maria.ramos.png'},
+  {nombre:'Daniela Carbajal',prof:'Psicóloga',cert:'Capacitada en psicoterapia infantil',grupo:'Niños, adolescentes y adulto joven',desc:'Experiencia con autismo y TDAH. Evaluación integral y psicología familiar sistémica.',horarios:'Lun a Vie 12:00 a 7:00pm, Sáb 9:00 am a 4:00pm',precio:'$450',modalidad:'Presencial y en línea',frase:'Mejorando a poquito',tel:'87-14-75-68-70',ig:'@psic.danielacarbajal',foto:'daniela.carbajal.png'},
+  {nombre:'Lidia Martínez',prof:'Psicóloga',cert:'Maestría en terapia sistémica',grupo:'Especialista en violencia de género y trauma',desc:'Acompañamiento psicológico en adopción. Terapia de pareja, familiar y adultos.',horarios:'Jue, Vie 4:00 a 8:00pm, Sáb 8:00 am a 7:00pm',precio:'$400 y $500 (pareja)',modalidad:'Presencial y Online',frase:'Lo que duele, tiene palabras. Lo que preocupa encuentra calma y lo que esperas construir empieza a tener raíces',tel:'87-12-43-64-80',ig:'@psi_lidia',foto:'lidia.martinez.png'},
+  {nombre:'Carmen Morales',prof:'Psicóloga',cert:'Especializada en conducta delictiva',grupo:'Niños, adolescentes y adultos',desc:'Formación en terapia Cognitivo-Conductual, TCC. Experiencia en ansiedad, depresión, violencia.',horarios:'Lun a Vie 5:00 a 7:00pm, Sáb 10:00 am a 5:00pm',precio:'$500',modalidad:'Presencial',frase:'Tu salud mental es importante. Dar el primer paso puede hacer una gran diferencia',tel:'87-11-61-48-33',foto:'carmen.morales.png'},
+  {nombre:'Cristina Marín',prof:'Psicóloga',cert:'Maestría en terapia sistémica',grupo:'Especialista en violencia de género y trauma',desc:'Terapia de pareja, familiar y adultos.',horarios:'—',precio:'—',modalidad:'—',frase:null,foto:null},
+  {nombre:'Marisol Montelongo',prof:'Psicóloga',cert:'Maestría en terapia sistémica',grupo:'Especialista en violencia de género y trauma',desc:'Terapia de pareja, familiar y adultos.',horarios:'—',precio:'—',modalidad:'—',frase:null,foto:null},
+  {nombre:'Scarleth Bernal',prof:'Nutrióloga Clínica',cert:'Diplomado en psiconutrición y Mindful Eating',grupo:'Adolescentes y adulto joven',desc:'Certificada en síndrome de ovario Poliquístico.',horarios:'Lun a Vie 10:00 am a 3:00pm, Sáb 11:00 am a 5:00pm',precio:'$400',modalidad:'Presencial y en línea',frase:'Resultados con conciencia, no con castigo',tel:'87-12-50-54-12',ig:'@nut.scarleth',foto:'scarleth.bernal.png'},
+  {nombre:'Manuel Galván',prof:'Psicólogo',cert:'Especializado en acompañamiento',grupo:'Adolescentes y adultos',desc:'Acompañamiento en ansiedad, depresión, estrés y crecimiento personal.',horarios:'Lun a Vie 6:00 pm a 8:00 pm, Sáb 9:00 am a 6:00pm',precio:'$400',modalidad:'Presencial',frase:'Estoy comprometido con el bienestar emocional y el desarrollo personal de mis pacientes. Ofrezco un espacio seguro, confidencial y libre de juicios, donde podrás explorar tus pensamientos, emociones y conductas para lograr una vida más equilibrada y plena',tel:'87-13-58-22-86',fb:'Psicólogo Manuel Galván',foto:'manuel.galvan.png'},
+  {nombre:'María del Socorro Rodríguez',prof:'Masajista',cert:'Terapeutas especializada',grupo:'Servicios de masaje',desc:'Servicios de masaje y relajación.',horarios:'—',precio:'—',modalidad:'—',frase:null,foto:null},
+];
+function getInitials(nombre){return nombre.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);}
+// Agrupa las profesiones sueltas ("Psicóloga y Tanatóloga", "Nutrióloga
+// Clínica"…) en las 3 categorías que se muestran como filtro en la portada.
+function categoriaDe(prof){
+  const t=(prof||'').toLowerCase();
+  if(t.includes('sicólog')||t.includes('sicolog')||t.includes('tanatólog')) return 'Psicología';
+  if(t.includes('utriólog')||t.includes('utriolog')) return 'Nutrición';
+  return 'Bienestar';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PORTADA PÚBLICA
+// ══════════════════════════════════════════════════════════════
+let filtroPortada=null;
+
+function cargarPortada(){
+  // Filtros: solo aparecen las categorías que de verdad existen en EQUIPO
+  const cats=[...new Set(EQUIPO.map(p=>categoriaDe(p.prof)))];
+  const chips=document.getElementById('pfiltros');
+  if(chips){
+    chips.innerHTML=
+      `<button class="pchip on" onclick="filtrarPortada(null,this)">Todos</button>`+
+      cats.map(c=>`<button class="pchip" onclick="filtrarPortada('${c}',this)">${c}</button>`).join('');
+  }
+  cargarEquipo('portada-equipo-grid',filtroPortada);
+
+  // Botones de contacto (si un dato está vacío en CONTACTO, su botón no sale)
+  const cont=document.getElementById('pcontacto-links');
+  if(cont){
+    const wa=CONTACTO.whatsapp?CONTACTO.whatsapp.replace(/\D/g,''):'';
+    const saludo=encodeURIComponent('Hola, me gustaría información sobre Casa Amatista');
+    cont.innerHTML=
+      (wa?`<a class="pbtn pbtn-1" target="_blank" rel="noopener" href="https://wa.me/52${wa}?text=${saludo}">Escríbenos por WhatsApp</a>`:'')+
+      (CONTACTO.instagram?`<a class="pbtn pbtn-2" target="_blank" rel="noopener" href="https://instagram.com/${CONTACTO.instagram.replace('@','')}">Síguenos en Instagram</a>`:'');
+  }
+  avisoSesionAbierta();
+  prepararAnimaciones();
+}
+
+function filtrarPortada(cat,btn){
+  filtroPortada=cat;
+  document.querySelectorAll('#pfiltros .pchip').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  cargarEquipo('portada-equipo-grid',cat);
+  // Al filtrar, las fichas nuevas aparecen enseguida: el usuario acaba de
+  // tocar el botón y sería raro obligarlo a hacer scroll para verlas.
+  prepararAnimaciones({inmediato:true});
+}
+
+// ══════════════════════════════════════════════════════════════
+//  APARICIÓN SUAVE AL HACER SCROLL
+// ══════════════════════════════════════════════════════════════
+//  Sin librerías: IntersectionObserver + transiciones de CSS.
+//  Cada elemento con clase .reveal se muestra al entrar en pantalla.
+//  Los hijos de un contenedor con [data-escalonar] entran en cascada.
+let observadorReveal=null;
+
+function prepararAnimaciones(opts){
+  const inmediato=opts&&opts.inmediato;
+  const sinMovimiento=window.matchMedia&&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Los hijos de las rejillas escalonadas se marcan al vuelo, porque se
+  // generan por JavaScript (fichas del equipo, fotos del espacio).
+  document.querySelectorAll('#portada [data-escalonar]').forEach(cont=>{
+    [...cont.children].forEach((hijo,i)=>{
+      hijo.classList.add('reveal');
+      if(!sinMovimiento) hijo.style.transitionDelay=Math.min(i,8)*70+'ms';
+    });
+  });
+
+  const pendientes=document.querySelectorAll('#portada .reveal:not(.visible)');
+
+  // Sin IntersectionObserver (navegador viejo) o con movimiento reducido:
+  // se muestra todo de golpe, sin animación.
+  if(sinMovimiento||!('IntersectionObserver' in window)){
+    pendientes.forEach(el=>el.classList.add('visible'));
+    return;
+  }
+
+  if(!observadorReveal){
+    observadorReveal=new IntersectionObserver((entradas,obs)=>{
+      entradas.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);   // una sola vez: no vuelve a esconderse
+        }
+      });
+    },{rootMargin:'0px 0px -8% 0px',threshold:.05});
+  }
+
+  pendientes.forEach(el=>{
+    if(inmediato){ el.classList.add('visible'); return; }
+    // Lo que ya se ve al cargar (la portada) aparece de inmediato
+    const r=el.getBoundingClientRect();
+    if(r.top<window.innerHeight*0.92) el.classList.add('visible');
+    else observadorReveal.observe(el);
+  });
+}
+
+// destinoId: dónde pintar las fichas (la app y la portada usan el mismo HTML)
+// filtro:    null = todas, o el nombre de una categoría
+function cargarEquipo(destinoId,filtro){
+  const grid=document.getElementById(destinoId||'equipo-grid');
+  if(!grid) return;
+  const lista=filtro?EQUIPO.filter(p=>categoriaDe(p.prof)===filtro):EQUIPO;
+  grid.innerHTML=lista.map(p=>{
+    const foto=p.foto?`<img src="fotos/${p.foto}" alt="${p.nombre}" onerror="this.style.display='none'">`:null;
+    return`<div class="team-card">
+      <div class="team-photo">
+        ${foto?foto:`<div class="team-initials">${getInitials(p.nombre)}</div>`}
+      </div>
+      <div class="team-info">
+        <div class="team-nombre">${p.nombre}</div>
+        <span class="team-prof">${p.prof}</span>
+        ${p.cert?`<div class="team-detail"><strong>${p.cert}</strong></div>`:''}
+        ${p.grupo?`<div class="team-especialidad"><strong>👥 ${p.grupo}</strong></div>`:''}
+        ${p.desc?`<div class="team-detail">${p.desc}</div>`:''}
+        ${p.horarios&&p.horarios!=='—'?`<div class="team-detail"><strong>🕐 Horarios:</strong> ${p.horarios}</div>`:''}
+        ${p.precio&&p.precio!=='—'?`<div class="team-detail"><strong>💰 ${p.precio}</strong></div>`:''}
+        ${p.modalidad&&p.modalidad!=='—'?`<div class="team-detail"><strong>📍 ${p.modalidad}</strong></div>`:''}
+        ${p.frase?`<div class="team-frase">"${p.frase}"</div>`:''}
+        <div class="team-contacto">
+          ${p.tel?`<a href="https://wa.me/52${p.tel.replace(/\D/g,'')}" class="team-link" title="WhatsApp" target="_blank">📱</a>`:''}
+          ${p.ig?`<a href="https://instagram.com/${p.ig.replace('@','')}" class="team-link" title="Instagram" target="_blank">📸</a>`:''}
+          ${p.fb?`<a href="https://facebook.com/search/top/?q=${encodeURIComponent(p.fb)}" class="team-link" title="Facebook" target="_blank">f</a>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — ACCESO
+// ══════════════════════════════════════════════════════════════
+function mostrarLoginAdmin(){
+  document.getElementById('admin-pw').value='';
+  document.getElementById('admin-error').style.display='none';
+  document.getElementById('modal-admin').classList.add('open');
+  setTimeout(()=>document.getElementById('admin-pw').focus(),200);
+}
+function cerrarLoginAdmin(){document.getElementById('modal-admin').classList.remove('open');}
+// La contraseña de administración se comprueba AHORA EN EL SERVIDOR.
+// Antes se comparaba un hash aquí en el navegador: eso escondía el botón,
+// pero no protegía los datos — cualquiera podía llamar al backend directo.
+async function verificarAdmin(){
+  const pw=document.getElementById('admin-pw').value;
+  const err=document.getElementById('admin-error');
+  if(!pw){err.style.display='block';return;}
+  err.style.display='none';
+  let data;
+  try{
+    data=await llamarBackend(`${SCRIPT_URL}?accion=loginAdmin&password=${encodeURIComponent(pw)}`);
+  }catch(e){ err.textContent='No se pudo conectar.'; err.style.display='block'; return; }
+  if(!data||!data.ok){
+    err.textContent='Contraseña incorrecta.';
+    err.style.display='block';
+    document.getElementById('admin-pw').value='';
+    return;
+  }
+  saveSession({token:data.token,username:'admin',nombreCompleto:'Administración',
+               id:'admin',rol:'admin',profesion:'admin'});
+  cerrarLoginAdmin();
+  abrirPanelAdmin();
+}
+
+async function abrirPanelAdmin(){
+  document.getElementById('portada').style.display='none';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('vista-usuario').style.display='none';
+  document.getElementById('admin-panel').style.display='block';
+  try{
+    const r=await llamarBackend(`${SCRIPT_URL}?accion=inicializar`);
+    if(r.ok&&r.total>0&&r.mensaje==='Psicólogos cargados'){
+      document.getElementById('init-box').classList.add('show');
+      setTimeout(()=>document.getElementById('init-box').classList.remove('show'),4000);
+    }
+  }catch(_){}
+  cargarListaPsicologos();
+  cargarPacientesRegistry();
+  cargarAdmin(); // auto-carga la semana actual al entrar al admin
+}
+function salirAdmin(){
+  document.getElementById('admin-panel').style.display='none';
+  const session=getSession();
+  if(session) mostrarVistaUsuario(session.nombreCompleto);
+  else{document.getElementById('login-screen').style.display='flex';}
+}
+function switchAdminTab(tab){
+  citaSeleccionada=null; // cancelar modo mover al cambiar de pestaña
+  const tabs=['agenda','psicologos','sary','espacios'];
+  document.querySelectorAll('#admin-panel .atab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
+  tabs.forEach(t=>document.getElementById(`tab-${t}`).classList.toggle('active',t===tab));
+  if(tab==='espacios'){ cargarEspacios(); cargarCandadoAdmin(); }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — ESPACIOS (habilitar / deshabilitar consultorios)
+// ══════════════════════════════════════════════════════════════
+async function cargarEspacios(){
+  const caja=document.getElementById('esp-loading');
+  if(caja) caja.style.display='block';
+  await cargarBloqueos();
+  if(caja) caja.style.display='none';
+  pintarEspacios();
+}
+
+function pintarEspacios(){
+  // Un interruptor por espacio (cierre hasta nuevo aviso)
+  const grid=document.getElementById('esp-grid');
+  if(grid){
+    grid.innerHTML=IDS.map(id=>{
+      const cerrado=BLOQUEOS.some(b=>b.roomId===id&&b.tipo==='total');
+      return`<div class="esp-card ${cerrado?'off':''}">
+        <div class="esp-nombre">${NOMBRES[id]}</div>
+        <div class="esp-estado">${cerrado?'Cerrado hasta nuevo aviso':'Disponible'}</div>
+        <button class="esp-btn ${cerrado?'esp-btn-on':'esp-btn-off'}"
+                onclick="alternarEspacio('${id}',${cerrado?'false':'true'})">
+          ${cerrado?'Volver a abrir':'Deshabilitar'}
+        </button>
+      </div>`;
+    }).join('');
+  }
+
+  // Lista de días concretos cerrados
+  const lista=document.getElementById('blq-lista');
+  if(lista){
+    const dias=BLOQUEOS.filter(b=>b.tipo==='dia').sort((a,b)=>a.fecha<b.fecha?-1:1);
+    lista.innerHTML=dias.length
+      ? `<div class="table-wrap"><table>
+           <thead><tr><th>Espacio</th><th>Fecha cerrada</th><th style="text-align:right;">Acción</th></tr></thead><tbody>`+
+        dias.map(b=>`<tr>
+            <td>${NOMBRES[b.roomId]||b.roomId}</td>
+            <td>${fmtCorta(b.fecha)}</td>
+            <td style="text-align:right;"><button class="btn-primary" style="padding:.3rem .7rem;font-size:.72rem;"
+                onclick="quitarBloqueo('${b.roomId}','dia','${b.fecha}')">Reabrir</button></td>
+          </tr>`).join('')+`</tbody></table></div>`
+      : `<p class="hint-espacios">No hay días cerrados.</p>`;
+  }
+  poblarSelectEspacios('blq-room');
+}
+
+// Antes de cerrar, avisa cuántas citas hay agendadas para que Sary decida.
+// Nunca se borra nada de forma automática.
+async function alternarEspacio(roomId,cerrar){
+  if(cerrar){
+    const n=await contarCitasFuturas(roomId);
+    const aviso=n>0
+      ? `${NOMBRES[roomId]} tiene ${n} cita${n===1?'':'s'} agendada${n===1?'':'s'} en los próximos 30 días.\n\n`+
+        `Cerrarlo impide reservas NUEVAS, pero esas citas siguen en pie. Si quieres `+
+        `moverlas o cancelarlas, hazlo desde la pestaña Agenda.\n\n¿Cerrar de todas formas?`
+      : `¿Cerrar ${NOMBRES[roomId]} hasta nuevo aviso?`;
+    if(!confirm(aviso)) return;
+    await guardarBloqueo(roomId,'total','');
+  }else{
+    await quitarBloqueo(roomId,'total','');
+  }
+}
+
+async function contarCitasFuturas(roomId){
+  try{
+    const hoy=new Date(), fin=addDays(hoy,30);
+    const evs=await llamarBackend(`${SCRIPT_URL}?accion=listarEventos`+
+      `&fechaIni=${dateStr(hoy)}&fechaFin=${dateStr(fin)}`+
+      `&calendarioId=${encodeURIComponent(CALENDARIOS[roomId])}&roomId=${roomId}`);
+    return Array.isArray(evs)?evs.length:0;
+  }catch(_){ return 0; }
+}
+
+async function bloquearDia(){
+  const roomId=document.getElementById('blq-room').value;
+  const fecha=document.getElementById('blq-fecha').value;
+  if(!roomId||!fecha){showToast('Elige espacio y fecha','error');return;}
+  if(BLOQUEOS.some(b=>b.roomId===roomId&&b.tipo==='dia'&&b.fecha===fecha)){
+    showToast('Ese día ya estaba cerrado','error');return;
+  }
+  await guardarBloqueo(roomId,'dia',fecha);
+}
+
+async function guardarBloqueo(roomId,tipo,fecha){
+  try{
+    await llamarBackend(`${SCRIPT_URL}?accion=guardarBloqueo`+
+      `&roomId=${encodeURIComponent(roomId)}&tipo=${tipo}&fecha=${encodeURIComponent(fecha||'')}`);
+    showToast(tipo==='total'?`${NOMBRES[roomId]} cerrado`
+                            :`${NOMBRES[roomId]} cerrado el ${fmtCorta(fecha)}`,'success');
+    await cargarEspacios();
+  }catch(e){ showToast('No se pudo guardar: '+e.message,'error'); }
+}
+
+async function quitarBloqueo(roomId,tipo,fecha){
+  try{
+    await llamarBackend(`${SCRIPT_URL}?accion=eliminarBloqueo`+
+      `&roomId=${encodeURIComponent(roomId)}&tipo=${tipo}&fecha=${encodeURIComponent(fecha||'')}`);
+    showToast(`${NOMBRES[roomId]} vuelve a estar disponible`,'success');
+    await cargarEspacios();
+  }catch(e){ showToast('No se pudo quitar: '+e.message,'error'); }
+}
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — AGENDA
+// ══════════════════════════════════════════════════════════════
+let todosLosEventos=[],estadosMap={},semanaOffset=0,fechaIniAdmin='',fechaFinAdmin='';
+async function cargarAdmin(){
+  fechaIniAdmin=document.getElementById('a-ini').value;
+  fechaFinAdmin=document.getElementById('a-fin').value;
+  if(!fechaIniAdmin||!fechaFinAdmin){showToast('Selecciona rango de fechas','error');return;}
+  ['admin-stats','psy-section','cal-section','admin-empty','totales-grid'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('admin-loading').style.display='block';
+  try{
+    const [activos,estadosRaw,canceladosRaw]=await Promise.all([
+      Promise.all(IDS.map(async id=>{
+        const url=`${SCRIPT_URL}?accion=listarEventos&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}&roomId=${id}`;
+        const data=await llamarBackend(url).catch(()=>[]);
+        return Array.isArray(data)?data.map(ev=>({...ev,roomId:id,roomNombre:NOMBRES[id],calId:CALENDARIOS[id]})):[];
+      })).then(a=>a.flat()),
+      llamarBackend(`${SCRIPT_URL}?accion=listarEstados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}`).catch(()=>[]),
+      llamarBackend(`${SCRIPT_URL}?accion=listarCancelados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&roomId=todos`).catch(()=>[]),
+    ]);
+    estadosMap={};
+    if(Array.isArray(estadosRaw)) estadosRaw.forEach(e=>{estadosMap[e.eventoId]={estado:e.estado,monto:e.monto};});
+    const activosConEstado=activos.map(ev=>({
+      ...ev,
+      estado:estadosMap[ev.id]?.estado||'asistio',
+      monto:estadosMap[ev.id]?.monto||TARIFA_ASISTIO,
+    }));
+    const cancelados=Array.isArray(canceladosRaw)?canceladosRaw.map(ev=>{
+      const sinCargo=(ev.roomNombre||'').includes('|SC');
+      return{...ev,roomNombre:(ev.roomNombre||'').replace('|SC',''),estado:'cancelo',cargo:!sinCargo,monto:sinCargo?0:TARIFA_CANCELO};
+    }):[];
+    todosLosEventos=[...activosConEstado,...cancelados].sort((a,b)=>a.inicio.localeCompare(b.inicio));
+  }catch(err){showToast('Error: '+err.message,'error');document.getElementById('admin-loading').style.display='none';return;}
+  document.getElementById('admin-loading').style.display='none';
+  if(todosLosEventos.length===0){document.getElementById('admin-empty').style.display='block';return;}
+  semanaOffset=0;
+  renderTotales();renderStats();renderPsyTable();renderCalAdmin();
+}
+function esSary(ev){const n=normNombre(ev.nombreBase||'');return n==='SARY'||n.startsWith('SARY - ');}
+function renderTotales(){
+  const rentas=todosLosEventos.filter(ev=>!esSary(ev));
+  const totalRentas=rentas.reduce((s,ev)=>{
+    if(ev.estado==='asistio')  return s+(ev.monto||TARIFA_ASISTIO);
+    if(ev.estado==='cancelo')  return s+(ev.cargo===false?0:TARIFA_CANCELO);
+    if(ev.estado==='descuento')return s+(ev.monto||0);
+    return s;
+  },0);
+  const terapias=todosLosEventos.filter(ev=>esSary(ev));
+  const totalTerapias=terapias.reduce((s,ev)=>s+(ev.fee||0),0);
+  document.getElementById('total-rentas').textContent=`$${totalRentas.toLocaleString('es-MX')}`;
+  document.getElementById('total-rentas-sub').textContent=`${rentas.length} citas de psicólogos`;
+  document.getElementById('total-terapias').textContent=`$${totalTerapias.toLocaleString('es-MX')}`;
+  document.getElementById('total-terapias-sub').textContent=`${terapias.length} sesiones de Sary`;
+  document.getElementById('totales-grid').style.display='grid';
+}
+function renderStats(){
+  const noSary=todosLosEventos.filter(ev=>!esSary(ev));
+  document.getElementById('st-asistio').textContent=noSary.filter(e=>e.estado==='asistio').length;
+  document.getElementById('st-cancelo').textContent=noSary.filter(e=>e.estado==='cancelo').length;
+  document.getElementById('st-desc').textContent=noSary.filter(e=>e.estado==='descuento').length;
+  document.getElementById('st-sary').textContent=todosLosEventos.filter(ev=>esSary(ev)).length;
+  document.getElementById('admin-stats').style.display='grid';
+}
+function renderPsyTable(){
+  const psyMap={};
+  todosLosEventos.filter(ev=>!esSary(ev)).forEach(ev=>{
+    const n=primerNombre(ev.nombreBase);
+    if(!psyMap[n])psyMap[n]={ag:0,can:0,desc:0,monto:0,base:ev.nombreBase};
+    const p=psyMap[n];
+    if(ev.estado==='asistio')  {p.ag++;  p.monto+=ev.monto||TARIFA_ASISTIO;}
+    if(ev.estado==='cancelo')  {p.can++; p.monto+=(ev.cargo===false?0:TARIFA_CANCELO);}
+    if(ev.estado==='descuento'){p.desc++;p.monto+=ev.monto||0;}
+  });
+  document.getElementById('psy-tbody').innerHTML=Object.entries(psyMap).map(([nombre,d])=>{
+    const col=colorPsy(d.base);
+    return`<tr><td><div class="psy-name-cell"><div class="psy-dot" style="background:${col};"></div>${nombre}</div></td>
+      <td><span class="badge b-green">${d.ag}</span></td><td><span class="badge b-red">${d.can}</span></td>
+      <td><span class="badge b-amber">${d.desc}</span></td><td class="monto-cell">$${d.monto.toLocaleString('es-MX')}</td></tr>`;
+  }).join('');
+  document.getElementById('psy-section').style.display='block';
+}
+function navSemana(delta){semanaOffset+=delta;renderCalAdmin();}
+async function partirEventosLargos(){
+  if(!todosLosEventos.length){showToast('Primero consulta el período','error');return;}
+  // Encontrar eventos NO-Sary con duración > 1 hora
+  const largos=todosLosEventos.filter(ev=>{
+    if(esSary(ev)||ev.estado==='cancelo')return false;
+    return calcDuracion(ev.inicio,ev.fin)>1;
+  });
+  if(!largos.length){showToast('No hay citas largas en este período ✓','');return;}
+  const btn=document.getElementById('btn-partir');
+  btn.disabled=true;btn.textContent='✂️ Partiendo…';
+  let slotsCreados=0,errores=0;
+  for(const ev of largos){
+    try{
+      // 1. Borrar evento original del calendario
+      await llamarBackend(`${SCRIPT_URL}?accion=eliminarCitaSary`+
+        `&eventoId=${encodeURIComponent(ev.id)}`+
+        `&calendarioId=${encodeURIComponent(ev.calId)}`+
+        `&inicio=${encodeURIComponent(ev.inicio)}`);
+      // 2. Crear slots de 1 hora
+      const fecha=ev.inicio.slice(0,10);
+      const hIni=parseFloat(ev.inicio.slice(11,13))+(ev.inicio.slice(14,16)==='30'?0.5:0);
+      const hFin=parseFloat(ev.fin.slice(11,13))+(ev.fin.slice(14,16)==='30'?0.5:0);
+      let cursor=hIni;
+      while(cursor<hFin){
+        const slotFin=Math.min(cursor+1,hFin);
+        await llamarBackend(`${SCRIPT_URL}?accion=crearEvento`+
+          `&titulo=${encodeURIComponent(ev.nombreBase)}`+
+          `&inicio=${encodeURIComponent(fecha+'T'+toISO(cursor))}`+
+          `&fin=${encodeURIComponent(fecha+'T'+toISO(slotFin))}`+
+          `&calendarioId=${encodeURIComponent(ev.calId)}`);
+        cursor=slotFin;
+        slotsCreados++;
+      }
+    }catch(e){errores++;}
+  }
+  if(slotsCreados>0){
+    showToast(`✂️ ${largos.length} cita${largos.length>1?'s':''} dividida${largos.length>1?'s':''} en ${slotsCreados} slots — recargando…`,'success');
+    await cargarAdmin();
+  }else{
+    showToast('No se pudo partir ninguna cita','error');
+  }
+  btn.disabled=false;btn.textContent='✂️ Partir citas largas';
+}
+let mostrarSinCargo=false;
+function renderCalAdmin(){
+  const base=new Date(fechaIniAdmin+'T00:00:00');
+  const lunes=startOfWeek(base);
+  const lunesSemana=addDays(lunes,semanaOffset*7);
+  const dias=Array.from({length:7},(_,i)=>addDays(lunesSemana,i));
+  document.getElementById('cal-titulo').textContent=`${dias[0].getDate()} ${MESES_ES[dias[0].getMonth()]} – ${dias[6].getDate()} ${MESES_ES[dias[6].getMonth()]} ${dias[6].getFullYear()}`;
+  // Banner de modo mover
+  const banner=document.getElementById('move-banner');
+  if(banner){
+    if(citaSeleccionada){
+      banner.style.display='flex';
+      const movNombre=esSary(citaSeleccionada)?primerNombre(citaSeleccionada.paciente||citaSeleccionada.nombreBase||'—'):primerNombre(citaSeleccionada.nombreBase||'—');
+      banner.innerHTML=`📍 Moviendo: <strong>${movNombre}</strong> · ${horaLeg(citaSeleccionada.inicio)}–${horaLeg(citaSeleccionada.fin)} &nbsp;— toca el horario destino&nbsp;
+        <button onclick="cancelarMovimiento()" style="font-family:'Lora',serif;font-size:.72rem;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:.2rem .65rem;cursor:pointer;color:white;margin-left:auto;">✕ Cancelar</button>`;
+    }else{banner.style.display='none';}
+  }
+  const grid=document.getElementById('cal-grid');
+  const headers=`<div class="cgh"></div>`+dias.map(d=>{
+    const esHoy=dateStr(d)===new Date().toISOString().slice(0,10);
+    return`<div class="cgh"${esHoy?' style="background:var(--plum);"':''}>${DIAS_ES[d.getDay()]}<small>${d.getDate()}/${d.getMonth()+1}</small></div>`;
+  }).join('');
+  const rows=SLOTS.map(v=>{
+    const cls=v%1===0?'he':'mh';
+    const cols=dias.map(d=>{
+      const fecha=dateStr(d);
+      const evs=todosLosEventos.filter(ev=>{
+        if(ev.estado==='cancelo'&&ev.cargo===false&&!mostrarSinCargo)return false;
+        const evF=ev.inicio.slice(0,10);
+        const evI=parseFloat(ev.inicio.slice(11,13))+(ev.inicio.slice(14,16)==='30'?0.5:0);
+        const evF2=parseFloat(ev.fin.slice(11,13))+(ev.fin.slice(14,16)==='30'?0.5:0);
+        return evF===fecha&&v>=evI&&v<evF2;
+      });
+      // Slot vacío: en modo mover → destino potencial
+      if(!evs.length){
+        if(citaSeleccionada) return`<div class="cslot ${cls} move-target" onclick="confirmarMovimiento('${fecha}',${v})"></div>`;
+        return`<div class="cslot ${cls} empty"></div>`;
+      }
+      const chips=evs.map(ev=>{
+        const esSaryEv=esSary(ev);
+        const esMoviendo=citaSeleccionada&&citaSeleccionada.id===ev.id;
+        const displayNombre=esSaryEv?primerNombre(ev.paciente||'—'):primerNombre(ev.nombreBase);
+        let bg=esSaryEv?COLOR_SARY:colorPsy(ev.nombreBase),badge='',statusCls='';
+        if(ev.estado==='cancelo')  {bg=ev.cargo===false?'#9a9a9a':'#c07070';badge=ev.cargo===false?'SC':'✕';statusCls='cancelo';}
+        if(ev.estado==='descuento'){bg='#c09030';badge='%';}
+        // Click: citas Sary movibles, psicólogos → estado
+        let onclick='';
+        if(esSaryEv&&ev.estado!=='cancelo') onclick=`onclick="seleccionarCitaParaMover('${ev.id}')"`;
+        else if(!esSaryEv&&ev.estado!=='cancelo') onclick=`onclick="abrirEstadoModal('${ev.id}')"`;
+        const movCls=esMoviendo?' moving':(esSaryEv&&ev.estado!=='cancelo'?' sary-movible':'');
+        return`<div class="ac ${statusCls}${movCls}" style="background:${bg};" data-badge="${badge}" ${onclick} title="${ev.roomNombre} · ${horaLeg(ev.inicio)}-${horaLeg(ev.fin)}${esSaryEv?' · Toca para mover':''}">
+          <span class="ac-name">${displayNombre}</span>
+          <span class="ac-room">${ev.roomNombre.replace('Consultorio','C')}${esSaryEv?' 💜':''}</span>
+        </div>`;
+      }).join('');
+      return`<div class="cslot ${cls} has-event">${chips}</div>`;
+    }).join('');
+    return`<div class="ctl ${cls}">${fmtHora(v)}</div>${cols}`;
+  }).join('');
+  grid.innerHTML=headers+rows;
+  document.getElementById('cal-section').style.display='block';
+}
+// ══════════════════════════════════════════════════════════════
+//  MOVER CITA DE SARY — Opción B: toca para seleccionar, toca destino
+// ══════════════════════════════════════════════════════════════
+// Estado de cita / mover cita
+let eventoActual=null,estadoSel='asistio',citaSeleccionada=null;
+function seleccionarCitaParaMover(eventoId){
+  const ev=todosLosEventos.find(e=>e.id===eventoId);
+  if(!ev)return;
+  if(citaSeleccionada&&citaSeleccionada.id===eventoId){cancelarMovimiento();return;}
+  citaSeleccionada=ev;
+  cerrarEstadoModal();
+  renderCalAdmin();
+  const nombre=esSary(ev)?primerNombre(ev.paciente||ev.nombreBase||'—'):primerNombre(ev.nombreBase||'—');
+  showToast(`${nombre} seleccionado/a — toca el horario destino`,'');
+}
+function moverDesdModal(){
+  if(!eventoActual)return;
+  seleccionarCitaParaMover(eventoActual.id);
+}
+function cancelarMovimiento(){
+  citaSeleccionada=null;
+  renderCalAdmin();
+}
+async function confirmarMovimiento(fecha,hora){
+  if(!citaSeleccionada)return;
+  const ev=citaSeleccionada;
+  const duracion=calcDuracion(ev.inicio,ev.fin);
+  const nuevaHoraFin=hora+duracion;
+  if(nuevaHoraFin>H_FIN){showToast('El horario de fin queda fuera del horario disponible','error');return;}
+  const paciente=esSary(ev)?primerNombre(ev.paciente||ev.nombreBase||'—'):primerNombre(ev.nombreBase||'—');
+  if(!confirm(`¿Mover cita de ${paciente}?\n\nNuevo horario: ${fmtCorta(fecha)} · ${fmtHora(hora)} – ${fmtHora(nuevaHoraFin)}`))return;
+  const fISO=(f,v)=>`${f}T${toISO(v)}`;
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=moverCitaSary`+
+      `&eventoId=${encodeURIComponent(ev.id)}&calendarioId=${encodeURIComponent(ev.calId)}`+
+      `&inicio=${encodeURIComponent(ev.inicio)}`+
+      `&nuevaFechaIni=${encodeURIComponent(fISO(fecha,hora))}&nuevaFechaFin=${encodeURIComponent(fISO(fecha,nuevaHoraFin))}`+
+      `&paciente=${encodeURIComponent(ev.paciente||'')}&fee=${ev.fee||0}`);
+    if(data.ok){
+      const idx=todosLosEventos.findIndex(e=>e.id===ev.id);
+      if(idx>=0) todosLosEventos[idx]={...todosLosEventos[idx],id:data.nuevoEventoId,inicio:fISO(fecha,hora),fin:fISO(fecha,nuevaHoraFin)};
+      citaSeleccionada=null;
+      renderCalAdmin();renderTotales();renderStats();
+      showToast(`Cita de ${paciente} movida a ${fmtHora(hora)} ✓`,'success');
+    }else{
+      showToast(data.mensaje||data.error||'Error al mover','error');
+    }
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+function calcDuracion(inicio,fin){
+  const hIni=parseFloat(inicio.slice(11,13))+(inicio.slice(14,16)==='30'?0.5:0);
+  const hFin=parseFloat(fin.slice(11,13))+(fin.slice(14,16)==='30'?0.5:0);
+  return hFin-hIni;
+}
+function abrirEstadoModal(eventoId){
+  eventoActual=todosLosEventos.find(e=>e.id===eventoId);
+  if(!eventoActual||esSary(eventoActual))return;
+  estadoSel=eventoActual.estado||'asistio';
+  document.getElementById('estado-sub').textContent=primerNombre(eventoActual.nombreBase);
+  document.getElementById('estado-detail').innerHTML=`<strong>Espacio:</strong> ${eventoActual.roomNombre}<br><strong>Fecha:</strong> ${eventoActual.inicio.slice(0,10)}<br><strong>Horario:</strong> ${horaLeg(eventoActual.inicio)} – ${horaLeg(eventoActual.fin)}`;
+  selStatus(estadoSel,false);
+  document.getElementById('desc-amount').value=eventoActual.monto||30;
+  document.getElementById('modal-estado').classList.add('open');
+}
+function selStatus(estado,focus=true){
+  estadoSel=estado;
+  ['asistio','cancelo','descuento'].forEach(s=>document.getElementById(`opt-${s}`).classList.toggle('selected',s===estado));
+  document.getElementById('desc-amount-wrap').classList.toggle('visible',estado==='descuento');
+  if(focus&&estado==='descuento')setTimeout(()=>document.getElementById('desc-amount').focus(),50);
+}
+function cerrarEstadoModal(){document.getElementById('modal-estado').classList.remove('open');}
+async function borrarEventoSinCargo(){
+  if(!eventoActual)return;
+  const nombre=primerNombre(eventoActual.nombreBase);
+  if(!confirm(`¿Borrar la cita de ${nombre}?\n\nSe eliminará del calendario sin registrar cancelación ni cargo de $30.`))return;
+  const btnOk=document.getElementById('btn-estado-ok');
+  const btnBorrar=document.getElementById('btn-borrar-evento');
+  btnOk.disabled=true;btnBorrar.disabled=true;btnBorrar.textContent='Borrando…';
+  try{
+    await llamarBackend(`${SCRIPT_URL}?accion=eliminarCitaSary&eventoId=${encodeURIComponent(eventoActual.id)}&calendarioId=${encodeURIComponent(eventoActual.calId)}`);
+    todosLosEventos=todosLosEventos.filter(e=>e.id!==eventoActual.id);
+    cerrarEstadoModal();
+    renderTotales();renderStats();renderPsyTable();renderCalAdmin();
+    showToast(`Cita de ${nombre} eliminada del calendario`,'success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+  finally{btnOk.disabled=false;btnBorrar.disabled=false;btnBorrar.textContent='🗑 Borrar cita sin cargo (psicólogo pidió excluirla)';}
+}
+async function guardarEstado(){
+  if(!eventoActual)return;
+  const btn=document.getElementById('btn-estado-ok');
+  btn.disabled=true;btn.textContent='Guardando…';
+  const monto=estadoSel==='descuento'?parseFloat(document.getElementById('desc-amount').value)||0:(estadoSel==='asistio'?TARIFA_ASISTIO:TARIFA_CANCELO);
+  try{
+    if(estadoSel==='cancelo'){
+      await llamarBackend(`${SCRIPT_URL}?accion=cancelarEvento&eventoId=${encodeURIComponent(eventoActual.id)}&calendarioId=${encodeURIComponent(eventoActual.calId)}&roomId=${encodeURIComponent(eventoActual.roomId)}&roomNombre=${encodeURIComponent(eventoActual.roomNombre)}&nombreBase=${encodeURIComponent(eventoActual.nombreBase)}&inicio=${encodeURIComponent(eventoActual.inicio)}&fin=${encodeURIComponent(eventoActual.fin)}`);
+      const idx=todosLosEventos.findIndex(e=>e.id===eventoActual.id);
+      if(idx>=0)todosLosEventos[idx]={...todosLosEventos[idx],estado:'cancelo',monto:TARIFA_CANCELO};
+    }else{
+      await llamarBackend(`${SCRIPT_URL}?accion=guardarEstado&eventoId=${encodeURIComponent(eventoActual.id)}&estado=${encodeURIComponent(estadoSel)}&monto=${monto}&calendarioId=${encodeURIComponent(eventoActual.calId)}&fechaIni=${encodeURIComponent(eventoActual.inicio)}&fechaFin=${encodeURIComponent(eventoActual.fin)}&nombreBase=${encodeURIComponent(eventoActual.nombreBase)}`);
+      const idx=todosLosEventos.findIndex(e=>e.id===eventoActual.id);
+      if(idx>=0)todosLosEventos[idx]={...todosLosEventos[idx],estado:estadoSel,monto};
+      estadosMap[eventoActual.id]={estado:estadoSel,monto};
+    }
+    cerrarEstadoModal();
+    renderTotales();renderStats();renderPsyTable();renderCalAdmin();
+    showToast(`${primerNombre(eventoActual.nombreBase)}: guardado`,'success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='Guardar';}
+}
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — PSICÓLOGOS
+// ══════════════════════════════════════════════════════════════
+async function registrarPsicologo(){
+  const nombre=document.getElementById('psy-nombre').value.trim();
+  const apellido=document.getElementById('psy-apellido').value.trim();
+  const profesion=document.getElementById('psy-profesion').value||'psicologo';
+  if(!nombre||!apellido){showToast('Ingresa nombre y apellido','error');return;}
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=registrarPsicologo&nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}&profesion=${encodeURIComponent(profesion)}`);
+    if(data.ok){
+      showToast(`${nombre} ${apellido} registrado · usuario: ${data.username}`,'success');
+      document.getElementById('psy-nombre').value='';document.getElementById('psy-apellido').value='';
+      cargarListaPsicologos();
+    }else showToast(data.error||'Error','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+async function cargarListaPsicologos(){
+  document.getElementById('psy-loading').style.display='block';
+  ['psy-list-psicologos','psy-list-nutriologos','psy-list-masajistas'].forEach(id=>document.getElementById(id).innerHTML='');
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=listarPsicologos`);
+    document.getElementById('psy-loading').style.display='none';
+    if(!Array.isArray(data)||!data.length){
+      document.getElementById('psy-list-psicologos').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin profesionales registrados.</td></tr>';
+      return;
+    }
+    const grupos={psicologo:[],nutriologo:[],masajista:[]};
+    data.forEach(p=>{const prof=p.profesion||'psicologo';if(grupos[prof])grupos[prof].push(p);else grupos.psicologo.push(p);});
+    const LABELS={psicologo:'Psicólogo/a',nutriologo:'Nutriólogo/a',masajista:'Masajista'};
+    const TBODY_IDS={psicologo:'psy-list-psicologos',nutriologo:'psy-list-nutriologos',masajista:'psy-list-masajistas'};
+    Object.entries(grupos).forEach(([prof,lista])=>{
+      const tbody=document.getElementById(TBODY_IDS[prof]);
+      if(!lista.length){
+        tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:.9rem;font-size:.8rem;">Sin ${LABELS[prof].toLowerCase()}s registrados.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML=lista.map(p=>{
+        const col=colorPsy(`${p.nombre} ${p.apellido}`);
+        const profActual=p.profesion||'psicologo';
+        return`<tr>
+          <td><div class="psy-name-cell"><div class="psy-dot" style="background:${col};"></div>${primerNombre(p.nombre+' '+p.apellido)} ${normNombre(p.apellido)}</div></td>
+          <td><span class="badge b-plum">${p.username}</span></td>
+          <td>
+            <select style="font-family:'Lora',serif;font-size:.75rem;background:var(--cream);border:1px solid var(--cream-dark);border-radius:6px;padding:.2rem .5rem;color:var(--ink);cursor:pointer;"
+              onchange="cambiarProfesion('${p.id}',this.value)">
+              <option value="psicologo"${profActual==='psicologo'?' selected':''}>Psicólogo/a</option>
+              <option value="nutriologo"${profActual==='nutriologo'?' selected':''}>Nutriólogo/a</option>
+              <option value="masajista"${profActual==='masajista'?' selected':''}>Masajista</option>
+            </select>
+          </td>
+          <td style="text-align:right;white-space:nowrap;">
+            <button class="btn-info" style="margin-right:.35rem;" onclick="asignarPasswordPsy('${p.username}','${p.nombre} ${p.apellido}')">🔑 Contraseña</button>
+            <button class="btn-danger" onclick="eliminarPsicologo('${p.id}','${p.nombre} ${p.apellido}')">Eliminar</button>
+          </td>
+        </tr>`;
+      }).join('');
+    });
+  }catch(e){document.getElementById('psy-loading').style.display='none';showToast('Error al cargar','error');}
+}
+async function cambiarProfesion(id,nuevaProfesion){
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=actualizarProfesional&id=${encodeURIComponent(id)}&profesion=${encodeURIComponent(nuevaProfesion)}`);
+    if(data.ok){showToast('Profesión actualizada','success');cargarListaPsicologos();}
+    else showToast(data.error||'Error','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+async function eliminarPsicologo(id,nombre){
+  if(!confirm(`¿Eliminar a ${nombre}? Ya no podrá iniciar sesión.`))return;
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=eliminarPsicologo&id=${encodeURIComponent(id)}`);
+    if(data.ok){showToast(`${nombre} eliminado`,'success');cargarListaPsicologos();}
+    else showToast('Error al eliminar','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+// La admin asigna / reinicia la contraseña de ACCESO de un profesional (🔑)
+async function asignarPasswordPsy(username,nombre){
+  const cruda=prompt(
+    `🔑 Contraseña de acceso para ${nombre}\n(usuario: ${username})\n\n`+
+    `Escribe la nueva contraseña (mínimo 6 caracteres).\n`+
+    `Compártesela tú. Por seguridad no se puede volver a ver: si se pierde, solo se cambia por una nueva aquí mismo.`
+  );
+  if(cruda===null) return;
+  const nueva=cruda.trim();
+  if(nueva.length<6){ showToast('La contraseña debe tener al menos 6 caracteres','error'); return; }
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=adminAsignarPassword&username=${encodeURIComponent(username)}&nueva=${encodeURIComponent(nueva)}`);
+    if(data.ok) showToast(`Contraseña actualizada para ${nombre}`,'success');
+    else showToast(data.mensaje||data.error||'No se pudo asignar la contraseña','error');
+  }catch(e){ showToast('Error: '+e.message,'error'); }
+}
+// ══════════════════════════════════════════════════════════════
+//  ADMIN — PACIENTES SARY
+// ══════════════════════════════════════════════════════════════
+let pacientesRegistry=[];
+async function cargarPacientesRegistry(){
+  document.getElementById('pac-loading').style.display='block';
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=listarPacientesRegistry`);
+    pacientesRegistry=Array.isArray(data)?data:[];
+    renderPacientesTable();
+    poblarSelectPacientes();
+  }catch(e){showToast('Error: '+e.message,'error');}
+  finally{document.getElementById('pac-loading').style.display='none';}
+}
+function renderPacientesTable(){
+  const tbody=document.getElementById('pac-tbody');
+  if(!pacientesRegistry.length){
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin pacientes registrados aún.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=pacientesRegistry.map(p=>`<tr>
+    <td>${p.nombre}</td>
+    <td>${p.tel||'—'}</td>
+    <td><span class="badge b-plum">$${(p.fee||0).toLocaleString('es-MX')}</span></td>
+    <td style="text-align:right;">
+      <button class="btn-info" onclick="abrirEditarPaciente('${p.id}','${p.nombre.replace(/'/g,"\\'")}','${(p.tel||'').replace(/'/g,"\\'")}','${p.fee||0}')">Editar</button>
+      <button class="btn-danger" onclick="eliminarPaciente('${p.id}','${p.nombre.replace(/'/g,"\\'")}')">Eliminar</button>
+    </td>
+  </tr>`).join('');
+}
+function poblarSelectPacientes(){
+  const sel=document.getElementById('s-paciente-sel');
+  const val=sel.value;
+  sel.innerHTML='<option value="">— Selecciona paciente —</option>';
+  pacientesRegistry.forEach(p=>{
+    const o=document.createElement('option');o.value=p.id;o.textContent=p.nombre;o.dataset.fee=p.fee||0;sel.appendChild(o);
+  });
+  if(val)sel.value=val;
+}
+function autoFillFee(){
+  const sel=document.getElementById('s-paciente-sel');
+  const opt=sel.options[sel.selectedIndex];
+  if(opt&&opt.dataset.fee) document.getElementById('s-fee').value=opt.dataset.fee;
+}
+// AGENDA SARY
+function poblarHorasSary(){
+  ['s-ini','s-fin-hora'].forEach(id=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    sel.innerHTML='';
+    for(let v=H_INI;v<=H_FIN;v+=0.5){const o=document.createElement('option');o.value=v;o.textContent=fmtHora(v);sel.appendChild(o);}
+  });
+  const si=document.getElementById('s-ini');const sf=document.getElementById('s-fin-hora');
+  if(si&&sf){si.value=9;sf.value=10;}
+}
+function autoCalcFin(){
+  const siEl=document.getElementById('s-ini');
+  if(!siEl)return;
+  const hIni=parseFloat(siEl.value)||9;
+  const duracion=document.getElementById('s-duracion').value;
+  const finWrapper=document.getElementById('s-fin-wrapper');
+  if(duracion==='otra'){
+    finWrapper.style.display='block';
+    document.getElementById('s-fin-hora').value=hIni+1;
+  }else{
+    const dur=parseFloat(duracion);
+    const hFin=hIni+dur;
+    document.getElementById('s-fin-hora').value=hFin;
+    finWrapper.style.display='none';
+  }
+}
+async function agendarSary(){
+  const roomId=document.getElementById('s-room').value;
+  const fecha=document.getElementById('s-fecha').value;
+  const hIni=parseFloat(document.getElementById('s-ini').value);
+  const hFin=parseFloat(document.getElementById('s-fin-hora').value);
+  const pacSel=document.getElementById('s-paciente-sel');
+  const pacId=pacSel.value;
+  const fee=parseFloat(document.getElementById('s-fee').value)||0;
+  const pacNombre=pacId?pacSel.options[pacSel.selectedIndex].textContent:'';
+  if(!fecha||!pacId){showToast('Selecciona fecha y paciente','error');return;}
+  // No dejar agendar en un espacio que está cerrado
+  await cargarBloqueos();
+  if(estaBloqueado(roomId,fecha)){
+    showToast(`${NOMBRES[roomId]} está deshabilitado ese día`,'error');return;
+  }
+  if(hFin<=hIni){showToast('La hora de fin debe ser después del inicio','error');return;}
+  const fISO=v=>`${fecha}T${toISO(v)}`;
+  const url=`${SCRIPT_URL}?accion=agendarSary&calendarioId=${encodeURIComponent(CALENDARIOS[roomId])}&roomId=${encodeURIComponent(roomId)}&roomNombre=${encodeURIComponent(NOMBRES[roomId])}&inicio=${encodeURIComponent(fISO(hIni))}&fin=${encodeURIComponent(fISO(hFin))}&paciente=${encodeURIComponent(pacNombre)}&fee=${fee}`;
+  try{
+    const data=await llamarBackend(url);
+    if(data.ok){
+      showToast(`Cita de ${pacNombre} agendada en ${NOMBRES[roomId]}`,'success');
+      cargarAgendaSary();
+    }else showToast(data.mensaje||data.error||'Error','error');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+async function cargarAgendaSary(){
+  const ini=document.getElementById('s-ver-ini').value;
+  const fin=document.getElementById('s-ver-fin').value;
+  if(!ini||!fin)return;
+  document.getElementById('sary-loading').style.display='block';
+  document.getElementById('sary-list').innerHTML='';
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=listarAgendaSary&fechaIni=${ini}&fechaFin=${fin}`);
+    document.getElementById('sary-loading').style.display='none';
+    if(!Array.isArray(data)||!data.length){
+      document.getElementById('sary-list').innerHTML='<div class="admin-empty">Sin citas en este período.</div>';
+      return;
+    }
+    const totalSary=data.reduce((s,c)=>s+(c.fee||0),0);
+    // FIX #2: el nombre del paciente se pasa como data attribute para buscar el tel del registry
+    document.getElementById('sary-list').innerHTML=`
+      <div style="background:var(--white);border:1px solid var(--cream-dark);border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;font-size:.82rem;">
+        <span><strong>${data.length}</strong> sesiones en el período</span>
+        <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--plum);">$${totalSary.toLocaleString('es-MX')}</span>
+      </div>`+
+      data.sort((a,b)=>a.inicio.localeCompare(b.inicio)).map((c,i)=>`
+        <div class="sary-card" id="sary-item-${i}">
+          <div class="sc-info">
+            <div class="sc-nombre">${c.paciente||'—'}</div>
+            <div class="sc-meta">${c.roomNombre||''} · ${fmtCorta(c.inicio.slice(0,10))} · ${horaLeg(c.inicio)} – ${horaLeg(c.fin)}</div>
+          </div>
+          <span style="font-family:'Playfair Display',serif;color:var(--plum);font-size:.95rem;margin-right:.75rem;">$${(c.fee||0).toLocaleString('es-MX')}</span>
+          <button class="btn-primary" style="background:var(--green);padding:.45rem .9rem;font-size:.75rem;"
+            onclick="enviarMensajeSary('${encodeURIComponent(c.paciente||'')}','${c.inicio}','${c.fin}','${encodeURIComponent(c.roomNombre||'')}')">📱 Mensaje</button>
+          <button class="btn-danger" onclick="eliminarCitaSary('${encodeURIComponent(c.eventoId||'')}','${encodeURIComponent(c.calId||'')}','${encodeURIComponent(c.paciente||'')}',${i})">Eliminar</button>
+        </div>`).join('');
+  }catch(e){
+    document.getElementById('sary-loading').style.display='none';
+    document.getElementById('sary-list').innerHTML=`<div style="background:var(--red-light);border:1px solid #e8bebe;border-radius:10px;padding:1rem;font-size:.82rem;color:var(--red);">
+      ⚠️ Error al conectar: ${e.message}<br><small>Verifica que el script de Google esté actualizado.</small>
+    </div>`;
+    showToast('Error: '+e.message,'error');
+  }
+}
+async function eliminarCitaSary(eventoIdEnc,calIdEnc,pacienteEnc,idx){
+  const eventoId=decodeURIComponent(eventoIdEnc);
+  const calId=decodeURIComponent(calIdEnc);
+  const paciente=decodeURIComponent(pacienteEnc);
+  if(!confirm(`¿Eliminar la cita de ${paciente}? También se borrará del calendario.`)) return;
+  try{
+    if(eventoId&&calId){
+      await llamarBackend(`${SCRIPT_URL}?accion=eliminarCitaSary&eventoId=${encodeURIComponent(eventoId)}&calendarioId=${encodeURIComponent(calId)}`);
+    }
+    showToast(`Cita de ${paciente} eliminada`,'success');
+    cargarAgendaSary();
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+// ══════════════════════════════════════════════════════════════
+//  FIX #2 — enviarMensajeSary busca el tel del directorio
+// ══════════════════════════════════════════════════════════════
+function enviarMensajeSary(pacienteEnc,inicio,fin,roomEnc){
+  const paciente=decodeURIComponent(pacienteEnc);
+  // Buscar el teléfono actualizado desde el directorio de pacientes (no de la cita)
+  const pac=pacientesRegistry.find(p=>p.nombre===paciente);
+  const tel=pac?pac.tel:'';
+  if(!tel){
+    showToast('El paciente no tiene teléfono registrado. Edítalo en el directorio.','error');
+    return;
+  }
+  const fecha=inicio.slice(0,10);
+  const hora=horaLeg(inicio);
+  const msg=`Hola ${paciente}, 👋\n\nConfirmamos tu sesión de terapia:\n\n📅 Fecha: ${fmtCorta(fecha)}\n🕐 Hora: ${hora}\n\n¡Nos vemos! 💜`;
+  const telLimpio=tel.replace(/\D/g,'');  // quita todo lo que no sea dígito
+  if(telLimpio.length<10){showToast('Número inválido: debe tener 10 dígitos','error');return;}
+  window.open(`https://wa.me/52${telLimpio}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+// FIX #4 — enviarMensajeATodos: abre uno a la vez con aviso
+function enviarMensajeATodos(){
+  if(!pacientesRegistry.length){showToast('Carga las citas primero','error');return;}
+  const cards=document.querySelectorAll('.sary-card');
+  if(!cards.length){showToast('No hay citas visibles en este período','error');return;}
+  const btns=[...cards].map(c=>c.querySelector('button.btn-primary')).filter(Boolean);
+  if(!btns.length){showToast('No hay citas con botón de mensaje','error');return;}
+  if(btns.length>1){
+    showToast(`Nota: el navegador puede bloquear ventanas múltiples. Se abrirán ${btns.length} WhatsApps.`,'');
+  }
+  btns.forEach((btn,i)=>setTimeout(()=>btn.click(),i*600));
+}
+// ══════════════════════════════════════════════════════════════
+//  MODAL BATCH PACIENTES — FIX #3: incluye teléfono
+// ══════════════════════════════════════════════════════════════
+function abrirBatchModal(){
+  const tbody=document.getElementById('batch-tbody');
+  tbody.innerHTML='';
+  for(let i=0;i<3;i++) agregarFilaBatch();
+  document.getElementById('modal-batch').classList.add('open');
+}
+function agregarFilaBatch(){
+  const tbody=document.getElementById('batch-tbody');
+  const row=tbody.insertRow();
+  row.innerHTML=`
+    <td><input type="text" class="batch-nombre" placeholder="Nombre completo"></td>
+    <td><input type="tel" class="batch-tel" placeholder="87-12-34-56-78"></td>
+    <td><input type="number" class="batch-fee" placeholder="550" min="0" style="width:90px;"></td>
+  `;
+}
+function cerrarBatchModal(){document.getElementById('modal-batch').classList.remove('open');}
+async function guardarBatch(){
+  const filas=document.querySelectorAll('#batch-tbody tr');
+  const pacientes=[];
+  filas.forEach(row=>{
+    const nombre=row.querySelector('.batch-nombre').value.trim();
+    const tel=row.querySelector('.batch-tel').value.trim();
+    const fee=parseFloat(row.querySelector('.batch-fee').value)||0;
+    if(nombre) pacientes.push({nombre,tel,fee});
+  });
+  if(!pacientes.length){showToast('Ingresa al menos un paciente','error');return;}
+  let count=0;
+  try{
+    for(const p of pacientes){
+      await llamarBackend(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(p.nombre)}&tel=${encodeURIComponent(p.tel)}&fee=${p.fee}`);
+      count++;
+    }
+    showToast(`${count} paciente${count!==1?'s':''} registrado${count!==1?'s':''}!`,'success');
+    cerrarBatchModal();
+    cargarPacientesRegistry();
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+// ══════════════════════════════════════════════════════════════
+//  MODAL EDITAR PACIENTE
+// ══════════════════════════════════════════════════════════════
+let pacienteEditando={};
+function abrirEditarPaciente(id,nombre,tel,fee){
+  pacienteEditando={id,nombre,tel,fee};
+  document.getElementById('edit-pac-nombre').value=nombre;
+  document.getElementById('edit-pac-tel').value=tel;
+  document.getElementById('edit-pac-fee').value=fee;
+  document.getElementById('modal-edit-pac').classList.add('open');
+}
+function cerrarEditarPaciente(){
+  document.getElementById('modal-edit-pac').classList.remove('open');
+  pacienteEditando={};
+}
+async function guardarEditarPaciente(){
+  if(!pacienteEditando.id){showToast('Error: ID de paciente no encontrado','error');return;}
+  const nombre=document.getElementById('edit-pac-nombre').value.trim();
+  const tel=document.getElementById('edit-pac-tel').value.trim();
+  const fee=parseFloat(document.getElementById('edit-pac-fee').value)||0;
+  if(!nombre){showToast('Ingresa el nombre del paciente','error');return;}
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=actualizarPaciente&id=${pacienteEditando.id}&nombre=${encodeURIComponent(nombre)}&tel=${encodeURIComponent(tel)}&fee=${fee}`);
+    if(data.ok){
+      showToast('Paciente actualizado','success');
+      cerrarEditarPaciente();
+      cargarPacientesRegistry();
+    }else{
+      showToast(data.error||'Error','error');
+    }
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+// ══════════════════════════════════════════════════════════════
+//  FIX #1 — eliminarPaciente usa accion=eliminarPacienteSary
+// ══════════════════════════════════════════════════════════════
+async function eliminarPaciente(id,nombre){
+  if(!confirm(`¿Eliminar a ${nombre}?`)) return;
+  try{
+    const data=await llamarBackend(`${SCRIPT_URL}?accion=eliminarPacienteSary&id=${encodeURIComponent(id)}`);
+    if(data.ok){
+      showToast(`${nombre} eliminado`,'success');
+      cargarPacientesRegistry();
+    }else{
+      showToast(data.error||'Error al eliminar','error');
+    }
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+// ══════════════════════════════════════════════════════════════
+//  REGISTRAR PACIENTE (uno)
+// ══════════════════════════════════════════════════════════════
+function registrarPaciente(){
+  const nombre=document.getElementById('pac-nombre').value.trim();
+  const tel=document.getElementById('pac-tel').value.trim();
+  const fee=parseFloat(document.getElementById('pac-fee').value)||0;
+  if(!nombre){showToast('Ingresa el nombre del paciente','error');return;}
+  llamarBackend(`${SCRIPT_URL}?accion=registrarPacienteSary&nombre=${encodeURIComponent(nombre)}&tel=${encodeURIComponent(tel)}&fee=${fee}`).then(data=>{
+    if(data.ok){
+      showToast(`${nombre} registrado`,'success');
+      document.getElementById('pac-nombre').value='';
+      document.getElementById('pac-tel').value='';
+      document.getElementById('pac-fee').value='';
+      cargarPacientesRegistry();
+    }else showToast(data.error||'Error','error');
+  }).catch(e=>showToast('Error: '+e.message,'error'));
+}
+// ══════════════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════════════
+function showToast(msg,tipo=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${tipo} show`;
+  setTimeout(()=>{t.className=`toast ${tipo}`;},3800);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){cerrarModal();cerrarLoginAdmin();cerrarEstadoModal();cerrarBatchModal();cerrarEditarPaciente();cerrarModalCancelar();}
+});
+[document.getElementById('modal'),document.getElementById('modal-admin'),document.getElementById('modal-estado'),document.getElementById('modal-batch'),document.getElementById('modal-edit-pac'),document.getElementById('modal-cancelar')]
+  .forEach(m=>m&&m.addEventListener('click',e=>{if(e.target===e.currentTarget)e.target.classList.remove('open');}));
+</script>
+</body></html>
