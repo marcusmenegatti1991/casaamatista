@@ -150,8 +150,9 @@ body.corridor #escena{position:fixed;inset:0;z-index:1;overflow:hidden;perspecti
 body.corridor #mundo{position:absolute;inset:0;transform-style:preserve-3d;}
 
 /* Salas (contenido) flotando en profundidad */
-body.corridor .sala{position:absolute;left:50%;top:50%;width:min(1100px,92vw);max-width:none;padding:0 clamp(1rem,4vw,2rem);
+body.corridor .sala{position:absolute;left:50%;top:50%;width:min(1100px,calc(100vw - 32px));max-width:none;padding:0 clamp(1rem,4vw,2rem);
   transform:translate(-50%,-50%);opacity:0;will-change:transform,opacity;}
+body.corridor .sala .sala-in{max-width:100%;}
 body.corridor .sala.entrada-plana{min-height:0;display:block;}   /* en pasillo es la 1ª sala (bienvenida) */
 body.corridor #equipo .grid-team{max-height:46vh;overflow-y:auto;padding:.15rem;scrollbar-width:thin;scrollbar-color:var(--am-600) transparent;}
 body.corridor #equipo .grid-team::-webkit-scrollbar{width:7px;}
@@ -211,10 +212,93 @@ body.corridor #dots{display:flex;position:fixed;right:clamp(.7rem,2.4vw,1.5rem);
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media(max-width:760px){
+  /* ── Móvil: una sala completa, sin tarjetas cortadas ───────── */
+  html{scroll-behavior:auto;}
+  .nav{padding:.72rem .9rem;}
+  .nav-brand{font-size:.92rem;gap:.45rem;}
+  .nav-brand img{height:29px;}
   .nav-links{position:fixed;inset:0 0 auto 0;top:0;flex-direction:column;gap:1.4rem;padding:5.5rem 2rem 2.5rem;background:rgba(21,17,29,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);transform:translateY(-100%);transition:transform .4s cubic-bezier(.2,.7,.2,1);}
   .nav-links.open{transform:translateY(0);}
   .nav-toggle{display:block;z-index:101;}
-  body.corridor #equipo .grid-team{max-height:40vh;}
+
+  body.corridor .sala{
+    width:calc(100vw - 24px);
+    padding:0 6px;
+  }
+  body.corridor .sala .sala-in{
+    width:100%;
+    max-height:calc(100svh - 92px);
+    max-height:calc(100dvh - 92px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  body.corridor #dots{right:7px;gap:.65rem;}
+  #dots .dot{width:10px;height:10px;}
+
+  /* Bienvenida */
+  body.corridor #inicio .mascota-wrap{width:min(128px,30vw);margin-bottom:.55rem;}
+  body.corridor #inicio h2.title{font-size:clamp(1.65rem,7vw,2.25rem)!important;line-height:1.12;}
+  body.corridor #inicio .sub{font-size:.88rem;line-height:1.5;margin-top:.7rem;max-width:31rem;}
+  body.corridor #inicio .ctas{gap:.6rem;margin-top:1.05rem;}
+  body.corridor #inicio .btn{font-size:.78rem;padding:.65rem .95rem;}
+
+  /* Servicios: las 3 tarjetas deben caber dentro de una sola sala */
+  body.corridor #servicios .eyebrow{margin-bottom:.45rem;}
+  body.corridor #servicios h2.title{font-size:1.55rem;}
+  body.corridor #servicios .sub{font-size:.78rem;line-height:1.4;margin-top:.55rem;max-width:32rem;}
+  body.corridor #servicios .grid-serv{grid-template-columns:1fr;gap:.55rem;margin-top:.85rem;}
+  body.corridor #servicios .card{padding:.78rem .95rem;border-radius:16px;display:grid;grid-template-columns:42px 1fr;column-gap:.75rem;align-items:center;text-align:left;}
+  body.corridor #servicios .card-ico{width:42px;height:42px;border-radius:12px;margin:0;grid-row:1 / span 2;}
+  body.corridor #servicios .card-ico svg{width:21px;height:21px;}
+  body.corridor #servicios .card h3{font-size:1.05rem;margin:0;line-height:1.1;}
+  body.corridor #servicios .card p{font-size:.72rem;line-height:1.35;margin-top:.18rem;}
+
+  /* Frase */
+  body.corridor #respira .breath{}
+  body.corridor .breath p{font-size:clamp(1.35rem,6.5vw,1.9rem);max-width:18ch;}
+
+  /* Equipo */
+  body.corridor #equipo .eyebrow{margin-bottom:.45rem;}
+  body.corridor #equipo h2.title{font-size:1.55rem;}
+  body.corridor #equipo .sub{font-size:.78rem;line-height:1.4;margin-top:.5rem;}
+  body.corridor #equipo .chips{gap:.35rem;margin-top:.75rem;}
+  body.corridor #equipo .chip{font-size:.7rem;padding:.38rem .72rem;}
+  body.corridor #equipo .grid-team{max-height:46dvh;margin-top:.7rem;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;padding:.1rem;}
+  body.corridor #equipo .tcard{padding:.8rem .7rem;border-radius:14px;}
+  body.corridor #equipo .tavatar{width:54px;height:54px;margin-bottom:.55rem;}
+  body.corridor #equipo .tcard h4{font-size:.9rem;}
+  body.corridor #equipo .tcard .prof,
+  body.corridor #equipo .tcard .cert{font-size:.66rem;line-height:1.3;}
+  body.corridor #equipo .tcard .tags{margin-top:.55rem;}
+  body.corridor #equipo .tcard .tags a{width:29px;height:29px;}
+
+  /* El lugar: 3 tarjetas lado a lado en móvil */
+  body.corridor #lugar h2.title{font-size:1.55rem;}
+  body.corridor #lugar .sub{font-size:.78rem;line-height:1.4;margin-top:.5rem;}
+  body.corridor #lugar .grid-place{grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem;margin-top:.9rem;}
+  body.corridor #lugar .place{aspect-ratio:1/1.2;border-radius:14px;}
+  body.corridor #lugar .place svg{width:52%;height:52%;}
+  body.corridor #lugar .place .lbl b{font-size:.72rem;line-height:1.15;padding:0 .2rem;}
+  body.corridor #lugar .place .lbl small{font-size:.48rem;letter-spacing:.08em;margin-top:.22rem;}
+
+  /* Contacto */
+  body.corridor #contacto h2.title{font-size:1.7rem;}
+  body.corridor #contacto .contact-card{margin-top:1rem;padding:1.15rem 1rem;border-radius:18px;}
+  body.corridor #contacto .contact-card p{font-size:.78rem;line-height:1.45;margin-bottom:1rem;}
+  body.corridor #contacto .btn{font-size:.78rem;padding:.65rem 1rem;}
+  body.corridor #contacto .foot{margin-top:1rem;font-size:.65rem;}
+}
+
+@media(max-width:380px){
+  body.corridor .sala{width:calc(100vw - 16px);}
+  body.corridor #servicios .card{grid-template-columns:38px 1fr;column-gap:.6rem;padding:.65rem .7rem;}
+  body.corridor #servicios .card-ico{width:38px;height:38px;}
+  body.corridor #servicios .card h3{font-size:.96rem;}
+  body.corridor #servicios .card p{font-size:.66rem;}
+  body.corridor #equipo .grid-team{grid-template-columns:1fr 1fr;}
+  body.corridor #lugar .grid-place{gap:.3rem;}
 }
 @media(prefers-reduced-motion:reduce){
   .m-float,.spark,.puerta-cta .pista span{animation:none;}
@@ -420,14 +504,47 @@ function iniciarInteraccion(){
   const ring=document.querySelector('.cursor'),dot=document.querySelector('.cursor-dot');
   const eyeEls=[...document.querySelectorAll('#mascota .m-eye')].map(e=>({pupil:e.querySelector('.pupil'),sclera:e.querySelector('.sclera')}));
   let mx=innerWidth/2,my=innerHeight*.45,gx=mx,gy=my,cx=mx,cy=my;
-  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
-  if(!noMotion){document.body.classList.add('has-cursor');
-    document.querySelectorAll('a,button,.chip').forEach(el=>{el.addEventListener('pointerenter',()=>document.body.classList.add('hovering'));el.addEventListener('pointerleave',()=>document.body.classList.remove('hovering'));});}
-  (function loop(){
-    eyeEls.forEach(({pupil,sclera})=>{const r=sclera.getBoundingClientRect();if(!r.width){return;}const dx=mx-(r.left+r.width/2),dy=my-(r.top+r.height/2),d=Math.hypot(dx,dy)||1,mag=7*Math.min(1,d/170);pupil.setAttribute('transform',`translate(${(dx/d*mag).toFixed(2)} ${(dy/d*mag).toFixed(2)})`);});
-    if(!noMotion){gx+=(mx-gx)*.09;gy+=(my-gy)*.09;root.style.setProperty('--gx',gx+'px');root.style.setProperty('--gy',gy+'px');cx+=(mx-cx)*.22;cy+=(my-cy)*.22;ring.style.transform=`translate(${cx}px,${cy}px)`;dot.style.transform=`translate(${mx}px,${my}px)`;}
-    requestAnimationFrame(loop);
-  })();
+  let interactionRaf=0;
+
+  function actualizarInteraccion(){
+    interactionRaf=0;
+    eyeEls.forEach(({pupil,sclera})=>{
+      const r=sclera.getBoundingClientRect();
+      if(!r.width)return;
+      const dx=mx-(r.left+r.width/2),dy=my-(r.top+r.height/2),d=Math.hypot(dx,dy)||1;
+      const mag=7*Math.min(1,d/170);
+      pupil.setAttribute('transform',`translate(${(dx/d*mag).toFixed(2)} ${(dy/d*mag).toFixed(2)})`);
+    });
+
+    if(!noMotion){
+      gx+=(mx-gx)*.09; gy+=(my-gy)*.09;
+      cx+=(mx-cx)*.22; cy+=(my-cy)*.22;
+      root.style.setProperty('--gx',gx+'px');
+      root.style.setProperty('--gy',gy+'px');
+      ring.style.transform=`translate(${cx}px,${cy}px)`;
+      dot.style.transform=`translate(${mx}px,${my}px)`;
+      const moving=Math.abs(mx-cx)+Math.abs(my-cy)>0.15 || Math.abs(mx-gx)+Math.abs(my-gy)>0.15;
+      if(moving)interactionRaf=requestAnimationFrame(actualizarInteraccion);
+    }
+  }
+
+  addEventListener('pointermove',e=>{
+    mx=e.clientX; my=e.clientY;
+    if(!interactionRaf)interactionRaf=requestAnimationFrame(actualizarInteraccion);
+  },{passive:true});
+
+  addEventListener('scroll',()=>{
+    if(!interactionRaf)interactionRaf=requestAnimationFrame(actualizarInteraccion);
+  },{passive:true});
+
+  if(!noMotion){
+    document.body.classList.add('has-cursor');
+    document.querySelectorAll('a,button,.chip').forEach(el=>{
+      el.addEventListener('pointerenter',()=>document.body.classList.add('hovering'));
+      el.addEventListener('pointerleave',()=>document.body.classList.remove('hovering'));
+    });
+  }
+  actualizarInteraccion();
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -476,8 +593,9 @@ function iniciarPasillo(){
   const clamp=(v,a,b)=>v<a?a:v>b?b:v;
   const smooth=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
 
-  (function loop(){
-    layout();                                                               // auto-corrige el alto
+  let corridorRaf=0;
+  function actualizarPasillo(){
+    corridorRaf=0;
     const P=(window.scrollY||document.documentElement.scrollTop||0)/STEP;   // 0..N
 
     // ── PUERTA (fase 0..1) ─────────────────────────────────
@@ -509,8 +627,14 @@ function iniciarPasillo(){
     const idx=clamp(Math.round(P),1,N);
     const dd=dotsBar.children; for(let i=0;i<dd.length;i++) dd[i].classList.toggle('on',(i+1)===idx);
 
-    requestAnimationFrame(loop);
-  })();
+  }
+  function solicitarActualizacion(){
+    if(corridorRaf)return;
+    corridorRaf=requestAnimationFrame(actualizarPasillo);
+  }
+  addEventListener('scroll',solicitarActualizacion,{passive:true});
+  addEventListener('resize',solicitarActualizacion,{passive:true});
+  solicitarActualizacion();
 }
 
 // ── Nav ──
