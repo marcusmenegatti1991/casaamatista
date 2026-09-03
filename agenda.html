@@ -1654,10 +1654,9 @@ function mostrarLogin(){
   setTimeout(()=>{const c=document.getElementById('l-user'); if(c) c.focus();},150);
 }
 function volverAPortada(){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('portada').style.display='block';
-  avisoSesionAbierta();
-  window.scrollTo(0,0);
+  // La portada pública ahora es el PASILLO (index.html en la raíz del sitio).
+  // agenda.html es solo la app, así que "← Volver" y "Cerrar sesión" regresan al pasillo.
+  location.href='/';
 }
 function volverASesion(){
   const s=getSession();
