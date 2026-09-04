@@ -39,7 +39,7 @@
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  #tablero{ display:flex; flex-direction:column; min-height:100vh; }
+  #tablero{ display:flex; flex-direction:column; height:100vh; overflow:hidden; }
 
   /* ── Barra superior ─────────────────────────────────────────── */
   header{
@@ -47,7 +47,9 @@
     gap:24px; flex-wrap:wrap;
     padding:clamp(24px,3vw,44px) clamp(24px,4vw,60px) 0;
   }
-  .marca{display:flex; align-items:baseline; gap:16px; flex-wrap:wrap}
+  .marca{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+  .logo-chip{display:inline-flex; align-items:center; justify-content:center; background:#f6f2fb; border-radius:16px; padding:8px 12px; box-shadow:0 12px 30px -12px rgba(0,0,0,.55)}
+  .logo-chip img{height:clamp(52px,9vh,104px); width:auto; display:block}
   .marca h1{
     font-family:var(--font-h); font-weight:700;
     font-size:clamp(32px,3.8vw,60px); letter-spacing:.5px;
@@ -90,13 +92,15 @@
     grid-auto-rows:1fr;
   }
   @media (max-width:720px){
+    #tablero{ height:auto; min-height:100vh; overflow:visible; }
     main{ grid-template-columns:1fr; grid-auto-rows:auto; }
+    .sala{ min-height:180px; }
   }
   .sala{
     position:relative; border-radius:28px; overflow:hidden;
     background:var(--card); border:1px solid var(--line);
     padding:clamp(24px,2.6vw,48px);
-    min-height:clamp(200px,22vh,340px);
+    min-height:0;
     display:flex; flex-direction:column;
     box-shadow:var(--shadow);
     transition:transform .5s ease, background .5s ease, border-color .5s ease;
@@ -258,7 +262,7 @@
 <div id="tablero" hidden>
   <header>
     <div class="marca">
-      <h1>Casa Amatista</h1>
+      <span class="logo-chip"><img src="fotos/logo.png" alt="Casa Amatista" onerror="this.closest('.logo-chip').outerHTML='<h1>Casa Amatista</h1>'"></span>
       <span class="sub">Recepción</span>
     </div>
     <div class="reloj">
