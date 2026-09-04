@@ -1158,6 +1158,8 @@
 //  CONFIGURACIÓN
 // ══════════════════════════════════════════════════════════════
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRIO6Yw8VIBgDKryr3T3b4tW8QjtN57W-Bt7a3-DVG8OkqLO9gTL8VBmOB3eY7JsvS/exec';
+// Despierta el backend al cargar, para que el primer login no espere el arranque en frio (~1 min).
+try{ fetch(SCRIPT_URL+'?accion=warmup',{method:'GET',mode:'no-cors',credentials:'omit'}).catch(function(){}); }catch(e){}
 const CALENDARIOS = {
   'consultorio-1':'f6b359cdadfa144d836290602caf1b796c8999515bf216a4c819c345cda71d6f@group.calendar.google.com',
   'consultorio-2':'e6ec7606cf0cb7e3340401ed80eb55aea734fc516bbd2ee9983513d7f01dbaa7@group.calendar.google.com',
@@ -1329,7 +1331,7 @@ function startOfWeek(d){const r=new Date(d);r.setDate(r.getDate()-(r.getDay()||7
 //  viejo), cae automáticamente al JSONP de siempre. Nunca queda
 //  peor que antes.
 // ──────────────────────────────────────────────────────────────
-const TIMEOUT_BACKEND = 15000;   // suficiente para el despertar normal de Apps Script
+const TIMEOUT_BACKEND = 75000;   // Apps Script puede tardar ~60s en despertar (arranque en frio)
 
 async function llamarBackend(url){
   // El token de sesión se añade AQUÍ, en un solo sitio, para que ninguna
@@ -1685,11 +1687,17 @@ async function cargarDisponibilidad(){
   const fecha=document.getElementById('fecha').value;
   if(!fecha){showToast('Selecciona una fecha','error');return;}
   renderGrid(null,fecha);
+  const res={};
   try{
-    // Un único request obtiene los 5 espacios. Apps Script consulta Calendar
-    // internamente y aprovecha CacheService para fechas consultadas recientemente.
-    const url=`${SCRIPT_URL}?accion=consultarDisponibilidadTodos&fecha=${encodeURIComponent(fecha)}`;
-    dispon=await llamarBackend(url);
+    await cargarBloqueos();
+    await Promise.all(IDS.map(async id=>{
+      // Un espacio cerrado no se le pregunta al calendario: se ahorra una
+      // llamada al Apps Script y la pantalla carga más rápido.
+      if(estaBloqueado(id,fecha)){ res[id]=null; return; }
+      const url=`${SCRIPT_URL}?accion=consultarDisponibilidadHoras&fecha=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
+      res[id]=await llamarBackend(url);
+    }));
+    dispon=res;
   }catch(err){
     document.getElementById('contenido').innerHTML=`<div class="idle-state"><div class="idle-icon" style="opacity:1">⚠️</div><p>No se pudo conectar.<br>${err.message}</p></div>`;
     return;
@@ -1988,11 +1996,13 @@ async function verificarAdmin(){
   const pw=document.getElementById('admin-pw').value;
   const err=document.getElementById('admin-error');
   if(!pw){err.style.display='block';return;}
-  err.style.display='none';
+  err.style.color='#7a6f90'; err.style.display='block';
+  err.textContent='Conectando... la primera vez puede tardar hasta un minuto.';
   let data;
   try{
     data=await llamarBackend(`${SCRIPT_URL}?accion=loginAdmin&password=${encodeURIComponent(pw)}`);
-  }catch(e){ err.textContent='No se pudo conectar.'; err.style.display='block'; return; }
+  }catch(e){ err.style.color=''; err.textContent='No se pudo conectar. Revisa tu internet y vuelve a intentar.'; err.style.display='block'; return; }
+  err.style.color='';
   if(!data||!data.ok){
     err.textContent='Contraseña incorrecta.';
     err.style.display='block';
@@ -2147,16 +2157,15 @@ async function cargarAdmin(){
   ['admin-stats','psy-section','cal-section','admin-empty','totales-grid'].forEach(id=>document.getElementById(id).style.display='none');
   document.getElementById('admin-loading').style.display='block';
   try{
-    // Un único request para todo el panel: eventos de los 5 espacios + estados + cancelaciones.
-    const adminData=await llamarBackend(
-      `${SCRIPT_URL}?accion=cargarAdminCompleto&fechaIni=${encodeURIComponent(fechaIniAdmin)}&fechaFin=${encodeURIComponent(fechaFinAdmin)}`
-    );
-    const activosRaw=Array.isArray(adminData?.activos)?adminData.activos:[];
-    const estadosRaw=Array.isArray(adminData?.estados)?adminData.estados:[];
-    const canceladosRaw=Array.isArray(adminData?.cancelados)?adminData.cancelados:[];
-    // El backend devuelve el roomId para identificar el calendario; aquí
-    // añadimos el nombre visual que ya utiliza el resto de la interfaz.
-    const activos=activosRaw.map(ev=>({...ev,roomNombre:NOMBRES[ev.roomId]||ev.roomNombre}));
+    const [activos,estadosRaw,canceladosRaw]=await Promise.all([
+      Promise.all(IDS.map(async id=>{
+        const url=`${SCRIPT_URL}?accion=listarEventos&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}&roomId=${id}`;
+        const data=await llamarBackend(url).catch(()=>[]);
+        return Array.isArray(data)?data.map(ev=>({...ev,roomId:id,roomNombre:NOMBRES[id],calId:CALENDARIOS[id]})):[];
+      })).then(a=>a.flat()),
+      llamarBackend(`${SCRIPT_URL}?accion=listarEstados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}`).catch(()=>[]),
+      llamarBackend(`${SCRIPT_URL}?accion=listarCancelados&fechaIni=${fechaIniAdmin}&fechaFin=${fechaFinAdmin}&roomId=todos`).catch(()=>[]),
+    ]);
     estadosMap={};
     if(Array.isArray(estadosRaw)) estadosRaw.forEach(e=>{estadosMap[e.eventoId]={estado:e.estado,monto:e.monto};});
     const activosConEstado=activos.map(ev=>({

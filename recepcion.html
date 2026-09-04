@@ -16,6 +16,12 @@
     --text:#f1eaf8; --muted:#a798c1; --dim:#6d5f88;
     --amethyst:#c19bff; --amethyst-2:#8a5cf0; --rose:#f0a6c8;
     --ok:#7ee0b8;
+    --green:#2fe0a0; --green-soft:#79f0c0;
+    --green-bg1:#123726; --green-bg2:#0e1f1c;
+    --green-line:rgba(47,224,160,.5); --green-glow:rgba(47,224,160,.30);
+    --red:#ff5d73; --red-soft:#ffc3cd;
+    --red-bg1:#3a1622; --red-bg2:#1f0f18;
+    --red-line:rgba(255,93,115,.5); --red-glow:rgba(255,93,115,.32);
     --shadow:0 24px 60px -30px rgba(0,0,0,.8);
     --font-h:'Playfair Display',Georgia,serif;
     --font-b:'Lora',Georgia,serif;
@@ -71,9 +77,9 @@
   }
   .resumen b{color:var(--text); font-weight:500}
   .pill{display:inline-flex; align-items:center; gap:10px}
-  .dot{width:14px; height:14px; border-radius:50%}
-  .dot.occ{background:var(--amethyst); box-shadow:0 0 12px var(--amethyst)}
-  .dot.free{background:transparent; border:2px solid var(--ok)}
+  .dot{width:15px; height:15px; border-radius:50%}
+  .dot.occ{background:var(--red); box-shadow:0 0 12px var(--red)}
+  .dot.free{background:var(--green); box-shadow:0 0 12px var(--green)}
 
   /* ── Cuadrícula de salas ────────────────────────────────────── */
   main{
@@ -99,12 +105,22 @@
     content:''; position:absolute; inset:0 0 auto 0; height:7px;
     background:var(--line);
   }
-  .sala.ocupada{background:var(--card-occ); border-color:var(--line-occ)}
-  .sala.ocupada::before{
-    background:linear-gradient(90deg, var(--amethyst-2), var(--amethyst), var(--rose));
+  .sala.libre{
+    background:linear-gradient(155deg, var(--green-bg1), var(--green-bg2) 72%);
+    border-color:var(--green-line);
+    box-shadow:var(--shadow), 0 0 70px -16px var(--green-glow);
   }
-  .sala.ocupada{box-shadow:var(--shadow), 0 0 60px -14px rgba(193,155,255,.45)}
-  .sala.sincon{opacity:.55}
+  .sala.libre::before{ background:linear-gradient(90deg, var(--green), var(--green-soft)); }
+  .sala.libre .libre-txt{ color:var(--green-soft); }
+  .sala.libre .detalle, .sala.libre .sub{ color:rgba(255,255,255,.72); }
+  .sala.ocupada{
+    background:linear-gradient(155deg, var(--red-bg1), var(--red-bg2) 72%);
+    border-color:var(--red-line);
+    box-shadow:var(--shadow), 0 0 70px -16px var(--red-glow);
+  }
+  .sala.ocupada::before{ background:linear-gradient(90deg, var(--red), var(--red-soft)); }
+  .sala.ocupada .detalle, .sala.ocupada .sub{ color:rgba(255,255,255,.74); }
+  .sala.sincon{opacity:.5}
 
   .sala .top{
     display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
@@ -113,11 +129,18 @@
     font-family:var(--font-h); font-weight:600; line-height:1.04;
     font-size:clamp(28px,2.8vw,50px); letter-spacing:.3px;
   }
-  .estado-mini{
-    font-size:clamp(13px,1.15vw,19px); letter-spacing:2.5px; text-transform:uppercase;
-    color:var(--muted); display:inline-flex; align-items:center; gap:10px;
-    white-space:nowrap; padding-top:8px;
+  .badge{
+    display:inline-flex; align-items:center; gap:11px; white-space:nowrap; margin-top:4px;
+    padding:clamp(8px,.75vw,12px) clamp(15px,1.25vw,24px);
+    border-radius:999px; font-weight:600; text-transform:uppercase;
+    font-size:clamp(14px,1.2vw,20px); letter-spacing:2px;
+    border:1.5px solid var(--line); color:var(--muted);
   }
+  .badge .bdot{ width:14px; height:14px; border-radius:50%; background:currentColor }
+  .badge.libre{ color:var(--green-soft); border-color:var(--green-line); background:rgba(47,224,160,.14) }
+  .badge.libre .bdot{ background:var(--green); box-shadow:0 0 12px var(--green) }
+  .badge.ocupado{ color:var(--red-soft); border-color:var(--red-line); background:rgba(255,93,115,.15) }
+  .badge.ocupado .bdot{ background:var(--red); box-shadow:0 0 12px var(--red) }
   .sala .centro{
     flex:1 1 auto; display:flex; flex-direction:column; justify-content:center;
     padding:clamp(12px,1.6vw,26px) 0;
@@ -126,10 +149,7 @@
     font-family:var(--font-h); line-height:1.03;
     font-size:clamp(36px,3.8vw,70px); font-weight:600;
   }
-  .sala.ocupada .ocupante{
-    background:linear-gradient(120deg,#fff,var(--amethyst));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
+  .sala.ocupada .ocupante{ color:#fff; }
   .libre-txt{
     font-family:var(--font-h); font-size:clamp(36px,3.8vw,70px);
     font-weight:500; color:var(--dim); line-height:1.03;
@@ -271,7 +291,7 @@
 const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbzRIO6Yw8VIBgDKryr3T3b4tW8QjtN57W-Bt7a3-DVG8OkqLO9gTL8VBmOB3eY7JsvS/exec';
 const SESSION_KEY = 'amatista_session';   // mismo que la app → comparten sesión
 const REFRESCO_MS = 45000;                // el tablero se actualiza cada 45 s
-const TIMEOUT_MS  = 30000;
+const TIMEOUT_MS  = 75000;                // Apps Script puede tardar ~60s en despertar
 
 // ── Sesión (compartida con la app) ────────────────────────────
 function getSession(){ try{ return JSON.parse(localStorage.getItem(SESSION_KEY)); }catch(_){ return null; } }
@@ -453,7 +473,7 @@ function render(salas){
     if(s.ok === false){
       return `<div class="sala sincon">
         <div class="top"><span class="nombre">${esc(s.nombre)}</span>
-          <span class="estado-mini">sin conexión</span></div>
+          <span class="badge">sin conexión</span></div>
         <div class="centro"><div class="libre-txt">—</div></div>
         <div class="pie"><div class="sub">No se pudo leer este calendario.</div></div>
       </div>`;
@@ -465,7 +485,7 @@ function render(salas){
         : `<div class="sub">Sin más citas hoy</div>`;
       return `<div class="sala ocupada">
         <div class="top"><span class="nombre">${esc(s.nombre)}</span>
-          <span class="estado-mini"><span class="dot occ"></span>En sesión</span></div>
+          <span class="badge ocupado"><span class="bdot"></span>En sesión</span></div>
         <div class="centro">
           <div class="ocupante">${esc(s.actual.nombre)}</div>
           <div class="detalle">Hasta las <span class="strong">${esc(s.actual.fin)}</span></div>
@@ -477,9 +497,9 @@ function render(salas){
     const prox = s.siguiente
       ? `<div class="sub">Próxima: <span class="strong">${esc(s.siguiente.nombre)}</span> · ${esc(s.siguiente.inicio)}</div>`
       : `<div class="sub">Sin más citas hoy</div>`;
-    return `<div class="sala">
+    return `<div class="sala libre">
       <div class="top"><span class="nombre">${esc(s.nombre)}</span>
-        <span class="estado-mini"><span class="dot free"></span>Disponible</span></div>
+        <span class="badge libre"><span class="bdot"></span>Disponible</span></div>
       <div class="centro"><div class="libre-txt">Libre</div></div>
       <div class="pie">${prox}</div>
     </div>`;
