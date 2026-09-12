@@ -470,6 +470,12 @@ async function cargarTablero(){
 
 function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
+function nombreLimpio(n){
+  n=String(n==null?'':n).trim();
+  // En recepcion, las citas de Sary ("Sary - Fulano", "Sary-Luz", ...) muestran solo "Sary".
+  if(/^sary\s*-/i.test(n) || /^sary$/i.test(n)) return 'Sary';
+  return n;
+}
 function render(salas){
   salas = salas.filter(s => s.roomId !== 'taller');   // el Taller no se muestra en la recepción
   let ocup = 0, libres = 0;
@@ -485,13 +491,13 @@ function render(salas){
     if(s.actual){
       ocup++;
       const luego = s.siguiente
-        ? `<div class="sub">Luego: <span class="nm">${esc(s.siguiente.nombre)}</span> · ${esc(s.siguiente.inicio)}</div>`
+        ? `<div class="sub">Luego: <span class="nm">${esc(nombreLimpio(s.siguiente.nombre))}</span> · ${esc(s.siguiente.inicio)}</div>`
         : `<div class="sub">Sin más citas hoy</div>`;
       return `<div class="sala ocupada">
         <div class="top"><span class="nombre">${esc(s.nombre)}</span>
           <span class="badge ocupado"><span class="bdot"></span>En sesión</span></div>
         <div class="centro">
-          <div class="ocupante">${esc(s.actual.nombre)}</div>
+          <div class="ocupante">${esc(nombreLimpio(s.actual.nombre))}</div>
           <div class="detalle">Hasta las <span class="strong">${esc(s.actual.fin)}</span></div>
         </div>
         <div class="pie">${luego}</div>
@@ -499,7 +505,7 @@ function render(salas){
     }
     libres++;
     const prox = s.siguiente
-      ? `<div class="sub">Próxima: <span class="strong">${esc(s.siguiente.nombre)}</span> · ${esc(s.siguiente.inicio)}</div>`
+      ? `<div class="sub">Próxima: <span class="strong">${esc(nombreLimpio(s.siguiente.nombre))}</span> · ${esc(s.siguiente.inicio)}</div>`
       : `<div class="sub">Sin más citas hoy</div>`;
     return `<div class="sala libre">
       <div class="top"><span class="nombre">${esc(s.nombre)}</span>
