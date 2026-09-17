@@ -1407,7 +1407,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   cargarPortada();
   const session=getSession();
   // Con sesión activa se entra directo a la agenda.
-  if(session&&session.nombreCompleto) mostrarVistaUsuario(session.nombreCompleto,session.profesion||'psicologo');
+  if(session&&session.rol==='admin') abrirPanelAdmin();
+  else if(session&&session.nombreCompleto) mostrarVistaUsuario(session.nombreCompleto,session.profesion||'psicologo');
   // Sin sesión: esta página (agenda.html) es solo para profesionales —la
   // portada pública ahora es el pasillo—, así que va directo al login.
   else mostrarLogin();
