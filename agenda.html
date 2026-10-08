@@ -1024,6 +1024,25 @@
       </div>
 
       <div id="blq-lista" style="margin-top:1.2rem;"></div>
+
+      <p class="section-title" style="margin-top:2rem;">Consultorios reservados (renta)</p>
+      <p class="hint-espacios">Un consultorio rentado en exclusiva. Los demás lo verán en gris, marcado como Reservado, y no podrán reservarlo. Marca quién sí puede usarlo.</p>
+      <div class="form-bar" style="border-radius:12px;border:1px solid var(--cream-dark);flex-wrap:wrap;">
+        <div class="field">
+          <label for="priv-room">Consultorio</label>
+          <select id="priv-room" onchange="sincronizarPriv()"></select>
+        </div>
+        <div class="field" style="flex:2;min-width:220px;">
+          <label>¿Quién puede usarlo?</label>
+          <div id="priv-psicologos" style="display:flex;flex-wrap:wrap;gap:.4rem .9rem;max-height:150px;overflow:auto;padding:.2rem 0;"></div>
+        </div>
+        <div class="field" style="flex:1;min-width:160px;">
+          <label for="priv-nota">Nota</label>
+          <input type="text" id="priv-nota" placeholder="ej. Renta mensual" maxlength="80">
+        </div>
+        <button class="btn-primary" onclick="guardarEspacioPrivado()">Guardar</button>
+      </div>
+      <div id="priv-lista" style="margin-top:1.2rem;"></div>
       <div class="loading-msg" id="esp-loading" style="display:none;">Cargando…</div>
     </div>
 
@@ -1683,6 +1702,21 @@ function avisoSesionAbierta(){
 //  VISTA USUARIO
 // ══════════════════════════════════════════════════════════════
 let dispon={},reserva={};
+let RESERVADOS={};
+async function cargarEspaciosReservados(){
+  try{
+    const r=await llamarBackend(`${SCRIPT_URL}?accion=verEspaciosPrivados`);
+    const esp=(r&&r.ok&&r.espacios)?r.espacios:{};
+    const out={};
+    Object.keys(esp).forEach(id=>{
+      const info=esp[id]||{};
+      if(info.permitido===false) out[id]={nota:info.nota||''};
+    });
+    RESERVADOS=out;
+  }catch(_){ RESERVADOS={}; }
+  return RESERVADOS;
+}
+function estaReservado(roomId){ return !!RESERVADOS[roomId]; }
 async function cargarDisponibilidad(){
   const session=getSession();if(!session){doLogout();return;}
   const fecha=document.getElementById('fecha').value;
@@ -1691,10 +1725,11 @@ async function cargarDisponibilidad(){
   const res={};
   try{
     await cargarBloqueos();
+    await cargarEspaciosReservados();
     await Promise.all(IDS.map(async id=>{
       // Un espacio cerrado no se le pregunta al calendario: se ahorra una
       // llamada al Apps Script y la pantalla carga más rápido.
-      if(estaBloqueado(id,fecha)){ res[id]=null; return; }
+      if(estaBloqueado(id,fecha)||estaReservado(id)){ res[id]=null; return; }
       const url=`${SCRIPT_URL}?accion=consultarDisponibilidadHoras&fecha=${fecha}&calendarioId=${encodeURIComponent(CALENDARIOS[id])}`;
       res[id]=await llamarBackend(url);
     }));
@@ -1719,7 +1754,7 @@ function renderGrid(data,fecha){
     const key=slotKey(v);const cls=v%1===0?'hora-entera':'media-hora';
     const cols=IDS.map(id=>{
       // Espacio cerrado por Sary: celda en gris y sin poder reservar
-      if(estaBloqueado(id,fecha)) return`<div class="slot cerrado ${cls}"></div>`;
+      if(estaBloqueado(id,fecha)||estaReservado(id)) return`<div class="slot cerrado ${cls}"></div>`;
       const raw=data[id]?.[key];const estado=typeof raw==='object'?raw.estado:raw;const psyNom=typeof raw==='object'?raw.nombre:null;
       if(estado==='ocupada'){
         const col=colorPsy(psyNom||'');
@@ -1744,14 +1779,17 @@ function renderGrid(data,fecha){
       </div>
     </div>
     <div class="grid-wrapper"><div class="grid-wrapper-x"><div class="time-grid">
-      <div class="gh"></div>${IDS.map(id=>estaBloqueado(id,fecha)
-        ?`<div class="gh gh-cerrado">${encabezadoEspacio(id)}<em>no disponible</em></div>`
-        :`<div class="gh">${encabezadoEspacio(id)}</div>`).join('')}
+      <div class="gh"></div>${IDS.map(id=>{
+        if(estaBloqueado(id,fecha)) return`<div class="gh gh-cerrado">${encabezadoEspacio(id)}<em>no disponible</em></div>`;
+        if(estaReservado(id)) return`<div class="gh gh-cerrado">${encabezadoEspacio(id)}<em>reservado</em></div>`;
+        return`<div class="gh">${encabezadoEspacio(id)}</div>`;
+      }).join('')}
       ${rows}
     </div></div></div>`;
 }
 function abrirModal(id,hIni,fecha){
   const session=getSession();if(!session){doLogout();return;}
+  if(estaReservado(id)){showToast('Consultorio reservado','error');return;}
   reserva={id,hIni:parseFloat(hIni),fecha,nombre:session.nombreCompleto};
   const sel=document.getElementById('hora-fin');
   sel.innerHTML='';
@@ -1840,7 +1878,7 @@ async function confirmarCancelacion(){
 // ══════════════════════════════════════════════════════════════
 const EQUIPO=[
   {nombre:'María Ramos',prof:'Psicóloga y Tanatóloga',cert:'Certificación en PNL',grupo:'Duelo en la infancia, adolescentes y adultos',desc:'Facilitadora de talleres para el desarrollo personal',horarios:'Mar, Mié, Jue de 9:00 am a 8:00pm',precio:'$350/paquete 5x $1400',modalidad:'Presencial y Online',frase:'Te acompaño en tu proceso terapéutico con herramientas de PNL y tanatología que impactará positivamente tu salud mental y conducirán a tu recuperación',tel:'87-15-24-12-07',ig:'@psic_mariaramos',foto:'maria.ramos.png'},
-  {nombre:'Daniela Carbajal',prof:'Psicóloga',cert:'Capacitada en psicoterapia infantil',grupo:'Niños, adolescentes y adulto joven',desc:'Experiencia con autismo y TDAH. Evaluación integral y psicología familiar sistémica.',horarios:'Lun a Vie 12:00 a 7:00pm, Sáb 9:00 am a 4:00pm',precio:'$450',modalidad:'Presencial y en línea',frase:'Mejorando a poquito',tel:'87-14-75-68-70',ig:'@psic.danielacarbajal',foto:'daniela.carbajal.png'},
+  {nombre:'Daniela Carbajal',prof:'Psicóloga',cert:'Capacitada en psicoterapia infantil',grupo:'Niños, adolescentes y adulto joven',desc:'Experiencia con autismo y TDAH. Evaluación integral y psicología familiar sistémica.',horarios:'Lun a Vie 12:00 a 7:00pm, Sáb 9:00 am a 4:00pm',precio:'$450',modalidad:'Presencial y en línea',frase:'Mejorando a poquito',tel:'87-14-75-68-70',ig:'@psic.danielacarbajal',foto:'daniela.carbajal.png?v=2'},
   {nombre:'Lidia Martínez',prof:'Psicóloga',cert:'Maestría en terapia sistémica',grupo:'Especialista en violencia de género y trauma',desc:'Acompañamiento psicológico en adopción. Terapia de pareja, familiar y adultos.',horarios:'Jue, Vie 4:00 a 8:00pm, Sáb 8:00 am a 7:00pm',precio:'$400 y $500 (pareja)',modalidad:'Presencial y Online',frase:'Lo que duele, tiene palabras. Lo que preocupa encuentra calma y lo que esperas construir empieza a tener raíces',tel:'87-12-43-64-80',ig:'@psi_lidia',foto:'lidia.martinez.png'},
   {nombre:'Carmen Morales',prof:'Psicóloga',cert:'Especializada en conducta delictiva',grupo:'Niños, adolescentes y adultos',desc:'Formación en terapia Cognitivo-Conductual, TCC. Experiencia en ansiedad, depresión, violencia.',horarios:'Lun a Vie 5:00 a 7:00pm, Sáb 10:00 am a 5:00pm',precio:'$500',modalidad:'Presencial',frase:'Tu salud mental es importante. Dar el primer paso puede hacer una gran diferencia',tel:'87-11-61-48-33',foto:'carmen.morales.png'},
   {nombre:'Cristina Marín',prof:'Psicóloga',cert:'Maestría en terapia sistémica',grupo:'Especialista en violencia de género y trauma',desc:'Terapia de pareja, familiar y adultos.',horarios:'—',precio:'—',modalidad:'—',frase:null,foto:null},
@@ -2055,6 +2093,7 @@ async function cargarEspacios(){
   await cargarBloqueos();
   if(caja) caja.style.display='none';
   pintarEspacios();
+  cargarEspaciosPrivados();
 }
 
 function pintarEspacios(){
@@ -2145,6 +2184,87 @@ async function quitarBloqueo(roomId,tipo,fecha){
       `&roomId=${encodeURIComponent(roomId)}&tipo=${tipo}&fecha=${encodeURIComponent(fecha||'')}`);
     showToast(`${NOMBRES[roomId]} vuelve a estar disponible`,'success');
     await cargarEspacios();
+  }catch(e){ showToast('No se pudo quitar: '+e.message,'error'); }
+}
+let PSIS_PRIV=[];
+let ESPACIOS_PRIV={};
+async function cargarEspaciosPrivados(){
+  poblarSelectEspacios('priv-room');
+  try{
+    const [psis,resp]=await Promise.all([
+      llamarBackend(`${SCRIPT_URL}?accion=listarPsicologos`).catch(()=>[]),
+      llamarBackend(`${SCRIPT_URL}?accion=adminVerEspaciosPrivados`).catch(()=>({}))
+    ]);
+    PSIS_PRIV=Array.isArray(psis)?psis:[];
+    ESPACIOS_PRIV=(resp&&resp.ok&&resp.espacios)?resp.espacios:{};
+  }catch(_){ PSIS_PRIV=[]; ESPACIOS_PRIV={}; }
+  pintarPsicologosPriv();
+  pintarEspaciosPrivados();
+}
+function pintarPsicologosPriv(){
+  const cont=document.getElementById('priv-psicologos');
+  if(!cont) return;
+  if(!PSIS_PRIV.length){
+    cont.innerHTML='<span class="hint-espacios" style="margin:0;">Primero registra profesionales en la pestaña Psicólogos.</span>';
+    return;
+  }
+  cont.innerHTML=PSIS_PRIV.map(p=>{
+    const nom=`${p.nombre||''} ${p.apellido||''}`.trim();
+    return`<label style="display:inline-flex;align-items:center;gap:.35rem;font-size:.8rem;cursor:pointer;"><input type="checkbox" class="priv-chk" value="${p.username}"> ${nom}</label>`;
+  }).join('');
+  sincronizarPriv();
+}
+function sincronizarPriv(){
+  const sel=document.getElementById('priv-room');
+  if(!sel) return;
+  const info=ESPACIOS_PRIV[sel.value]||{};
+  const usuarios=Array.isArray(info.usuarios)?info.usuarios:[];
+  document.querySelectorAll('#priv-psicologos .priv-chk').forEach(chk=>{
+    chk.checked=usuarios.indexOf(chk.value)>=0;
+  });
+  const nota=document.getElementById('priv-nota');
+  if(nota) nota.value=info.nota||'';
+}
+function pintarEspaciosPrivados(){
+  const lista=document.getElementById('priv-lista');
+  if(!lista) return;
+  const ids=Object.keys(ESPACIOS_PRIV).filter(id=>{
+    const u=ESPACIOS_PRIV[id]&&ESPACIOS_PRIV[id].usuarios;
+    return Array.isArray(u)&&u.length>0;
+  });
+  if(!ids.length){ lista.innerHTML='<p class="hint-espacios">No hay consultorios reservados.</p>'; return; }
+  const nombreDe=u=>{
+    const p=PSIS_PRIV.find(x=>x.username===u);
+    return p?`${p.nombre||''} ${p.apellido||''}`.trim():u;
+  };
+  lista.innerHTML='<div class="table-wrap"><table><thead><tr><th>Consultorio</th><th>Pueden usarlo</th><th>Nota</th><th style="text-align:right;">Acción</th></tr></thead><tbody>'+
+    ids.map(id=>{
+      const info=ESPACIOS_PRIV[id]||{};
+      const quien=(info.usuarios||[]).map(nombreDe).join(', ');
+      const nota=info.nota||'';
+      return`<tr><td>${NOMBRES[id]||id}</td><td>${quien}</td><td>${nota}</td><td style="text-align:right;"><button class="btn-primary" style="padding:.3rem .7rem;font-size:.72rem;" onclick="quitarEspacioPrivado('${id}')">Quitar</button></td></tr>`;
+    }).join('')+'</tbody></table></div>';
+}
+async function guardarEspacioPrivado(){
+  const roomId=document.getElementById('priv-room').value;
+  if(!roomId){ showToast('Elige un consultorio','error'); return; }
+  const usuarios=Array.from(document.querySelectorAll('#priv-psicologos .priv-chk')).filter(chk=>chk.checked).map(chk=>chk.value);
+  const nota=document.getElementById('priv-nota').value.trim();
+  try{
+    const r=await llamarBackend(`${SCRIPT_URL}?accion=guardarEspacioPrivado&roomId=${encodeURIComponent(roomId)}&usuarios=${encodeURIComponent(usuarios.join(','))}&nota=${encodeURIComponent(nota)}`);
+    if(r&&r.ok===false){ showToast(r.mensaje||r.error||'No se pudo guardar','error'); return; }
+    showToast(usuarios.length?`${NOMBRES[roomId]} reservado`:`${NOMBRES[roomId]} vuelve a ser público`,'success');
+    await cargarEspaciosPrivados();
+  }catch(e){ showToast('No se pudo guardar: '+e.message,'error'); }
+}
+async function quitarEspacioPrivado(roomId){
+  const nom=NOMBRES[roomId]||roomId;
+  if(!confirm(`¿Quitar la reserva de ${nom}? Volverá a estar disponible para todos.`)) return;
+  try{
+    const r=await llamarBackend(`${SCRIPT_URL}?accion=guardarEspacioPrivado&roomId=${encodeURIComponent(roomId)}&usuarios=&nota=`);
+    if(r&&r.ok===false){ showToast(r.mensaje||r.error||'No se pudo quitar','error'); return; }
+    showToast(`${nom} vuelve a ser público`,'success');
+    await cargarEspaciosPrivados();
   }catch(e){ showToast('No se pudo quitar: '+e.message,'error'); }
 }
 // ══════════════════════════════════════════════════════════════
