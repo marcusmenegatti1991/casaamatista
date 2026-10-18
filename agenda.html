@@ -111,6 +111,16 @@
     #candado-box .cand-nota{font-size:.76rem;color:var(--ink-mid);font-style:italic;}
     #candado-box .cand-fecha{margin-left:auto;font-size:.66rem;color:var(--ink-light);text-align:right;white-space:nowrap;}
     @media(max-width:520px){#candado-box .cand-fecha{display:none;}}
+    /* Videoconsulta en línea (Sala Amatista) */
+    #video-box{display:flex;align-items:center;gap:.9rem;padding:.7rem 1.5rem;background:var(--white);border-bottom:1px solid var(--cream-dark);}
+    #video-box .cand-ico{font-size:1.5rem;line-height:1;}
+    #video-box .video-main{display:flex;flex-direction:column;line-height:1.3;min-width:0;}
+    #video-box .cand-label{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--plum);}
+    #video-box .video-txt{font-size:.76rem;color:var(--ink-mid);}
+    #video-box .btn-primary{margin-left:auto;align-self:center;background:var(--plum-dark);}
+    #video-box .btn-primary:hover{background:var(--plum);}
+    #video-box .btn-primary:disabled{background:var(--ink-light);}
+    @media(max-width:520px){#video-box .video-txt{display:none;}}
     .session-bar strong{color:var(--gold);}
     .btn-logout{font-family:'Lora',serif;font-size:.68rem;color:rgba(255,255,255,.6);background:none;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:.2rem .65rem;cursor:pointer;transition:all .15s;}
     .btn-logout:hover{color:white;border-color:rgba(255,255,255,.5);}
@@ -788,6 +798,15 @@
       <span class="cand-nota" id="cand-nota-ver"></span>
     </div>
     <span class="cand-fecha" id="cand-fecha-ver"></span>
+  </div>
+  <!-- Videoconsulta: crea una sala en sala.casaamatista.mom con la sesión de la agenda -->
+  <div id="video-box">
+    <span class="cand-ico">🎥</span>
+    <div class="video-main">
+      <span class="cand-label">Videoconsulta en línea</span>
+      <span class="video-txt">Crea una sala privada y envía el enlace a tu paciente.</span>
+    </div>
+    <button class="btn-primary" id="btn-video" onclick="abrirVideoconsulta()">Crear videoconsulta</button>
   </div>
   <!-- PESTAÑAS USUARIO -->
   <div class="admin-tabs" style="border-bottom:2px solid var(--cream-dark);background:var(--white);padding:0 1.5rem;margin:0;">
@@ -1646,6 +1665,36 @@ async function cambiarMiPasswordUI(){
   }catch(e){ showToast('Error: '+e.message,'error'); }
 }
 
+// ── VIDEOCONSULTA (Sala Amatista) ────────────────────────────────
+// El servidor da un permiso firmado de 5 minutos (ticketSala) a quien tiene sesión y sigue
+// activo en el equipo; sala.casaamatista.mom crea la sala con él, sin el código del consultorio.
+const SALA_URL='https://sala.casaamatista.mom';
+async function abrirVideoconsulta(){
+  const btn=document.getElementById('btn-video');
+  if(btn.disabled) return;
+  // La pestaña se abre YA, dentro del clic: si se abriera al llegar la respuesta (Apps Script
+  // puede tardar en despertar), el navegador la bloquearía como ventana emergente.
+  const w=window.open('','_blank');
+  try{
+    w.document.title='Videoconsulta · Casa Amatista';
+    w.document.body.style.cssText='font-family:Georgia,serif;color:#4A4256;background:#FAF7F2;padding:2rem;';
+    w.document.body.textContent='Preparando tu videoconsulta…';
+  }catch(_){}
+  btn.disabled=true; btn.textContent='Preparando…';
+  try{
+    const r=await llamarBackend(`${SCRIPT_URL}?accion=ticketSala`);
+    if(!r||!r.ok||!r.ticket) throw new Error((r&&(r.mensaje||r.error))||'No se pudo preparar la videoconsulta');
+    const url=`${SALA_URL}/desde-agenda#t=${encodeURIComponent(r.ticket)}`;
+    if(!w) location.href=url;   // ventanas emergentes bloqueadas: se abre en esta pestaña
+    else if(!w.closed){ w.opener=null; w.location.replace(url); }
+  }catch(e){
+    if(w&&!w.closed) w.close();
+    showToast(e.message||'No se pudo abrir la videoconsulta','error');
+  }finally{
+    btn.disabled=false; btn.textContent='Crear videoconsulta';
+  }
+}
+
 function switchUserTab(tab){
   const tabs=['agenda','equipo'];
   document.querySelectorAll('#vista-usuario .atab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
@@ -1878,7 +1927,7 @@ async function confirmarCancelacion(){
 // ══════════════════════════════════════════════════════════════
 const EQUIPO=[
   {nombre:'María Ramos',prof:'Psicóloga y Tanatóloga',cert:'Certificación en PNL',grupo:'Duelo en la infancia, adolescentes y adultos',desc:'Facilitadora de talleres para el desarrollo personal',horarios:'Mar, Mié, Jue de 9:00 am a 8:00pm',precio:'$350/paquete 5x $1400',modalidad:'Presencial y Online',frase:'Te acompaño en tu proceso terapéutico con herramientas de PNL y tanatología que impactará positivamente tu salud mental y conducirán a tu recuperación',tel:'87-15-24-12-07',ig:'@psic_mariaramos',foto:'maria.ramos.png'},
-  {nombre:'Daniela Carbajal',prof:'Psicóloga',cert:'Capacitada en psicoterapia infantil',grupo:'Niños, adolescentes y adulto joven',desc:'Experiencia con autismo y TDAH. Evaluación integral y psicología familiar sistémica.',horarios:'Lun a Vie 12:00 a 7:00pm, Sáb 9:00 am a 4:00pm',precio:'$500',modalidad:'Presencial y en línea',frase:'Comprender lo que sentimos para transformar como vivimos🩵',tel:'87-14-75-68-70',ig:'@psic.danielacarbajal',foto:'daniela.carbajal.png?v=3'},
+  {nombre:'Daniela Carbajal',prof:'Psicóloga',cert:'Capacitada en psicoterapia infantil',grupo:'Niños, adolescentes y adulto joven',desc:'Experiencia con autismo y TDAH. Evaluación integral y psicología familiar sistémica.',horarios:'Lun a Vie 12:00 a 7:00pm, Sáb 9:00 am a 4:00pm',precio:'$450',modalidad:'Presencial y en línea',frase:'Mejorando a poquito',tel:'87-14-75-68-70',ig:'@psic.danielacarbajal',foto:'daniela.carbajal.png?v=2'},
   {nombre:'Lidia Martínez',prof:'Psicóloga',cert:'Maestría en terapia sistémica',grupo:'Especialista en violencia de género y trauma',desc:'Acompañamiento psicológico en adopción. Terapia de pareja, familiar y adultos.',horarios:'Jue, Vie 4:00 a 8:00pm, Sáb 8:00 am a 7:00pm',precio:'$400 y $500 (pareja)',modalidad:'Presencial y Online',frase:'Lo que duele, tiene palabras. Lo que preocupa encuentra calma y lo que esperas construir empieza a tener raíces',tel:'87-12-43-64-80',ig:'@psi_lidia',foto:'lidia.martinez.png'},
   {nombre:'Carmen Morales',prof:'Psicóloga',cert:'Especializada en conducta delictiva',grupo:'Niños, adolescentes y adultos',desc:'Formación en terapia Cognitivo-Conductual, TCC. Experiencia en ansiedad, depresión, violencia.',horarios:'Lun a Vie 5:00 a 7:00pm, Sáb 10:00 am a 5:00pm',precio:'$500',modalidad:'Presencial',frase:'Tu salud mental es importante. Dar el primer paso puede hacer una gran diferencia',tel:'87-11-61-48-33',foto:'carmen.morales.png'},
   {nombre:'Cristina Marín',prof:'Psicóloga',cert:'Maestría en terapia sistémica',grupo:'Especialista en violencia de género y trauma',desc:'Terapia de pareja, familiar y adultos.',horarios:'—',precio:'—',modalidad:'—',frase:null,foto:null},
