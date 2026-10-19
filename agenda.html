@@ -121,6 +121,7 @@
     #video-box .btn-primary:hover{background:var(--plum);}
     #video-box .btn-primary:disabled{background:var(--ink-light);}
     @media(max-width:520px){#video-box .video-txt{display:none;}}
+    #video-nota{padding:.4rem 1.5rem;font-size:.7rem;color:var(--ink-light);background:var(--white);border-bottom:1px solid var(--cream-dark);}
     .session-bar strong{color:var(--gold);}
     .btn-logout{font-family:'Lora',serif;font-size:.68rem;color:rgba(255,255,255,.6);background:none;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:.2rem .65rem;cursor:pointer;transition:all .15s;}
     .btn-logout:hover{color:white;border-color:rgba(255,255,255,.5);}
@@ -258,6 +259,11 @@
     .b-red{background:var(--red-light);color:var(--red);}
     .b-amber{background:var(--amber-light);color:var(--amber);}
     .b-plum{background:#EDE9F5;color:var(--plum);}
+    .b-off{background:var(--cream-mid);color:var(--ink-light);}
+    /* Sala Amatista por persona (panel → Psicólogos) */
+    .sala-cell{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .7rem;font-size:.72rem;color:var(--ink-mid);}
+    .sala-cell label{display:flex;align-items:center;gap:.3rem;white-space:nowrap;cursor:pointer;}
+    .sala-cell input[type=date]{font-family:'Lora',serif;font-size:.72rem;background:var(--cream);border:1px solid var(--cream-dark);border-radius:6px;padding:.1rem .35rem;color:var(--ink);}
     .monto-cell{font-family:'Playfair Display',serif;font-size:.9rem;text-align:right;}
     .btn-danger{font-family:'Lora',serif;font-size:.72rem;color:var(--red);background:var(--red-light);border:1px solid #e8bebe;border-radius:6px;padding:.28rem .7rem;cursor:pointer;transition:background .15s;white-space:nowrap;}
     .btn-danger:hover{background:#f5cccc;}
@@ -799,15 +805,17 @@
     </div>
     <span class="cand-fecha" id="cand-fecha-ver"></span>
   </div>
-  <!-- Videoconsulta: crea una sala en sala.casaamatista.mom con la sesión de la agenda -->
-  <div id="video-box">
+  <!-- Videoconsulta: crea una sala en sala.casaamatista.mom con la sesión de la agenda.
+       Solo se muestra a quien la administración habilitó (estadoSala). -->
+  <div id="video-box" style="display:none;">
     <span class="cand-ico">🎥</span>
     <div class="video-main">
       <span class="cand-label">Videoconsulta en línea</span>
-      <span class="video-txt">Crea una sala privada y envía el enlace a tu paciente.</span>
+      <span class="video-txt" id="video-txt">Crea una sala privada y envía el enlace a tu paciente.</span>
     </div>
     <button class="btn-primary" id="btn-video" onclick="abrirVideoconsulta()">Crear videoconsulta</button>
   </div>
+  <p id="video-nota" style="display:none;">🎥 Videoconsulta en línea: pide acceso a Sala Amatista a la administración.</p>
   <!-- PESTAÑAS USUARIO -->
   <div class="admin-tabs" style="border-bottom:2px solid var(--cream-dark);background:var(--white);padding:0 1.5rem;margin:0;">
     <button class="atab active" onclick="switchUserTab('agenda')">📅 Reservar horarios</button>
@@ -931,21 +939,21 @@
       <p class="section-title">🧠 Psicólogos</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th>Sala Amatista</th><th style="text-align:right;">Acción</th></tr></thead>
           <tbody id="psy-list-psicologos"></tbody>
         </table>
       </div>
       <p class="section-title">🥗 Nutriólogos</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th>Sala Amatista</th><th style="text-align:right;">Acción</th></tr></thead>
           <tbody id="psy-list-nutriologos"></tbody>
         </table>
       </div>
       <p class="section-title">💆 Masajistas</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th style="text-align:right;">Acción</th></tr></thead>
+          <thead><tr><th>Nombre completo</th><th>Usuario</th><th>Profesión</th><th>Sala Amatista</th><th style="text-align:right;">Acción</th></tr></thead>
           <tbody id="psy-list-masajistas"></tbody>
         </table>
       </div>
@@ -1608,6 +1616,7 @@ function mostrarVistaUsuario(nombreCompleto,profesion){
   else if(el){el.style.display='none';}
   cargarEquipo();
   cargarCandadoUsuario();
+  cargarEstadoSala();
 }
 
 // ── CANDADO DEL CONSULTORIO ──────────────────────────────────────
@@ -1669,6 +1678,20 @@ async function cambiarMiPasswordUI(){
 // El servidor da un permiso firmado de 5 minutos (ticketSala) a quien tiene sesión y sigue
 // activo en el equipo; sala.casaamatista.mom crea la sala con él, sin el código del consultorio.
 const SALA_URL='https://sala.casaamatista.mom';
+// Muestra la franja solo a quien tiene Sala Amatista habilitada y vigente; a quien no, una nota.
+// Si el servidor todavía no conoce estadoSala (o falla), no se muestra nada.
+async function cargarEstadoSala(){
+  const box=document.getElementById('video-box'), nota=document.getElementById('video-nota');
+  box.style.display=nota.style.display='none';   // nada de lo que viera otra sesión en este equipo
+  try{
+    const d=await llamarBackend(`${SCRIPT_URL}?accion=estadoSala`);
+    const activa=!!(d&&d.ok&&d.activa);
+    document.getElementById('video-txt').textContent='Crea una sala privada y envía el enlace a tu paciente.'+
+      (activa&&d.hasta?` Activa hasta el ${fmtCorta(d.hasta)}.`:'');
+    box.style.display=activa?'flex':'none';
+    nota.style.display=(d&&d.ok&&!activa)?'block':'none';
+  }catch(e){ box.style.display='none'; nota.style.display='none'; }
+}
 async function abrirVideoconsulta(){
   const btn=document.getElementById('btn-video');
   if(btn.disabled) return;
@@ -1683,6 +1706,7 @@ async function abrirVideoconsulta(){
   btn.disabled=true; btn.textContent='Preparando…';
   try{
     const r=await llamarBackend(`${SCRIPT_URL}?accion=ticketSala`);
+    if(r&&r.error==='sala_inactiva') cargarEstadoSala();   // venció o se la apagaron: quita la franja
     if(!r||!r.ok||!r.ticket) throw new Error((r&&(r.mensaje||r.error))||'No se pudo preparar la videoconsulta');
     const url=`${SALA_URL}/desde-agenda#t=${encodeURIComponent(r.ticket)}`;
     if(!w) location.href=url;   // ventanas emergentes bloqueadas: se abre en esta pestaña
@@ -2636,7 +2660,7 @@ async function cargarListaPsicologos(){
     const data=await llamarBackend(`${SCRIPT_URL}?accion=listarPsicologos`);
     document.getElementById('psy-loading').style.display='none';
     if(!Array.isArray(data)||!data.length){
-      document.getElementById('psy-list-psicologos').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin profesionales registrados.</td></tr>';
+      document.getElementById('psy-list-psicologos').innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--ink-light);padding:1.5rem;">Sin profesionales registrados.</td></tr>';
       return;
     }
     const grupos={psicologo:[],nutriologo:[],masajista:[]};
@@ -2646,7 +2670,7 @@ async function cargarListaPsicologos(){
     Object.entries(grupos).forEach(([prof,lista])=>{
       const tbody=document.getElementById(TBODY_IDS[prof]);
       if(!lista.length){
-        tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--ink-light);padding:.9rem;font-size:.8rem;">Sin ${LABELS[prof].toLowerCase()}s registrados.</td></tr>`;
+        tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--ink-light);padding:.9rem;font-size:.8rem;">Sin ${LABELS[prof].toLowerCase()}s registrados.</td></tr>`;
         return;
       }
       tbody.innerHTML=lista.map(p=>{
@@ -2663,6 +2687,7 @@ async function cargarListaPsicologos(){
               <option value="masajista"${profActual==='masajista'?' selected':''}>Masajista</option>
             </select>
           </td>
+          <td>${celdaSala(p)}</td>
           <td style="text-align:right;white-space:nowrap;">
             <button class="btn-info" style="margin-right:.35rem;" onclick="asignarPasswordPsy('${p.username}','${p.nombre} ${p.apellido}')">🔑 Contraseña</button>
             <button class="btn-danger" onclick="eliminarPsicologo('${p.id}','${p.nombre} ${p.apellido}')">Eliminar</button>
@@ -2671,6 +2696,38 @@ async function cargarListaPsicologos(){
       }).join('');
     });
   }catch(e){document.getElementById('psy-loading').style.display='none';showToast('Error al cargar','error');}
+}
+// ── SALA AMATISTA POR PERSONA ────────────────────────────────────
+// Cada profesional paga su acceso a la videoconsulta: la admin la enciende y, si quiere,
+// pone "pagado hasta" (vale hasta ese día inclusive; después se apaga sola).
+function hoyLocal(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function estadoSalaPsy(on,hasta){
+  if(!on) return '<span class="badge b-off">Apagada</span>';
+  if(hasta&&hasta<hoyLocal()) return '<span class="badge b-red">Vencida</span>';
+  return '<span class="badge b-green">Activa</span>';
+}
+function celdaSala(p){
+  const on=String(p.sala).toLowerCase()==='true';
+  const hasta=/^\d{4}-\d{2}-\d{2}$/.test(p.salaHasta||'')?p.salaHasta:'';
+  return `<div class="sala-cell">
+    <label><input type="checkbox"${on?' checked':''} onchange="guardarSalaPsy('${p.id}',this)"> Habilitada</label>
+    <label title="Opcional. Sin fecha, depende solo de la casilla.">Pagado hasta <input type="date" value="${hasta}" onchange="guardarSalaPsy('${p.id}',this)"></label>
+    <span class="sala-estado">${estadoSalaPsy(on,hasta)}</span>
+  </div>`;
+}
+async function guardarSalaPsy(id,el){
+  const cell=el.closest('.sala-cell');
+  const chk=cell.querySelector('input[type=checkbox]'), fecha=cell.querySelector('input[type=date]');
+  chk.disabled=fecha.disabled=true;
+  try{
+    const d=await llamarBackend(`${SCRIPT_URL}?accion=guardarSalaPsicologo&id=${encodeURIComponent(id)}&sala=${chk.checked}&hasta=${encodeURIComponent(fecha.value)}`);
+    if(!d||!d.ok) throw new Error((d&&(d.mensaje||d.error))||'No se pudo guardar');
+    cell.querySelector('.sala-estado').innerHTML=estadoSalaPsy(chk.checked,fecha.value);
+    showToast(d.activa?'Sala Amatista activa':chk.checked?'Sala Amatista vencida: la fecha ya pasó':'Sala Amatista apagada',d.activa?'success':'');
+  }catch(e){
+    showToast('Error: '+e.message,'error');
+    cargarListaPsicologos();
+  }finally{ chk.disabled=fecha.disabled=false; }
 }
 async function cambiarProfesion(id,nuevaProfesion){
   try{
